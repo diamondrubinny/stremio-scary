@@ -8,6 +8,9 @@
  * for a guest: a location lookup by IP address, a remote configuration and a promotion window. The guard replaces
  * `fetch` before the engine loads and refuses those hosts, so the engine itself stays unmodified.
  *
+ * The guard judges the address that is asked for. Cinemeta answers its allowed lists by sending the browser on to its
+ * own catalogs host, and the browser follows.
+ *
  * Only exact host names are listed. Film information (Cinemeta), images and the add-ons a viewer installs are other
  * hosts and are not touched.
  */
@@ -17,13 +20,36 @@ const BLOCKED_HOSTS: ReadonlySet<string> = new Set([
     'link.stremio.com',
 ]);
 
+const SCARY_GENRES: readonly string[] = ['Horror', 'Thriller', 'Mystery'];
+const GENRE_CATALOG = /^\/catalog\/(?:movie|series)\/(?:top|imdbRating)\/([^/]+)\.json$/;
+const OWN_SERIES_CATALOG = /^\/catalog\/series\/(?:last-videos|calendar-videos)\//;
+
+/** True for one of Cinemeta's lists narrowed to horror, thriller or mystery: "genre=Horror", with or without "skip=100". */
+const isScaryGenreCatalog = (pathname: string): boolean => {
+    const match = GENRE_CATALOG.exec(pathname);
+    if (match === null) return false;
+    let extra = match[1];
+    try {
+        extra = decodeURIComponent(extra);
+    } catch {
+        return false;
+    }
+    const parts = extra.split('&');
+    const genres = parts.filter((part) => part.startsWith('genre='));
+    return genres.length === 1 && SCARY_GENRES.includes(genres[0].slice('genre='.length)) &&
+        parts.every((part) => part.startsWith('genre=') || /^skip=\d{1,6}$/.test(part));
+};
+
 /**
- * Cinemeta's general catalogs (every genre): SCARY shows horror only, from its own feed, so they are never asked for.
- * Cinemeta's film pages (/meta/…) are not catalogs and stay reachable.
+ * Cinemeta's general catalogs (every genre): SCARY shows horror, thriller and mystery only, so nothing else is asked
+ * for. What stays reachable: its lists narrowed to one of those three genres; the new episodes of the series in the
+ * viewer's own library (the calendar); and its film pages (/meta/…), which are not catalogs.
  */
-const isGeneralCatalog = (address: URL): boolean =>
-    address.hostname === 'cinemeta-catalogs.strem.io' ||
-    (address.hostname === 'v3-cinemeta.strem.io' && address.pathname.startsWith('/catalog/'));
+const isGeneralCatalog = (address: URL): boolean => {
+    if (address.hostname === 'cinemeta-catalogs.strem.io') return true;
+    if (address.hostname !== 'v3-cinemeta.strem.io' || !address.pathname.startsWith('/catalog/')) return false;
+    return !OWN_SERIES_CATALOG.test(address.pathname) && !isScaryGenreCatalog(address.pathname);
+};
 
 /** True when a request to this address must not leave the browser. Relative and unreadable addresses are allowed. */
 const isBlockedUrl = (url: string, base?: string): boolean => {
@@ -60,4 +86,4 @@ const installNetworkGuard = (scope: FetchScope): void => {
     scope.fetch = guardedFetch as FetchScope['fetch'];
 };
 
-export { BLOCKED_HOSTS, isBlockedUrl, installNetworkGuard };
+export { BLOCKED_HOSTS, SCARY_GENRES, isBlockedUrl, installNetworkGuard };

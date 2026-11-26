@@ -50,7 +50,7 @@ const PlayerGate = ({ children }: Props) => {
         <div className={styles['gate']} role={'dialog'} aria-modal={'true'} aria-label={t('SCARY_CONSENT_TRAILERS')}>
             <p className={styles['gate-text']}>{t('SCARY_CONSENT_GATE')}</p>
             <div className={styles['chips-line']} style={{ display: 'flex', gap: '0.6rem' }}>
-                <Chip label={t('SCARY_CONSENT_PLAY')} chosen={true} onClick={() => store.update(() => answerConsent(true))} />
+                <Chip label={t('SCARY_CONSENT_PLAY')} chosen={true} onClick={() => store.update(answerConsent(true))} />
                 <Chip label={t('SCARY_BACK')} onClick={() => navigate(-1)} />
             </div>
         </div>

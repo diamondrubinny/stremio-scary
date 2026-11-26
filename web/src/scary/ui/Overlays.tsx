@@ -6,7 +6,6 @@
 // ambient sound and the sleep timer. Mounted once, in src/App/App.js.
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import FocusLock from 'react-focus-lock';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router';
 import { useToast } from 'stremio/common';
@@ -21,39 +20,13 @@ import { useFeedLanguage, useScaryRules, useScaryState, useSession } from '../ho
 import { askPin, isUnlocked, setSleepTimer, unlock } from '../state/session';
 import { answerConsent, store } from '../state/store';
 import Chip from './Chip';
+import Dialog from './Dialog';
 import styles from './scary.less';
 
 const SHIVER_MS = 2_200;
 const IDLE_MS = 5 * 60_000;
 const SLIDE_MS = 12_000;
 const SAME_WATCH_MS = 6 * 3_600_000;
-
-type DialogProps = {
-    label: string,
-    children: React.ReactNode,
-    onClose: () => void,
-};
-
-/** A window over the app: keeps the keyboard inside it, closes on Escape, and is announced as a dialog. */
-const Dialog = ({ label, children, onClose }: DialogProps) => {
-    useEffect(() => {
-        const onKey = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                event.stopPropagation();
-                onClose();
-            }
-        };
-        window.addEventListener('keydown', onKey, true);
-        return () => window.removeEventListener('keydown', onKey, true);
-    }, [onClose]);
-    return (
-        <FocusLock returnFocus={true}>
-            <div className={styles['gate']} role={'dialog'} aria-modal={'true'} aria-label={label}>
-                {children}
-            </div>
-        </FocusLock>
-    );
-};
 
 /** Asks for the PIN, for whoever called askPin(). Checks an existing PIN itself, with the wait after wrong tries. */
 const PinDialog = () => {
@@ -332,8 +305,8 @@ const ConsentBanner = () => {
         <section className={styles['consent']} role={'region'} aria-label={t('SCARY_PRIVACY')}>
             <p className={styles['consent-text']}>{t('SCARY_CONSENT_TEXT')}</p>
             <div className={styles['consent-actions']}>
-                <Chip label={t('SCARY_CONSENT_ALLOW')} onClick={() => store.update(() => answerConsent(true))} />
-                <Chip label={t('SCARY_CONSENT_REFUSE')} onClick={() => store.update(() => answerConsent(false))} />
+                <Chip label={t('SCARY_CONSENT_ALLOW')} onClick={() => store.update(answerConsent(true))} />
+                <Chip label={t('SCARY_CONSENT_REFUSE')} onClick={() => store.update(answerConsent(false))} />
                 <Chip label={t('SCARY_CONSENT_MANAGE')} quiet={true} href={'#/settings/scary'} />
             </div>
         </section>

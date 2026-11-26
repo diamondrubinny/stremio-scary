@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { feedLanguageOf } from './addon';
 import { toItem, toRow as row } from './items';
 import { useScaryLibrary } from './library';
+import { useScaryRules } from '../hooks';
 import { MIN_QUERY_LENGTH, searchFilms } from './search';
 
 const useScarySearch = (queryParams: URLSearchParams) => {
@@ -16,6 +17,7 @@ const useScarySearch = (queryParams: URLSearchParams) => {
     const query = (queryParams.get('search') ?? queryParams.get('query') ?? '').trim();
     const active = query.length >= MIN_QUERY_LENGTH;
     const state = useScaryLibrary(active);
+    const rules = useScaryRules(false);
 
     const search = useMemo(() => {
         if (!active) return { selected: null, catalogs: [] };
@@ -27,7 +29,7 @@ const useScarySearch = (queryParams: URLSearchParams) => {
         if (state.status === 'failed') {
             return { selected, catalogs: [row('scary_search_failed', '', 'movie', { type: 'Err', content: t('SCARY_SEARCH_UNAVAILABLE') })] };
         }
-        const found = searchFilms(state.films, query).map((film) => toItem(film, language));
+        const found = searchFilms(state.films.filter((film) => !rules.isHidden(film)), query).map((film) => toItem(film, language));
         const films = found.filter((item) => item.type === 'movie');
         const series = found.filter((item) => item.type === 'series');
         const catalogs = [
@@ -38,7 +40,7 @@ const useScarySearch = (queryParams: URLSearchParams) => {
             catalogs.push(row('scary_search_empty', '', 'movie', { type: 'Err', content: t('SCARY_SEARCH_EMPTY') }));
         }
         return { selected, catalogs };
-    }, [active, query, state, i18n.language, t]);
+    }, [active, query, state, rules, i18n.language, t]);
 
     // The whole answer is already here: there is nothing more for the screen to ask for as it scrolls.
     const loadRange = useMemo(() => () => undefined, []);

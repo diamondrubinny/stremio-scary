@@ -3,7 +3,7 @@
 
 // A backup file: everything the app keeps in this browser (the library, "continue watching", settings, SCARY's
 // lists), as one JSON file the viewer saves and can restore. There is no account, so this file is the only copy
-// outside the browser. The parental PIN is never written to it, and restoring never changes the lock.
+// outside the browser. The parental PIN and the TMDB key are never written to it, and restoring never changes them.
 
 import { STORAGE_KEY, sanitize } from './store';
 
@@ -23,9 +23,10 @@ const withoutLock = (stateJson: string | null): string => {
     } catch {
         // An unreadable state is saved as the defaults.
     }
-    const { lock, lockout, ...rest } = sanitize(state);
+    const { lock, lockout, tmdbKey, ...rest } = sanitize(state);
     void lock;
     void lockout;
+    void tmdbKey;
     return JSON.stringify(rest);
 };
 
@@ -82,7 +83,7 @@ const restoreBackup = (storage: KeyValueStorage, entries: Record<string, string>
         } catch {
             // Falls back to the defaults below.
         }
-        storage.setItem(key, JSON.stringify({ ...sanitize(restored), lock: current.lock, lockout: current.lockout }));
+        storage.setItem(key, JSON.stringify({ ...sanitize(restored), lock: current.lock, lockout: current.lockout, tmdbKey: current.tmdbKey }));
     }
 };
 

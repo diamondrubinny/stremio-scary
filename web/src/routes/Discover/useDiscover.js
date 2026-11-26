@@ -6,6 +6,7 @@ const { useCore } = require('stremio/core');
 const { useModelState } = require('stremio/common');
 const { default: useScaryAddon } = require('stremio/scary/content/useScaryAddon');
 const { defaultDiscoverRequest, narrowDiscover } = require('stremio/scary/content/discover');
+const { useScaryRules } = require('stremio/scary/hooks');
 
 const map = (discover) => ({
     ...discover,
@@ -72,7 +73,10 @@ const useDiscover = (urlParams, queryParams) => {
         };
     }, [urlParams, queryParams, scaryAddon]);
     const discover = useModelState({ model: 'discover', action, map, deps: ['ctx'] });
-    const scaryDiscover = React.useMemo(() => narrowDiscover(discover, scaryAddon), [discover, scaryAddon]);
+    // Family night: only the gentlest films of SCARY's library are shown, here as everywhere.
+    const scaryRules = useScaryRules(false);
+    const scaryHidden = React.useMemo(() => scaryRules.familyNight ? (id) => scaryRules.library.status !== 'ready' || scaryRules.isHidden(scaryRules.library.byId.get(id)) : null, [scaryRules]);
+    const scaryDiscover = React.useMemo(() => narrowDiscover(discover, scaryAddon, scaryHidden), [discover, scaryAddon, scaryHidden]);
     return [scaryDiscover, loadNextPage];
 };
 

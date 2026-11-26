@@ -19,6 +19,7 @@ import { becauseYouLoved } from '../domain/recommender';
 import { BUDGETS, isLineup, planTime } from '../domain/timePlan';
 import type { Budget } from '../domain/timePlan';
 import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
+import { useComingSoon } from '../tmdb/useTmdb';
 import Chip from './Chip';
 import styles from './scary.less';
 
@@ -47,6 +48,8 @@ const BoardExtras = ({ rowClassName }: Props) => {
         watched: new Set(history.map(({ id }) => id)),
     }), [films, budget, history]);
     const seasons = useMemo(() => effects.seasonal ? seasonsOn(new Date()) : [], [effects.seasonal]);
+    // Films not out yet have no scare level, so family night leaves the row out.
+    const coming = useComingSoon(!familyNight);
     const because = useMemo(() => becauseYouLoved(films, [...loved].reverse()), [films, loved]);
 
     const row = useCallback((id: string, title: string, list: Film[], seeAll?: string) => list.length === 0 ? null : (
@@ -115,6 +118,24 @@ const BoardExtras = ({ rowClassName }: Props) => {
                     null
             }
             {seasons.map((season) => row(`scary_${season}`, t(`SCARY_ROW_${season.toUpperCase()}`), pickSeason(films, season)))}
+            {
+                coming.length > 0 ?
+                    <MetaRow
+                        className={rowClassName}
+                        title={t('SCARY_ROW_COMING_SOON')}
+                        catalog={toRow('scary_coming', t('SCARY_ROW_COMING_SOON'), 'movie', { type: 'Ready', content: coming.map((film) => ({
+                            id: film.imdbId,
+                            type: 'movie',
+                            name: `${film.title} · ${t('SCARY_COMING_ON', { a: new Date(`${film.date}T00:00:00`).toLocaleDateString(language) })}`,
+                            poster: film.poster,
+                            posterShape: 'poster',
+                            deepLinks: { metaDetailsVideos: null, metaDetailsStreams: `#/detail/movie/${film.imdbId}/${film.imdbId}`, player: null },
+                        })) })}
+                        itemComponent={MetaItem}
+                    />
+                    :
+                    null
+            }
             {because !== null ? row('scary_because', t('SCARY_ROW_BECAUSE_LOVED', { a: titleOf(because.because, language) }), because.films) : null}
         </div>
     );

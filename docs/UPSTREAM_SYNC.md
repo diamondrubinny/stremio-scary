@@ -55,6 +55,7 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/routes/Details/Hero/Hero.tsx`, `web/src/components/MetaPreview/MetaPreview.tsx` | `<ScaryDetailsExtras />` | מד פחד, אהבתי/לא בשבילי, Bucket list, "עוד כאלה" |
 | `web/src/routes/Settings/{constants.ts,useSettingsPages.ts,Settings.tsx}` | עמוד "הגדרות SCARY" | ערב משפחתי, נעילה, אפקטים, טיימר שינה, רשימות, גיבוי |
 | `web/src/router/routerPaths.tsx` (נוסף) | הנתיב `/scary/:page` | בורר הטעם, Bucket list, "השנה שלך בפחד" |
+| `web/src/components/NavBar/HorizontalNavBar/SearchBar/SearchBar.js` | `useLocalSearch` → `useScaryLocalSearch`; `<ScaryVoiceButton />` | הצעות חיפוש מהמאגר של SCARY; חיפוש קולי |
 | `web/assets/screenshots/*` | צילומי מסך של SCARY Web במקום של Stremio | מופיעים בחלון ההתקנה של ה-PWA |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub

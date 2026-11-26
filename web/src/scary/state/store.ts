@@ -6,6 +6,7 @@
 // a backup file or another script on the device can have written it.
 
 import { NO_LOCKOUT } from '../domain/lock';
+import { keyKind } from '../tmdb/client';
 import type { Lockout } from '../domain/lock';
 
 const STORAGE_KEY = 'scary.state';
@@ -29,9 +30,15 @@ type ScaryState = {
     effects: { atmosphere: boolean, shiver: boolean, sound: boolean, screensaver: boolean, seasonal: boolean },
     /**
      * What the viewer said about content from outside: trailers play from YouTube (Google). `media` is null until
-     * they answer, and nothing from YouTube loads unless it is true. `at` is when they answered.
+     * they answer, and nothing from YouTube loads unless it is true. `at` is when they answered. `voice` is asked the
+     * first time the microphone is used: the browser's speech service hears what is said.
      */
-    consent: { media: boolean | null, at: number | null, version: number },
+    consent: { media: boolean | null, voice: boolean, at: number | null, version: number },
+    /**
+     * The viewer's own TMDB key, when they added one: it turns on the cast, the stores and "coming soon". Kept in
+     * this browser and sent only to api.themoviedb.org. Never written to a backup file.
+     */
+    tmdbKey: string | null,
 };
 
 /** The version of the privacy text the consent was given to. A new version asks again. */
@@ -47,7 +54,8 @@ const DEFAULT_STATE: ScaryState = {
     history: [],
     // Sound starts off: a browser page that makes noise by itself is not welcome.
     effects: { atmosphere: true, shiver: true, sound: false, screensaver: true, seasonal: true },
-    consent: { media: null, at: null, version: CONSENT_VERSION },
+    consent: { media: null, voice: false, at: null, version: CONSENT_VERSION },
+    tmdbKey: null,
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -88,9 +96,11 @@ const sanitize = (value: unknown): ScaryState => {
         },
         consent: {
             media: answered ? consent.media as boolean : null,
+            voice: consent.voice === true && consent.version === CONSENT_VERSION,
             at: answered ? whole(consent.at, 1, Number.MAX_SAFE_INTEGER, 0) || null : null,
             version: CONSENT_VERSION,
         },
+        tmdbKey: keyKind(raw.tmdbKey) !== null ? raw.tmdbKey as string : null,
     };
 };
 
@@ -141,7 +151,8 @@ const browserStorage = (): Storage | null => {
 const store = createStore(browserStorage());
 
 /** Records the viewer's answer about content from outside, and when it was given. */
-const answerConsent = (media: boolean, now: number = Date.now()): Partial<ScaryState> => ({ consent: { media, at: now, version: CONSENT_VERSION } });
+const answerConsent = (media: boolean, now: number = Date.now()): ((state: ScaryState) => Partial<ScaryState>) =>
+    (state) => ({ consent: { ...state.consent, media, at: now, version: CONSENT_VERSION } });
 
 export { CONSENT_VERSION, DEFAULT_STATE, SLEEP_MINUTES, STORAGE_KEY, answerConsent, createStore, sanitize, store };
 export type { ScaryState, Watch };

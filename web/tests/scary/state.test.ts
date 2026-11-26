@@ -41,12 +41,14 @@ describe('the saved state', () => {
     });
 
     test('consent is unanswered until the viewer answers, and an answer to an older text does not count', () => {
-        expect(DEFAULT_STATE.consent).toEqual({ media: null, at: null, version: CONSENT_VERSION });
+        expect(DEFAULT_STATE.consent).toEqual({ media: null, voice: false, at: null, version: CONSENT_VERSION });
         expect(sanitize({ consent: { media: true } }).consent.media).toBeNull();
         expect(sanitize({ consent: { media: 'yes', at: 5, version: CONSENT_VERSION } }).consent.media).toBeNull();
-        expect(sanitize({ consent: { media: true, at: 5, version: CONSENT_VERSION - 1 } }).consent).toEqual({ media: null, at: null, version: CONSENT_VERSION });
-        expect(sanitize(answerConsent(true, 1_700_000_000_000)).consent).toEqual({ media: true, at: 1_700_000_000_000, version: CONSENT_VERSION });
-        expect(sanitize(answerConsent(false, 7)).consent).toEqual({ media: false, at: 7, version: CONSENT_VERSION });
+        expect(sanitize({ consent: { media: true, voice: true, at: 5, version: CONSENT_VERSION - 1 } }).consent).toEqual({ media: null, voice: false, at: null, version: CONSENT_VERSION });
+        expect(sanitize(answerConsent(true, 1_700_000_000_000)(DEFAULT_STATE)).consent).toEqual({ media: true, voice: false, at: 1_700_000_000_000, version: CONSENT_VERSION });
+        const spoken = sanitize({ consent: { media: null, voice: true, version: CONSENT_VERSION } });
+        expect(spoken.consent).toMatchObject({ media: null, voice: true });
+        expect(sanitize(answerConsent(false, 7)(spoken)).consent).toEqual({ media: false, voice: true, at: 7, version: CONSENT_VERSION });
     });
 
     test('a change is checked, saved and announced', () => {
@@ -72,7 +74,7 @@ describe('the backup file', () => {
         const source = memoryStorage({
             profile: '{"settings":{}}',
             library: '{"items":{}}',
-            [STORAGE_KEY]: JSON.stringify({ loved: ['tt0081505'], familyNight: true, lock: { enabled: true, fromFear: 2, pin: PIN } }),
+            [STORAGE_KEY]: JSON.stringify({ loved: ['tt0081505'], familyNight: true, lock: { enabled: true, fromFear: 2, pin: PIN }, tmdbKey: 'a'.repeat(32) }),
             'weird key!': 'x',
         });
         const backup = createBackup(source, new Date('2026-11-26T12:00:00Z'));
@@ -80,9 +82,10 @@ describe('the backup file', () => {
         expect(Object.keys(backup.storage).sort()).toEqual(['library', 'profile', STORAGE_KEY].sort());
         expect(JSON.stringify(backup)).not.toContain('c2FsdHNhbHR');
         expect(JSON.parse(backup.storage[STORAGE_KEY])).not.toHaveProperty('lock');
+        expect(JSON.stringify(backup)).not.toContain('a'.repeat(32));
 
         const entries = readBackup(JSON.stringify(backup))!;
-        const target = memoryStorage({ [STORAGE_KEY]: JSON.stringify({ lock: { enabled: true, fromFear: 5, pin: PIN }, lockout: { failedAttempts: 4, lockedUntil: 99 } }) });
+        const target = memoryStorage({ [STORAGE_KEY]: JSON.stringify({ lock: { enabled: true, fromFear: 5, pin: PIN }, lockout: { failedAttempts: 4, lockedUntil: 99 }, tmdbKey: 'b'.repeat(32) }) });
         restoreBackup(target, entries);
         expect(target.getItem('profile')).toBe('{"settings":{}}');
         expect(sanitize(JSON.parse(target.getItem(STORAGE_KEY)!))).toMatchObject({
@@ -90,6 +93,7 @@ describe('the backup file', () => {
             familyNight: true,
             lock: { enabled: true, fromFear: 5, pin: PIN },
             lockout: { failedAttempts: 4, lockedUntil: 99 },
+            tmdbKey: 'b'.repeat(32),
         });
     });
 

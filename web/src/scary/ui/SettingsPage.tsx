@@ -14,6 +14,9 @@ import { useScaryState, useSession } from '../hooks';
 import { createBackup, readBackup, restoreBackup } from '../state/backup';
 import { askPin, lockAgain, setSleepTimer } from '../state/session';
 import { SLEEP_MINUTES, answerConsent, store } from '../state/store';
+import { keyKind } from '../tmdb/client';
+import { checkKey, forgetTmdb } from '../tmdb/useTmdb';
+import styles from './scary.less';
 import type { ScaryState } from '../state/store';
 
 type Effect = keyof ScaryState['effects'];
@@ -21,7 +24,9 @@ type Effect = keyof ScaryState['effects'];
 const SettingsPage = () => {
     const { t } = useTranslation();
     const toast = useToast();
-    const { familyNight, lock, effects, bucket, loved, consent } = useScaryState();
+    const { familyNight, lock, effects, bucket, loved, consent, tmdbKey } = useScaryState();
+    const [typedKey, setTypedKey] = useState('');
+    const [checkingKey, setCheckingKey] = useState(false);
     const { sleepUntil } = useSession();
     const fileInput = useRef<HTMLInputElement>(null);
     const [, setTick] = useState(0);
@@ -77,6 +82,31 @@ const SettingsPage = () => {
 
     const toggleEffect = useCallback((effect: Effect) => {
         store.update((state) => ({ effects: { ...state.effects, [effect]: !state.effects[effect] } }));
+    }, []);
+
+    const saveTmdbKey = useCallback(async (event?: React.FormEvent) => {
+        event?.preventDefault();
+        const key = typedKey.trim();
+        if (keyKind(key) === null) {
+            toast.show({ type: 'error', title: t('SCARY_TMDB_INVALID_FORMAT'), timeout: 8_000 });
+            return;
+        }
+        setCheckingKey(true);
+        const answer = await checkKey(key);
+        setCheckingKey(false);
+        if (answer !== 'ok') {
+            toast.show({ type: 'error', title: t(answer === 'rejected' ? 'SCARY_TMDB_REJECTED' : 'SCARY_TMDB_UNREACHABLE'), timeout: 8_000 });
+            return;
+        }
+        forgetTmdb();
+        store.update(() => ({ tmdbKey: key }));
+        setTypedKey('');
+        toast.show({ type: 'success', title: t('SCARY_TMDB_SAVED'), timeout: 4_000 });
+    }, [typedKey, toast, t]);
+
+    const deleteTmdbKey = useCallback(() => {
+        forgetTmdb();
+        store.update(() => ({ tmdbKey: null }));
     }, []);
 
     const saveBackup = useCallback(() => {
@@ -166,9 +196,29 @@ const SettingsPage = () => {
                     <RowButton label={t('SCARY_SETTINGS_STATS')} href={'#/scary/stats'} />
                 </Row>
             </Group>
+            <Group rowId={'scary-tmdb'} title={t('SCARY_TMDB_DIALOG_TITLE')} description={t('SCARY_TMDB_NOTE')}>
+                <form onSubmit={saveTmdbKey} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', padding: '0.75rem 1rem', alignItems: 'center' }}>
+                    <input
+                        className={styles['text-input']}
+                        type={'password'}
+                        autoComplete={'off'}
+                        spellCheck={false}
+                        maxLength={600}
+                        value={typedKey}
+                        placeholder={tmdbKey !== null ? '••••••••' : t('SCARY_TMDB_HINT')}
+                        aria-label={t('SCARY_SETTINGS_TMDB')}
+                        onChange={(event) => setTypedKey(event.target.value)}
+                    />
+                    <RowButton label={checkingKey ? t('SCARY_TMDB_CHECKING') : t('SCARY_TMDB_SAVE')} variant={'primary'} disabled={checkingKey || typedKey.trim().length === 0} onClick={() => saveTmdbKey()} />
+                    {tmdbKey !== null ? <RowButton label={t('SCARY_TMDB_DELETE')} variant={'danger'} onClick={deleteTmdbKey} /> : null}
+                </form>
+            </Group>
             <Group rowId={'scary-privacy'} title={t('SCARY_PRIVACY')} description={t('SCARY_CONSENT_NOTE')}>
                 <Row rowId={'scary-consent-media'} label={t('SCARY_CONSENT_TRAILERS')} description={t('SCARY_CONSENT_GATE')}>
-                    <Toggle checked={consent.media === true} onClick={() => store.update(() => answerConsent(consent.media !== true))} />
+                    <Toggle checked={consent.media === true} onClick={() => store.update(answerConsent(consent.media !== true))} />
+                </Row>
+                <Row rowId={'scary-consent-voice'} label={t('SCARY_VOICE_SEARCH')} description={t('SCARY_VOICE_TEXT')}>
+                    <Toggle checked={consent.voice} onClick={() => store.update((state) => ({ consent: { ...state.consent, voice: !state.consent.voice } }))} />
                 </Row>
             </Group>
             <Group title={t('SCARY_BACKUP')} description={t('SCARY_BACKUP_NOTE')}>

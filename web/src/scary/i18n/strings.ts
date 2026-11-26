@@ -40,6 +40,12 @@ type ScaryStrings = {
     SCARY_CONSENT_GATE: string,
     SCARY_CONSENT_PLAY: string,
     SCARY_CONSENT_NOTE: string,
+    SCARY_VOICE_TEXT: string,
+    SCARY_VOICE_LISTENING: string,
+    SCARY_SUGGESTIONS: string,
+    SCARY_TMDB_NOTE: string,
+    SCARY_TMDB_SAVED: string,
+    SCARY_STUDIOS: string,
 };
 
 const STRINGS: Record<FeedLanguage, ScaryStrings> = {
@@ -78,6 +84,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_CONSENT_GATE: 'This trailer plays from YouTube. While it plays, YouTube (Google) receives your IP address and details of your device, and may set its own cookies, under Google\'s privacy policy.',
         SCARY_CONSENT_PLAY: 'Allow and play',
         SCARY_CONSENT_NOTE: 'Nothing else on SCARY Web needs your consent: no analytics, no advertising. You can change this answer here at any time; refusing only means trailers do not play.',
+        SCARY_VOICE_TEXT: 'Voice search uses your browser\'s speech service. In most browsers what you say is sent to the browser\'s maker (in Chrome, Google) to be turned into text. Allow voice search?',
+        SCARY_VOICE_LISTENING: 'Listening…',
+        SCARY_SUGGESTIONS: 'From the library',
+        SCARY_TMDB_NOTE: 'With your own TMDB key, a film\'s page shows its cast with pictures, the companies that made it, and where it can be watched, rented or bought in your country; and the home screen shows what is coming to cinemas. The key is kept in this browser and sent only to api.themoviedb.org. TMDB receives the ids of the films you open and your IP address. This product uses the TMDB API but is not endorsed or certified by TMDB.',
+        SCARY_TMDB_SAVED: 'TMDB accepted the key.',
+        SCARY_STUDIOS: 'Made by',
     },
     he: {
         SCARY_SEARCH_FILMS: 'סרטים',
@@ -114,6 +126,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_CONSENT_GATE: 'הטריילר הזה מתנגן מ־YouTube. בזמן הניגון YouTube (Google) מקבלת את כתובת ה־IP שלכם ופרטים על המכשיר, ועשויה לשמור עוגיות משלה, לפי מדיניות הפרטיות של Google.',
         SCARY_CONSENT_PLAY: 'אישור וניגון',
         SCARY_CONSENT_NOTE: 'שום דבר אחר ב־SCARY Web לא דורש את הסכמתכם: אין אנליטיקה ואין פרסום. אפשר לשנות את התשובה כאן בכל רגע; דחייה רק אומרת שטריילרים לא יתנגנו.',
+        SCARY_VOICE_TEXT: 'חיפוש קולי משתמש בשירות הדיבור של הדפדפן. ברוב הדפדפנים מה שאתם אומרים נשלח ליצרן הדפדפן (ב־Chrome, ל־Google) כדי להפוך לטקסט. לאפשר חיפוש קולי?',
+        SCARY_VOICE_LISTENING: 'מקשיבה…',
+        SCARY_SUGGESTIONS: 'מהמאגר',
+        SCARY_TMDB_NOTE: 'עם מפתח TMDB משלכם, עמוד הסרט מציג את השחקנים עם תמונות, את החברות שיצרו אותו, ואיפה אפשר לצפות בו, לשכור או לקנות אותו במדינה שלכם; ומסך הבית מציג מה מגיע בקרוב לקולנוע. המפתח נשמר בדפדפן הזה ונשלח רק ל־api.themoviedb.org. TMDB מקבלת את מזהי הסרטים שאתם פותחים ואת כתובת ה־IP שלכם. המוצר משתמש ב־API של TMDB אך אינו מאושר או מוסמך על ידי TMDB.',
+        SCARY_TMDB_SAVED: 'TMDB אישרה את המפתח.',
+        SCARY_STUDIOS: 'הופק על ידי',
     },
     ar: {
         SCARY_SEARCH_FILMS: 'أفلام',
@@ -150,6 +168,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_CONSENT_GATE: 'هذا الإعلان يُشغَّل من YouTube. أثناء تشغيله يستلم YouTube (Google) عنوان IP الخاص بك وتفاصيل جهازك، وقد يضع ملفات تعريف ارتباط خاصة به، وفق سياسة خصوصية Google.',
         SCARY_CONSENT_PLAY: 'سماح وتشغيل',
         SCARY_CONSENT_NOTE: 'لا شيء آخر في SCARY Web يحتاج موافقتك: لا تحليلات ولا إعلانات. يمكنك تغيير هذا الجواب هنا في أي وقت؛ الرفض يعني فقط أن الإعلانات التشويقية لا تُشغَّل.',
+        SCARY_VOICE_TEXT: 'البحث الصوتي يستخدم خدمة الكلام في متصفحك. في معظم المتصفحات يُرسَل ما تقوله إلى صانع المتصفح (في Chrome إلى Google) ليُحوَّل إلى نص. هل تسمح بالبحث الصوتي؟',
+        SCARY_VOICE_LISTENING: 'أستمع…',
+        SCARY_SUGGESTIONS: 'من المكتبة',
+        SCARY_TMDB_NOTE: 'بمفتاح TMDB خاص بك، تعرض صفحة الفيلم ممثليه مع صورهم والشركات التي أنتجته وأين يمكن مشاهدته أو استئجاره أو شراؤه في بلدك؛ وتعرض الشاشة الرئيسية ما سيُعرض قريبًا في السينما. يُحفظ المفتاح في هذا المتصفح ويُرسل فقط إلى api.themoviedb.org. تستلم TMDB معرّفات الأفلام التي تفتحها وعنوان IP الخاص بك. يستخدم هذا المنتج واجهة TMDB لكنه غير معتمد أو مصدَّق من TMDB.',
+        SCARY_TMDB_SAVED: 'قبلت TMDB المفتاح.',
+        SCARY_STUDIOS: 'من إنتاج',
     },
     pt: {
         SCARY_SEARCH_FILMS: 'Filmes',
@@ -186,6 +210,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_CONSENT_GATE: 'Este trailer toca pelo YouTube. Enquanto toca, o YouTube (Google) recebe seu endereço IP e dados do seu aparelho, e pode gravar cookies próprios, conforme a política de privacidade do Google.',
         SCARY_CONSENT_PLAY: 'Permitir e tocar',
         SCARY_CONSENT_NOTE: 'Nada mais no SCARY Web precisa do seu consentimento: sem análises, sem publicidade. Você pode mudar esta resposta aqui a qualquer momento; recusar só significa que os trailers não tocam.',
+        SCARY_VOICE_TEXT: 'A busca por voz usa o serviço de fala do seu navegador. Na maioria dos navegadores o que você diz é enviado ao fabricante do navegador (no Chrome, ao Google) para virar texto. Permitir a busca por voz?',
+        SCARY_VOICE_LISTENING: 'Ouvindo…',
+        SCARY_SUGGESTIONS: 'Da biblioteca',
+        SCARY_TMDB_NOTE: 'Com a sua própria chave do TMDB, a página do filme mostra o elenco com fotos, as empresas que o fizeram e onde assistir, alugar ou comprar no seu país; e a tela inicial mostra o que está chegando aos cinemas. A chave fica neste navegador e é enviada só para api.themoviedb.org. O TMDB recebe os ids dos filmes que você abre e seu endereço IP. Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.',
+        SCARY_TMDB_SAVED: 'O TMDB aceitou a chave.',
+        SCARY_STUDIOS: 'Produzido por',
     },
     ru: {
         SCARY_SEARCH_FILMS: 'Фильмы',
@@ -222,6 +252,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_CONSENT_GATE: 'Этот трейлер идёт с YouTube. Пока он идёт, YouTube (Google) получает ваш IP-адрес и сведения об устройстве и может сохранять свои cookie согласно политике конфиденциальности Google.',
         SCARY_CONSENT_PLAY: 'Разрешить и смотреть',
         SCARY_CONSENT_NOTE: 'Больше ничего в SCARY Web не требует вашего согласия: ни аналитики, ни рекламы. Ответ можно изменить здесь в любой момент; отказ означает лишь, что трейлеры не идут.',
+        SCARY_VOICE_TEXT: 'Голосовой поиск использует службу распознавания речи вашего браузера. В большинстве браузеров сказанное отправляется разработчику браузера (в Chrome — в Google), чтобы стать текстом. Разрешить голосовой поиск?',
+        SCARY_VOICE_LISTENING: 'Слушаю…',
+        SCARY_SUGGESTIONS: 'Из библиотеки',
+        SCARY_TMDB_NOTE: 'С вашим собственным ключом TMDB страница фильма показывает актёров с фотографиями, компании-производители и где фильм можно посмотреть, взять напрокат или купить в вашей стране; а на главном экране видно, что скоро выйдет в кино. Ключ хранится в этом браузере и отправляется только на api.themoviedb.org. TMDB получает идентификаторы открытых фильмов и ваш IP-адрес. Этот продукт использует API TMDB, но не одобрен и не сертифицирован TMDB.',
+        SCARY_TMDB_SAVED: 'TMDB принял ключ.',
+        SCARY_STUDIOS: 'Производство',
     },
 };
 

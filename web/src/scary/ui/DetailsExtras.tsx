@@ -7,12 +7,13 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { detailsHref, posterOf, titleOf } from '../content/items';
 import { useScaryLibrary } from '../content/library';
-import { isRated } from '../domain/film';
+import { isRated, isSeries } from '../domain/film';
 import { BUCKET_MAX, toggleInList } from '../domain/lists';
 import { qrCode, qrPath } from '../domain/qr';
 import { moreLikeThis } from '../domain/recommender';
 import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
 import { store } from '../state/store';
+import { useTmdbFilm } from '../tmdb/useTmdb';
 import Chip from './Chip';
 import FearMeter from './FearMeter';
 import styles from './scary.less';
@@ -22,6 +23,8 @@ type Link = { category?: string, name?: string, url?: string, href?: string };
 type Props = {
     /** The film's id, when the screen knows it; otherwise it is read from the links. */
     id?: string | null,
+    /** "series" for a series; anything else is a film. */
+    type?: string | null,
     links?: Link[] | null,
 };
 
@@ -38,7 +41,7 @@ const filmIdOf = (links: Link[] | null | undefined): string | null => {
     return null;
 };
 
-const DetailsExtras = ({ id: givenId, links }: Props) => {
+const DetailsExtras = ({ id: givenId, type, links }: Props) => {
     const { t } = useTranslation();
     const language = useFeedLanguage();
     const id = typeof givenId === 'string' && new RegExp(`^${IMDB_ID.source}$`).test(givenId) ? givenId : filmIdOf(links);
@@ -47,6 +50,8 @@ const DetailsExtras = ({ id: givenId, links }: Props) => {
     const rules = useScaryRules(id !== null);
     const film = id !== null ? library.byId.get(id) ?? null : null;
     const similar = useMemo(() => film === null ? [] : moreLikeThis(library.films, film, new Set(notForMe), rules.isHidden).slice(0, 12), [library.films, film, notForMe, rules.isHidden]);
+    const tmdb = useTmdbFilm(id, type === 'series' || (film !== null && isSeries(film)));
+    const offers = tmdb.details?.offers ?? null;
     const qr = useMemo(() => id === null ? null : qrCode(`https://www.imdb.com/title/${id}/`), [id]);
     if (id === null) return null;
     return (
@@ -82,6 +87,47 @@ const DetailsExtras = ({ id: givenId, links }: Props) => {
                         </svg>
                         <span>{t('SCARY_SHARE_SCAN')}</span>
                     </div>
+                    :
+                    null
+            }
+            {
+                tmdb.enabled && tmdb.details !== null ?
+                    <React.Fragment>
+                        <div className={styles['more-title']}>{t('SCARY_RENT_BUY_TITLE', { a: tmdb.country })}</div>
+                        {
+                            offers === null ?
+                                <div className={styles['offers']}>{t('SCARY_RENT_BUY_NONE', { a: tmdb.country })}</div>
+                                :
+                                <dl className={styles['offers']}>
+                                    {offers.included.length > 0 ? <div><dt>{t('SCARY_RENT_BUY_INCLUDED')}</dt><dd>{offers.included.join(' · ')}</dd></div> : null}
+                                    {offers.rent.length > 0 ? <div><dt>{t('SCARY_OFFER_RENT')}</dt><dd>{offers.rent.join(' · ')}</dd></div> : null}
+                                    {offers.buy.length > 0 ? <div><dt>{t('SCARY_OFFER_BUY')}</dt><dd>{offers.buy.join(' · ')}</dd></div> : null}
+                                    <div>
+                                        <dd>
+                                            {offers.link !== null ? <a href={offers.link} target={'_blank'} rel={'noreferrer noopener'}>{t('SCARY_RENT_BUY_CREDIT')}</a> : t('SCARY_RENT_BUY_CREDIT')}
+                                        </dd>
+                                    </div>
+                                </dl>
+                        }
+                        {
+                            tmdb.details.cast.length > 0 ?
+                                <React.Fragment>
+                                    <div className={styles['more-title']}>{t('SCARY_CAST_LABEL').replace(/[:：]\s*$/, '')}</div>
+                                    <ul className={styles['more-strip']}>
+                                        {tmdb.details.cast.map((person) => (
+                                            <li key={`${person.name}:${person.character}`} className={styles['more-film']}>
+                                                {person.photo !== null ? <img src={person.photo} alt={''} loading={'lazy'} referrerPolicy={'no-referrer'} /> : <div className={styles['no-photo']} aria-hidden={'true'}>{person.name.slice(0, 1)}</div>}
+                                                <strong>{person.name}</strong>
+                                                {person.character.length > 0 ? <span>{person.character}</span> : null}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </React.Fragment>
+                                :
+                                null
+                        }
+                        {tmdb.details.studios.length > 0 ? <div className={styles['offers']}>{t('SCARY_STUDIOS')}: {tmdb.details.studios.join(' · ')}</div> : null}
+                    </React.Fragment>
                     :
                     null
             }

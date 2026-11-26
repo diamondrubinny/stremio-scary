@@ -55,6 +55,7 @@ const ICONS: Record<string, Glyph> = {
 
     // Finding and moving about.
     'search': [circle(10.5, 10.5, 6.8), 'M15.5 15.5 21 21'],
+    'mic': ['M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z', 'M6 11a6 6 0 0 0 12 0', 'M12 17v4M8.5 21h7'],
     'close': ['M5 5l14 14M19 5 5 19'],
     'add': ['M12 4v16M4 12h16'],
     'remove': ['M4 12h16'],

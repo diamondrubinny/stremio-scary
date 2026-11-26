@@ -577,3 +577,75 @@
         color: var(--scary-void);
     }
 }
+
+.offers {
+    color: var(--scary-bone-dim);
+    line-height: 1.6;
+    overflow: visible;
+
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        overflow: visible;
+    }
+
+    dt {
+        color: var(--scary-ash);
+
+        &::after {
+            content: ':';
+        }
+    }
+
+    a {
+        color: var(--scary-ash);
+        text-decoration: underline;
+
+        &:hover, &:focus-visible {
+            color: var(--scary-bone);
+        }
+    }
+}
+
+.more-film {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    overflow: visible;
+
+    strong {
+        color: var(--scary-bone);
+        font-size: 0.85rem;
+    }
+
+    .no-photo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 6.5rem;
+        height: 9.5rem;
+        border-radius: var(--border-radius);
+        background-color: var(--overlay-color);
+        color: var(--scary-ash);
+        font-size: 2.5rem;
+        margin-bottom: 0.3rem;
+    }
+}
+
+.text-input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    height: 3rem;
+    padding: 0 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--scary-line);
+    background-color: var(--overlay-color);
+    color: var(--scary-bone);
+    user-select: text;
+
+    &:focus-visible {
+        outline: var(--focus-outline-size) solid var(--scary-bone);
+    }
+}

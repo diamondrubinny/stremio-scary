@@ -36,7 +36,7 @@ const useScaryRules = (wanted = true): Rules => {
     const { familyNight, lock, notForMe } = useScaryState();
     const session = useSession();
     const lockActive = lock.enabled && lock.pin !== null;
-    const library = useScaryLibrary(wanted);
+    const library = useScaryLibrary(wanted || familyNight);
     const unlocked = isUnlocked() && session.unlockedAt !== null;
     const isHidden = useCallback((film: Film | null | undefined) => familyNight && !familyAllows(film), [familyNight]);
     const isLocked = useCallback((film: Film | null | undefined) => needsPin(lockActive, unlocked, lock.fromFear, film), [lockActive, unlocked, lock.fromFear]);

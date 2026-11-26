@@ -69,27 +69,47 @@ describe('home rows', () => {
 });
 
 describe('Discover', () => {
-    test('offers SCARY\'s films and series only', () => {
-        const discover = {
-            catalog: null,
-            selectable: {
-                types: ['movie', 'series', 'channel', 'tv'].map((type) => ({ type, selected: type === 'movie', deepLinks: { discover: `#/discover/x/${type}/top` } })),
-                catalogs: [
-                    { id: 'top', deepLinks: { discover: '#/discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/top' } },
-                    { id: 'scary_slashers', deepLinks: { discover: discoverHref(HE, 'movie', 'scary_slashers') } },
-                ],
-                extra: [],
-            },
-        };
-        const narrowed = narrowDiscover(discover, HE, PAGE);
+    const cinemeta = (id: string) => ({ id, deepLinks: { discover: `#/discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/${id}` } });
+    const discover = {
+        selected: null as { request: { base: string } } | null,
+        catalog: { content: { type: 'Ready', content: [{ id: 'tt0000001' }, { id: 'tt0000002' }] } },
+        selectable: {
+            types: ['movie', 'series', 'channel', 'tv'].map((type) => ({ type, selected: type === 'movie', deepLinks: { discover: `#/discover/x/${type}/top` } })),
+            catalogs: [cinemeta('top'), cinemeta('year'), cinemeta('imdbRating'), { id: 'scary_slashers', deepLinks: { discover: discoverHref(HE, 'movie', 'scary_slashers') } },
+                { id: 'top', deepLinks: { discover: '#/discover/https%3A%2F%2Fevil.example%2Fmanifest.json/movie/top' } }],
+            extra: [{ name: 'genre', isRequired: false, options: [null, 'Comedy', 'Horror', 'Thriller', 'Mystery', 'Drama'].map((value) => ({ value, selected: false, deepLinks: { discover: '#' } })) },
+                { name: 'skip', isRequired: false, options: [] }],
+        },
+    };
+
+    test('offers SCARY\'s films and series, then Cinemeta\'s lists with a genre', () => {
+        const narrowed = narrowDiscover(discover, HE, null, PAGE);
         expect(narrowed.selectable.types.map(({ type, deepLinks }) => [type, deepLinks.discover])).toEqual([
             ['movie', discoverHref(HE, 'movie', 'scary_movies')],
             ['series', discoverHref(HE, 'series', 'scary_series')],
         ]);
-        expect(narrowed.selectable.catalogs.map((catalog) => (catalog as { id: string }).id)).toEqual(['scary_slashers']);
+        expect(narrowed.selectable.catalogs.map((catalog) => [catalog.id, catalog.deepLinks.discover.split('/movie/')[1]])).toEqual([
+            ['scary_slashers', 'scary_slashers'],
+            ['top', 'top?genre=Horror'],
+            ['imdbRating', 'imdbRating?genre=Horror'],
+        ]);
+        // In one of SCARY's own catalogs the filters are left as they are.
         expect(narrowed.selectable.extra).toBe(discover.selectable.extra);
-        expect(narrowDiscover(discover, null, PAGE).selectable.types).toEqual([]);
+        expect(narrowed.catalog).toBe(discover.catalog);
+        expect(narrowDiscover(discover, null, null, PAGE).selectable.types).toEqual([]);
         expect(defaultDiscoverRequest(HE)).toEqual({ base: HE, path: { resource: 'catalog', type: 'movie', id: 'scary_movies', extra: [] } });
+    });
+
+    test('in a Cinemeta list the genre is one of horror, thriller and mystery, and is required', () => {
+        const narrowed = narrowDiscover({ ...discover, selected: { request: { base: 'https://v3-cinemeta.strem.io/manifest.json' } } }, HE, null, PAGE);
+        expect(narrowed.selectable.extra[0]).toMatchObject({ name: 'genre', isRequired: true });
+        expect(narrowed.selectable.extra[0].options.map(({ value }) => value)).toEqual(['Horror', 'Thriller', 'Mystery']);
+        expect(narrowed.selectable.extra[1]).toBe(discover.selectable.extra[1]);
+    });
+
+    test('family night takes films out of what is shown', () => {
+        const narrowed = narrowDiscover(discover, HE, (id) => id !== 'tt0000002', PAGE);
+        expect(narrowed.catalog.content.content).toEqual([{ id: 'tt0000002' }]);
     });
 });
 

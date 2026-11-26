@@ -27,6 +27,20 @@ describe('network guard', () => {
         expect(isBlockedUrl('https://v3-cinemeta.strem.io/manifest.json')).toBe(false);
     });
 
+    test('lets Cinemeta\'s horror, thriller and mystery lists through, and the viewer\'s own series', () => {
+        const base = 'https://v3-cinemeta.strem.io/catalog';
+        for (const allowed of ['movie/top/genre=Horror.json', 'series/top/genre=Thriller.json', 'movie/imdbRating/genre=Mystery.json',
+            'movie/top/genre=Horror&skip=100.json', 'movie/top/skip=200&genre=Horror.json', 'movie/top/genre%3DHorror%26skip%3D100.json',
+            'series/calendar-videos/calendarVideosIds=tt1,tt2.json', 'series/last-videos/lastVideosIds=tt1.json']) {
+            expect([allowed, isBlockedUrl(`${base}/${allowed}`)]).toEqual([allowed, false]);
+        }
+        for (const blocked of ['movie/top/genre=Comedy.json', 'movie/top/genre=Horror&search=x.json', 'movie/top/genre=Horror&genre=Comedy.json',
+            'movie/top/skip=100.json', 'movie/year/genre=2026.json', 'movie/top/genre=Horror/extra.json', 'movie/top/genre=horror.json',
+            'channel/top/genre=Horror.json', 'movie/top/genre=Horror&skip=1e9.json', 'movie/top/%E0%A4%A.json']) {
+            expect([blocked, isBlockedUrl(`${base}/${blocked}`)]).toEqual([blocked, true]);
+        }
+    });
+
     test('is not fooled by look-alike addresses', () => {
         expect(isBlockedUrl('https://api.strem.io.example.org/api/getGeo')).toBe(false);
         expect(isBlockedUrl('https://example.org/api.strem.io')).toBe(false);

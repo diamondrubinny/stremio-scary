@@ -14,7 +14,8 @@ const TextInput = require('stremio/components/TextInput').default;
 const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useSearchHistory = require('./useSearchHistory');
-const useLocalSearch = require('./useLocalSearch');
+const { default: useLocalSearch } = require('stremio/scary/content/useScaryLocalSearch');
+const { default: ScaryVoiceButton } = require('stremio/scary/ui/VoiceButton');
 const styles = require('./styles');
 const useBinaryState = require('stremio/common/useBinaryState');
 
@@ -129,6 +130,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         <Icon className={styles['icon']} name={'search'} />
                     </Button>
             }
+            <ScaryVoiceButton className={styles['submit-button-container']} iconClassName={styles['icon']} />
             {
                 historyOpen && (searchHistory?.items?.length || localSearch?.items?.length) ?
                     <div className={styles['menu-container']}>
