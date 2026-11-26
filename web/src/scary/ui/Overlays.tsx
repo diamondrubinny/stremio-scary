@@ -19,7 +19,7 @@ import { filmIdOfPath, isPlayerPath } from '../domain/paths';
 import { isValidPin, verifyPin } from '../domain/pin';
 import { useFeedLanguage, useScaryRules, useScaryState, useSession } from '../hooks';
 import { askPin, isUnlocked, setSleepTimer, unlock } from '../state/session';
-import { store } from '../state/store';
+import { answerConsent, store } from '../state/store';
 import Chip from './Chip';
 import styles from './scary.less';
 
@@ -320,6 +320,26 @@ const useAmbientSound = (enabled: boolean): void => {
     }, [enabled]);
 };
 
+/**
+ * Asks once, on the first visit, about the one thing that comes from outside. Allowing and refusing are equally easy,
+ * nothing is chosen in advance, and the answer can be changed in the settings at any time.
+ */
+const ConsentBanner = () => {
+    const { t } = useTranslation();
+    const { consent } = useScaryState();
+    if (consent.media !== null) return null;
+    return (
+        <section className={styles['consent']} role={'region'} aria-label={t('SCARY_PRIVACY')}>
+            <p className={styles['consent-text']}>{t('SCARY_CONSENT_TEXT')}</p>
+            <div className={styles['consent-actions']}>
+                <Chip label={t('SCARY_CONSENT_ALLOW')} onClick={() => store.update(() => answerConsent(true))} />
+                <Chip label={t('SCARY_CONSENT_REFUSE')} onClick={() => store.update(() => answerConsent(false))} />
+                <Chip label={t('SCARY_CONSENT_MANAGE')} quiet={true} href={'#/settings/scary'} />
+            </div>
+        </section>
+    );
+};
+
 const Overlays = () => {
     const { t } = useTranslation();
     const location = useLocation();
@@ -359,6 +379,7 @@ const Overlays = () => {
             <Gate filmId={filmId} />
             <BucketPrompt filmId={filmId} playing={playing} />
             <PinDialog />
+            {!playing ? <ConsentBanner /> : null}
         </React.Fragment>
     );
 };

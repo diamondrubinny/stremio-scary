@@ -9,6 +9,7 @@ import { detailsHref, posterOf, titleOf } from '../content/items';
 import { useScaryLibrary } from '../content/library';
 import { isRated } from '../domain/film';
 import { BUCKET_MAX, toggleInList } from '../domain/lists';
+import { qrCode, qrPath } from '../domain/qr';
 import { moreLikeThis } from '../domain/recommender';
 import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
 import { store } from '../state/store';
@@ -46,6 +47,7 @@ const DetailsExtras = ({ id: givenId, links }: Props) => {
     const rules = useScaryRules(id !== null);
     const film = id !== null ? library.byId.get(id) ?? null : null;
     const similar = useMemo(() => film === null ? [] : moreLikeThis(library.films, film, new Set(notForMe), rules.isHidden).slice(0, 12), [library.films, film, notForMe, rules.isHidden]);
+    const qr = useMemo(() => id === null ? null : qrCode(`https://www.imdb.com/title/${id}/`), [id]);
     if (id === null) return null;
     return (
         <div className={styles['details-extras']}>
@@ -72,6 +74,17 @@ const DetailsExtras = ({ id: givenId, links }: Props) => {
                         null
                 }
             </div>
+            {
+                qr !== null ?
+                    <div className={styles['qr']}>
+                        <svg viewBox={`-2 -2 ${qr.length + 4} ${qr.length + 4}`} role={'img'} aria-label={t('SCARY_SHARE_SCAN')} shapeRendering={'crispEdges'}>
+                            <path d={qrPath(qr)} fill={'currentColor'} />
+                        </svg>
+                        <span>{t('SCARY_SHARE_SCAN')}</span>
+                    </div>
+                    :
+                    null
+            }
             {
                 similar.length > 0 ?
                     <React.Fragment>

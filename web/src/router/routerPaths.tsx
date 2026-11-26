@@ -6,6 +6,7 @@ import { PLAYER_PATH, META_DETAILS_PATH, LEGACY_META_DETAILS_PATH } from './getB
 
 import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
 import ScaryPages from 'stremio/scary/ui/Pages';
+import ScaryPlayerGate from 'stremio/scary/ui/PlayerGate';
 
 export default [
     ...(ACCOUNTS_ENABLED ? [{
@@ -66,7 +67,7 @@ export default [
     {
         path: PLAYER_PATH,
         view: 4,
-        element: <routes.Player />,
+        element: <ScaryPlayerGate><routes.Player /></ScaryPlayerGate>,
     },
     {
         path: '/',

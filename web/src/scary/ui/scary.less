@@ -525,3 +525,55 @@
         height: 1.3rem;
     }
 }
+
+// The consent question: a band at the bottom that covers nothing essential and never blocks the app.
+.consent {
+    position: fixed;
+    inset-inline: 1rem;
+    bottom: 1rem;
+    z-index: 55;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--scary-line);
+    background-color: var(--scary-crypt);
+    box-shadow: 0 0 2rem var(--scary-void);
+    overflow: visible;
+
+    .consent-text {
+        flex: 1 1 24rem;
+        color: var(--scary-bone);
+        line-height: 1.5;
+    }
+
+    .consent-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        overflow: visible;
+    }
+}
+
+.qr {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--scary-ash);
+    font-size: 0.9rem;
+    overflow: visible;
+
+    svg {
+        flex: none;
+        width: 5.5rem;
+        height: 5.5rem;
+        padding: 0.4rem;
+        border-radius: 0.3rem;
+        // A QR code is read as dark on light: bone under black, whatever the theme.
+        background-color: var(--scary-bone);
+        color: var(--scary-void);
+    }
+}

@@ -3,7 +3,7 @@
 
 import { filmIdOfPath, isPlayerPath } from '../../src/scary/domain/paths';
 import { createBackup, readBackup, restoreBackup } from '../../src/scary/state/backup';
-import { DEFAULT_STATE, STORAGE_KEY, createStore, sanitize } from '../../src/scary/state/store';
+import { CONSENT_VERSION, DEFAULT_STATE, STORAGE_KEY, answerConsent, createStore, sanitize } from '../../src/scary/state/store';
 
 const memoryStorage = (initial: Record<string, string> = {}) => {
     const data = new Map(Object.entries(initial));
@@ -38,6 +38,15 @@ describe('the saved state', () => {
         expect(sanitize({ lock: { enabled: true, fromFear: 3, pin: null } }).lock).toEqual({ enabled: false, fromFear: 3, pin: null });
         expect(sanitize({ lock: { enabled: true, fromFear: 9, pin: 'javascript:alert(1)' } }).lock).toEqual({ enabled: false, fromFear: 4, pin: null });
         expect(sanitize({ lock: { enabled: true, fromFear: 2, pin: PIN } }).lock).toEqual({ enabled: true, fromFear: 2, pin: PIN });
+    });
+
+    test('consent is unanswered until the viewer answers, and an answer to an older text does not count', () => {
+        expect(DEFAULT_STATE.consent).toEqual({ media: null, at: null, version: CONSENT_VERSION });
+        expect(sanitize({ consent: { media: true } }).consent.media).toBeNull();
+        expect(sanitize({ consent: { media: 'yes', at: 5, version: CONSENT_VERSION } }).consent.media).toBeNull();
+        expect(sanitize({ consent: { media: true, at: 5, version: CONSENT_VERSION - 1 } }).consent).toEqual({ media: null, at: null, version: CONSENT_VERSION });
+        expect(sanitize(answerConsent(true, 1_700_000_000_000)).consent).toEqual({ media: true, at: 1_700_000_000_000, version: CONSENT_VERSION });
+        expect(sanitize(answerConsent(false, 7)).consent).toEqual({ media: false, at: 7, version: CONSENT_VERSION });
     });
 
     test('a change is checked, saved and announced', () => {

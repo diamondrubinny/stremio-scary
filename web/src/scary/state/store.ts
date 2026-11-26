@@ -27,7 +27,15 @@ type ScaryState = {
     /** Films opened in the player, newest last. */
     history: Watch[],
     effects: { atmosphere: boolean, shiver: boolean, sound: boolean, screensaver: boolean, seasonal: boolean },
+    /**
+     * What the viewer said about content from outside: trailers play from YouTube (Google). `media` is null until
+     * they answer, and nothing from YouTube loads unless it is true. `at` is when they answered.
+     */
+    consent: { media: boolean | null, at: number | null, version: number },
 };
+
+/** The version of the privacy text the consent was given to. A new version asks again. */
+const CONSENT_VERSION = 1;
 
 const DEFAULT_STATE: ScaryState = {
     familyNight: false,
@@ -39,6 +47,7 @@ const DEFAULT_STATE: ScaryState = {
     history: [],
     // Sound starts off: a browser page that makes noise by itself is not welcome.
     effects: { atmosphere: true, shiver: true, sound: false, screensaver: true, seasonal: true },
+    consent: { media: null, at: null, version: CONSENT_VERSION },
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -54,6 +63,9 @@ const sanitize = (value: unknown): ScaryState => {
     const lock = isRecord(raw.lock) ? raw.lock : {};
     const lockout = isRecord(raw.lockout) ? raw.lockout : {};
     const effects = isRecord(raw.effects) ? raw.effects : {};
+    const consent = isRecord(raw.consent) ? raw.consent : {};
+    // An answer given to an older privacy text does not count for this one.
+    const answered = typeof consent.media === 'boolean' && consent.version === CONSENT_VERSION;
     const pin = typeof lock.pin === 'string' && PIN_HASH.test(lock.pin) ? lock.pin : null;
     return {
         familyNight: flag(raw.familyNight, DEFAULT_STATE.familyNight),
@@ -73,6 +85,11 @@ const sanitize = (value: unknown): ScaryState => {
             sound: flag(effects.sound, DEFAULT_STATE.effects.sound),
             screensaver: flag(effects.screensaver, DEFAULT_STATE.effects.screensaver),
             seasonal: flag(effects.seasonal, DEFAULT_STATE.effects.seasonal),
+        },
+        consent: {
+            media: answered ? consent.media as boolean : null,
+            at: answered ? whole(consent.at, 1, Number.MAX_SAFE_INTEGER, 0) || null : null,
+            version: CONSENT_VERSION,
         },
     };
 };
@@ -123,5 +140,8 @@ const browserStorage = (): Storage | null => {
 
 const store = createStore(browserStorage());
 
-export { DEFAULT_STATE, SLEEP_MINUTES, STORAGE_KEY, createStore, sanitize, store };
+/** Records the viewer's answer about content from outside, and when it was given. */
+const answerConsent = (media: boolean, now: number = Date.now()): Partial<ScaryState> => ({ consent: { media, at: now, version: CONSENT_VERSION } });
+
+export { CONSENT_VERSION, DEFAULT_STATE, SLEEP_MINUTES, STORAGE_KEY, answerConsent, createStore, sanitize, store };
 export type { ScaryState, Watch };

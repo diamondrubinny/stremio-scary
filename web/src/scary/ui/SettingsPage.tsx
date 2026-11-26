@@ -13,7 +13,7 @@ import { hashPin } from '../domain/pin';
 import { useScaryState, useSession } from '../hooks';
 import { createBackup, readBackup, restoreBackup } from '../state/backup';
 import { askPin, lockAgain, setSleepTimer } from '../state/session';
-import { SLEEP_MINUTES, store } from '../state/store';
+import { SLEEP_MINUTES, answerConsent, store } from '../state/store';
 import type { ScaryState } from '../state/store';
 
 type Effect = keyof ScaryState['effects'];
@@ -21,7 +21,7 @@ type Effect = keyof ScaryState['effects'];
 const SettingsPage = () => {
     const { t } = useTranslation();
     const toast = useToast();
-    const { familyNight, lock, effects, bucket, loved } = useScaryState();
+    const { familyNight, lock, effects, bucket, loved, consent } = useScaryState();
     const { sleepUntil } = useSession();
     const fileInput = useRef<HTMLInputElement>(null);
     const [, setTick] = useState(0);
@@ -157,6 +157,11 @@ const SettingsPage = () => {
                 </Row>
                 <Row rowId={'scary-stats'} label={t('SCARY_SETTINGS_STATS')}>
                     <RowButton label={t('SCARY_SETTINGS_STATS')} href={'#/scary/stats'} />
+                </Row>
+            </Group>
+            <Group rowId={'scary-privacy'} title={t('SCARY_PRIVACY')} description={t('SCARY_CONSENT_NOTE')}>
+                <Row rowId={'scary-consent-media'} label={t('SCARY_CONSENT_TRAILERS')} description={t('SCARY_CONSENT_GATE')}>
+                    <Toggle checked={consent.media === true} onClick={() => store.update(() => answerConsent(consent.media !== true))} />
                 </Row>
             </Group>
             <Group title={t('SCARY_BACKUP')} description={t('SCARY_BACKUP_NOTE')}>
