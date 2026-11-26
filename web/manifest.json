@@ -1,9 +1,9 @@
 {
-    "name": "Stremio Web",
-    "short_name": "Stremio",
-    "description": "Freedom To Stream",
-    "background_color": "#0c0b11",
-    "theme_color": "#2a2843",
+    "name": "SCARY Web",
+    "short_name": "SCARY",
+    "description": "A horror cinema in your browser. No account, no ads, no tracking.",
+    "background_color": "#0a0b0b",
+    "theme_color": "#0a0b0b",
     "orientation": "any",
     "display": "standalone",
     "display_override": ["standalone"],
@@ -30,8 +30,8 @@
     ],
     "icons": [
         {
-            "src": "favicons/icon_256x256.ico",
-            "sizes": "256x256",
+            "src": "favicons/favicon.ico",
+            "sizes": "16x16 32x32 48x48",
             "type": "image/vnd.microsoft.icon"
         },
         {

@@ -23,7 +23,14 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 ## קבצי upstream שנגענו בהם
 | קובץ | מה שונה | למה |
 |---|---|---|
-| *(עדיין אין)* | | |
+| `web/webpack.config.js` | כניסת ה-worker → `src/scary/worker.ts`; הוסרה העתקת `.well-known` | "שומר הרשת" נטען לפני ה-core; לא משייכים את הדומיין לאפליקציית iOS של Stremio |
+| `web/.well-known/` | נמחק | כנ"ל |
+| `web/src/index.js` | שורה אחת: `require('./scary')` | נקודת הכניסה של שכבת SCARY |
+| `web/src/index.html` | כותרת, תיאור, `lang`/`dir`, צבע; הוסרו סקריפט Chromecast (gstatic) וסקריפט Apple ID; בוטלה נעילת הזום | מיתוג, פרטיות, נגישות |
+| `web/manifest.json` | שם, תיאור, צבעים, אייקון | מיתוג |
+| `web/assets/images/*`, `web/assets/favicons/favicon.ico` | התוכן הוחלף (אותם שמות קבצים) ע"י `scripts/make-brand-assets.py` | מיתוג בלי לגעת בקוד |
+| `web/tests/copyright.spec.js` | מדלג על `src/scary` | לקבצי SCARY כותרת רישיון משלהם (נבדקת ב-`tests/scary/credit.test.js`) |
+| `web/jest.config.js` | קובץ חדש | הרצת בדיקות TypeScript בלי תלות חדשה |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

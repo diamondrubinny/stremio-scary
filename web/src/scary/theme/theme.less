@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
+
+// SCARY's look, laid over Stremio Web's own variables (src/App/styles.less). The palette and the fonts are the ones
+// of SCARY for Android TV (ui/theme/Theme.kt): void black, bone, blood.
+
+@void: rgb(10, 11, 11);
+@crypt: rgb(15, 15, 15);
+@bone: rgb(233, 225, 207);
+@ash: rgb(163, 158, 146);
+@blood: rgb(142, 27, 27);
+@blood-dim: rgb(58, 34, 34);
+// Between blood and SCARY's accent: at least 3:1 against the void as an icon, and against bone text as a surface.
+@accent: rgb(200, 48, 48);
+
+@font-face {
+    font-family: 'Assistant';
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Assistant-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Assistant';
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Assistant-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rubik';
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Rubik-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rubik';
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Rubik-Bold.ttf') format('truetype');
+}
+
+// Arabic only: the browser fetches Cairo when Arabic text is on the screen.
+@font-face {
+    font-family: 'Cairo';
+    font-weight: 400;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    src: url('/assets/fonts/scary/Cairo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-weight: 700;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    src: url('/assets/fonts/scary/Cairo-Bold.ttf') format('truetype');
+}
+
+// `html:root` outranks Stremio Web's `:root` and `html` rules whatever the order of the style sheets.
+html:root {
+    --primary-background-color: @void;
+    --secondary-background-color: rgb(34, 14, 14);
+    --primary-foreground-color: fade(@bone, 92%);
+    --secondary-foreground-color: @void;
+    --primary-accent-color: @accent;
+    --overlay-color: fade(@bone, 6%);
+    --modal-background-color: @crypt;
+    --outer-glow: 0px 0px 15px fade(@accent, 37%);
+    --color-placeholder: fade(@ash, 50%);
+    --border-radius: 0.5rem;
+    --scary-void: @void;
+    --scary-bone: @bone;
+    --scary-ash: @ash;
+    --scary-blood: @blood;
+    --scary-blood-dim: @blood-dim;
+
+    // Assistant for Latin and Hebrew, Rubik for Cyrillic, Cairo for Arabic: each letter takes the first font that has it.
+    font-family: 'Assistant', 'Rubik', 'Cairo', 'Arial', 'Helvetica', 'TwemojiFlags', sans-serif;
+}

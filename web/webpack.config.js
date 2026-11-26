@@ -38,7 +38,7 @@ module.exports = (env, argv) => ({
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     entry: {
         main: './src/index.js',
-        worker: './node_modules/@stremio/stremio-core-web/worker.js'
+        worker: './src/scary/worker.ts'
     },
     output: {
         path: path.join(__dirname, 'build'),
@@ -238,7 +238,6 @@ module.exports = (env, argv) => ({
                 { from: 'assets/favicons', to: 'favicons' },
                 { from: 'assets/images', to: 'images' },
                 { from: 'assets/screenshots/*.webp', to: 'screenshots/[name][ext]' },
-                { from: '.well-known', to: '.well-known' },
                 { from: 'manifest.json', to: 'manifest.json' },
             ]
         }),
