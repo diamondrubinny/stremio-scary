@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import useModelState from 'stremio/common/useModelState';
+import { isScaryTransportUrl } from 'stremio/scary/content/addon';
 
 const useBoardCatalogs = (all: boolean): BoardCatalogs => {
     const action = useMemo(() => ({
@@ -11,7 +12,12 @@ const useBoardCatalogs = (all: boolean): BoardCatalogs => {
             args: { all },
         },
     }), [all]);
-    return useModelState({ model: 'board_catalogs', action, deps: ['ctx'] }) as BoardCatalogs;
+    const boardCatalogs = useModelState({ model: 'board_catalogs', action, deps: ['ctx'] }) as BoardCatalogs;
+    // SCARY: the spotlight chooses among SCARY's own rows.
+    return useMemo(() => ({
+        ...boardCatalogs,
+        catalogs: (boardCatalogs.catalogs ?? []).filter(({ request }) => isScaryTransportUrl(request?.base)),
+    }), [boardCatalogs]);
 };
 
 export default useBoardCatalogs;

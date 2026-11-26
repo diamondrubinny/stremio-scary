@@ -6,7 +6,8 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { ALL_CATALOG, PAGE_SIZE, buildAll, buildLanguage, toMeta } from '../src/addon.ts';
 import type { Manifest, MetaPreview } from '../src/addon.ts';
-import { LANGUAGES, ROW_LABELS, SUBGENRE_LABELS } from '../src/labels.ts';
+import { LANGUAGES, MOOD_LABELS, ROW_LABELS, SUBGENRE_LABELS } from '../src/labels.ts';
+import { MAX_MOOD_FILMS, pickMoods } from '../src/moods.ts';
 import { FeedError, MIN_FILMS, parseFearLevels, parseFeed } from '../src/validate.ts';
 
 const YEAR = 2026;
@@ -129,8 +130,28 @@ test('pages: both orders of skip and genre, and an empty page at the end', () =>
     assert.deepEqual(manifest.resources, ['catalog']);
 });
 
+test('moods pick only hand-rated films, by SCARY\'s rules', () => {
+    const fear = new Map<string, number>();
+    const films = Array.from({ length: MIN_FILMS }, (_, n) => {
+        // The first 300 films are rated 1 to 5 in turn; every third of them is a slasher, every fourth a ghost story.
+        if (n < 300) fear.set(imdb(n + 1), n % 5 + 1);
+        return film(n + 1, { y: n < 20 ? 1975 : 2005, m: 60 + n % 100, s: [...(n % 3 === 0 ? ['slasher'] : []), ...(n % 4 === 0 ? ['ghost'] : [])] });
+    });
+    const feed = parse(feedOf([...films, film(950_001, { k: 'series' })]), new Map([...fear, [imdb(950_001), 5]]));
+    const moods = new Map(pickMoods(feed.films).map((mood) => [mood.id, mood.films]));
+    assert.deepEqual([...moods.keys()], ['gentle', 'ghosts', 'blood', 'classics', 'relentless', 'short']);
+    assert.ok(moods.get('gentle')!.every((entry) => entry.fear !== null && entry.fear <= 2));
+    assert.ok(moods.get('blood')!.every((entry) => entry.fear! >= 3 && entry.subgenres.includes('slasher')));
+    assert.ok(moods.get('ghosts')!.every((entry) => entry.subgenres.includes('ghost')));
+    assert.equal(moods.get('classics')!.length, 20);
+    assert.equal(moods.get('relentless')![0].fear, 5);
+    assert.ok(moods.get('short')!.every((entry) => entry.minutes <= 90));
+    assert.ok(moods.get('short')![0].minutes <= moods.get('short')!.at(-1)!.minutes);
+    assert.ok([...moods.values()].every((list) => list.length <= MAX_MOOD_FILMS && list.every((entry) => entry.type === 'movie')));
+});
+
 test('every label exists in every language', () => {
-    for (const labels of [...Object.values(ROW_LABELS), ...Object.values(SUBGENRE_LABELS)]) {
+    for (const labels of [...Object.values(ROW_LABELS), ...Object.values(SUBGENRE_LABELS), ...Object.values(MOOD_LABELS)]) {
         for (const language of LANGUAGES) assert.ok(labels[language].trim().length > 0);
     }
 });
@@ -146,7 +167,7 @@ test('the bundled feed builds, in every language', () => {
     const files = buildAll(feed);
     for (const language of LANGUAGES) {
         const manifest = files.get(`${language}/manifest.json`) as Manifest;
-        assert.equal(manifest.catalogs.length, feed.rows.length + 2);
+        assert.equal(manifest.catalogs.length, feed.rows.length + pickMoods(feed.films).length + 2);
         for (const catalog of manifest.catalogs) {
             assert.ok(files.has(`${language}/catalog/${catalog.type}/${catalog.id}.json`), `${language}/${catalog.id}`);
             for (const option of catalog.extra?.find((extra) => extra.name === 'genre')?.options ?? []) {

@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
+
+// Stands in for Stremio's palette file (webpack.config.js maps its name to this one), so the few styles of
+// Stremio Web that take a colour straight from that palette get SCARY's instead, without touching those styles.
+// Every name of the original stays defined; the ones Stremio Web uses are given again below, in SCARY's colours.
+
+@import (reference) '../../../node_modules/@stremio/stremio-colors/less/stremio-colors.less';
+
+@scary-void: rgb(0, 0, 0);
+@scary-bone: rgb(233, 225, 207);
+@scary-bone-dim: rgb(207, 200, 184);
+@scary-ash: rgb(163, 158, 146);
+@scary-blood: rgb(142, 27, 27);
+@scary-accent: rgb(217, 64, 64);
+
+// Backgrounds: black, never purple.
+@color-background: rgb(15, 15, 15);
+@color-background-dark5: @scary-void;
+@color-background-dark5-20: fade(@scary-void, 20%);
+@color-background-dark5-40: fade(@scary-void, 40%);
+@color-background-dark5-60: fade(@scary-void, 60%);
+
+// Surfaces and text: bone, never white.
+@color-surface-light5: @scary-bone;
+@color-surface-light5-10: fade(@scary-bone, 10%);
+@color-surface-light5-20: fade(@scary-bone, 20%);
+@color-surface-light5-90: fade(@scary-bone, 90%);
+@color-surface-50: fade(@scary-ash, 50%);
+@color-surface-dark5-20: fade(@scary-ash, 20%);
+
+// Stremio's blues and purple: secondary words are ash, a mark is the one red.
+@color-secondaryvariant1-light4: @scary-bone-dim;
+@color-secondaryvariant2-light1-90: @scary-ash;
+@color-primary-light2: @scary-blood;
+
+// Stremio's green and gold: in SCARY what is lit is bone, and a warning is blood.
+@color-accent3: @scary-bone;
+@color-accent5: @scary-accent;
+@color-accent5-90: fade(@scary-accent, 90%);
+@color-accent5-dark3: @scary-blood;

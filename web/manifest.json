@@ -2,8 +2,8 @@
     "name": "SCARY Web",
     "short_name": "SCARY",
     "description": "A horror cinema in your browser. No account, no ads, no tracking.",
-    "background_color": "#0a0b0b",
-    "theme_color": "#0a0b0b",
+    "background_color": "#000000",
+    "theme_color": "#000000",
     "orientation": "any",
     "display": "standalone",
     "display_override": ["standalone"],
@@ -71,14 +71,14 @@
             "sizes": "1440x900",
             "type": "image/webp",
             "form_factor": "wide",
-            "label": "Homescreen of Stremio"
+            "label": "The home screen of SCARY Web"
         },
         {
             "src": "screenshots/board_narrow.webp",
             "sizes": "414x896",
             "type": "image/webp",
             "form_factor": "narrow",
-            "label": "Homescreen of Stremio"
+            "label": "The home screen of SCARY Web"
         }
     ]
 }

@@ -45,6 +45,10 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/common/interfaceLanguages.json` | 6 שפות ממשק במקום 50+ | חמש השפות של SCARY (פורטוגזית בשתי גרסאות) |
 | `web/package.json`, `web/pnpm-lock.yaml` | נוסף `postcss-rtlcss` 6.0.0 | RTL בזמן בנייה |
 | `web/webpack.config.js` (נוסף) | `postcss-rtlcss` בשרשרת ה-PostCSS | RTL |
+| `web/webpack.config.js` (נוסף) | שלושה `alias`: קובץ הפלטה של Stremio → `src/scary/theme/stremio-colors.less`; `@stremio/stremio-icons/react` → `src/scary/icons`; `stremio-icons-original` → הערכה המקורית | צבעי SCARY ואייקוני SCARY בכל המסכים בלי לגעת בהם |
+| `web/src/routes/Settings/Interface/SpotlightSettings/useBoardCatalogs.ts` | סינון לקטלוגי SCARY | בורר הספוטלייט מציע רק שורות של SCARY |
+| `web/assets/images/*` (נוסף) | איורים מקוריים במקום הקמע של Stremio ותמונת Big Buck Bunny | `scripts/render-illustrations.cjs` מ-`brand/illustrations/` |
+| `web/assets/screenshots/*` | צילומי מסך של SCARY Web במקום של Stremio | מופיעים בחלון ההתקנה של ה-PWA |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

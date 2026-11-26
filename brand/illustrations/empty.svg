@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300" fill="none" stroke="#E9E1CF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Nothing here: a web in the corner, and the one who lives in it. -->
+  <g opacity="0.7">
+    <path d="M20 20 280 40M20 20l230 110M20 20l150 200M20 20l40 250"/>
+    <path d="M98 26Q75 35 89 53 63 55 65 80 41 71 32 95"/>
+    <path d="M163 31Q121 47 146.5 80.5 98 84 102.5 130 59 113 42 157.5"/>
+    <path d="M228 36Q167 59 204 108 134 113 140 180 77 155 52 220"/>
+  </g>
+  <path d="M196 118v78" stroke-width="2"/>
+  <g stroke-width="2.6">
+    <path d="M188 214l-18-9-7 9M187 220h-20l-8 10M188 226l-16 9-4 11M191 231l-10 13-1 11"/>
+    <path d="M204 214l18-9 7 9M205 220h20l8 10M204 226l16 9 4 11M201 231l10 13 1 11"/>
+  </g>
+  <circle cx="196" cy="203" r="6" fill="#E9E1CF"/>
+  <ellipse cx="196" cy="222" rx="10.5" ry="12.5" fill="#D94040" stroke="#D94040"/>
+</svg>

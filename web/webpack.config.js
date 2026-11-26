@@ -187,6 +187,11 @@ module.exports = (env, argv) => ({
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.json', '.less', '.wasm'],
         alias: {
+            // SCARY: Stremio's palette file is answered by SCARY's (src/scary/theme/stremio-colors.less).
+            '@stremio/stremio-colors/less/stremio-colors.less$': path.resolve(__dirname, 'src', 'scary', 'theme', 'stremio-colors.less'),
+            // SCARY: its own icons answer for Stremio's (src/scary/icons); the original set stays reachable by another name.
+            '@stremio/stremio-icons/react$': path.resolve(__dirname, 'src', 'scary', 'icons', 'index.tsx'),
+            'stremio-icons-original$': require.resolve('@stremio/stremio-icons/react'),
             'stremio': path.resolve(__dirname, 'src'),
             'stremio-router': path.resolve(__dirname, 'src', 'router')
         }

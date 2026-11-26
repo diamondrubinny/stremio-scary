@@ -26,8 +26,30 @@ const addBundle = (language: FeedLanguage, strings: Record<string, string>): voi
     }
 };
 
+/**
+ * Stremio Web's own sentences name the app ("A new version of Stremio is available"). This app is SCARY, so in the
+ * interface languages every such sentence names SCARY. Add-ons, and Stremio's own services, are named by their data
+ * and are not touched.
+ */
+const renameApp = (): void => {
+    for (const code of Object.values(INTERFACE_CODES).flat()) {
+        const bundle = i18n.getResourceBundle(code, 'translation') as Record<string, unknown> | undefined;
+        if (!bundle) continue;
+        const renamed: Record<string, string> = {};
+        for (const [key, value] of Object.entries(bundle)) {
+            if (typeof value === 'string' && /stremio/i.test(value) && !key.startsWith('SCARY_')) {
+                renamed[key] = value.replace(/Stremio/g, 'SCARY');
+            }
+        }
+        i18n.addResourceBundle(code, 'translation', renamed, true, true);
+    }
+};
+
 const addScaryStrings = (): void => {
-    const add = () => FEED_LANGUAGES.forEach((language) => addBundle(language, STRINGS[language]));
+    const add = () => {
+        renameApp();
+        FEED_LANGUAGES.forEach((language) => addBundle(language, STRINGS[language]));
+    };
     if (i18n.isInitialized) add();
     else i18n.on('initialized', add);
 };

@@ -58,7 +58,6 @@ const Help = ({ streamingServer }: Props) => {
                 <LinkRow label={t('SCARY_LICENSE')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/NOTICE`} />
                 <LinkRow label={t('SCARY_BASED_ON')} href={'https://github.com/Stremio/stremio-web'} />
                 <LinkRow label={'Powered by SCARY · Open source'} href={'https://github.com/diamondrubinny/Scary'} />
-                <LinkRow label={'Big Buck Bunny © 2008 Blender Foundation · CC BY 3.0'} href={'https://peach.blender.org/about/'} />
             </Group>
         </React.Fragment>
     );

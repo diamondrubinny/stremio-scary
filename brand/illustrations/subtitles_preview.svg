@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- The picture behind the subtitles preview: a house on a hill, a moon, one lit window. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset="0.65" stop-color="#1a0c0c"/>
+      <stop offset="1" stop-color="#2a1010"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#E9E1CF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#E9E1CF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky)"/>
+  <circle cx="960" cy="200" r="260" fill="url(#glow)"/>
+  <circle cx="960" cy="200" r="112" fill="#E9E1CF"/>
+  <circle cx="925" cy="170" r="18" fill="#CFC8B8"/><circle cx="1000" cy="235" r="26" fill="#CFC8B8"/><circle cx="990" cy="150" r="10" fill="#CFC8B8"/>
+  <g fill="#0b0b0b">
+    <path d="M840 150c12-15 24-15 31-3 4-8 7-11 10-11s6 3 10 11c7-12 19-12 31 3-16-3-23 5-26 16-5-8-10-11-15-11s-10 3-15 11c-3-11-10-19-26-16z"/>
+    <path d="M1060 110c8-10 16-10 21-2 2-5 4-7 6-7s4 2 6 7c5-8 13-8 21 2-10-2-15 3-17 10-3-5-6-7-10-7s-7 2-10 7c-2-7-7-12-17-10z"/>
+  </g>
+  <path d="M0 720V560C180 500 330 470 520 470s420 60 760 150v100z" fill="#080808"/>
+  <g fill="#030303">
+    <path d="M330 490V330l-26 4 96-112 96 104-22 2v170z"/>
+    <path d="M470 492V250l-18 2 54-104 54 104-18-2v248z"/>
+    <path d="M250 500V400l-16 2 62-66 62 62-14 2v104z"/>
+    <path d="M396 222v-48h10v36z"/>
+    <path d="M120 560c10-60 0-110-22-150 26 22 36 50 38 84 6-52-8-96-30-128 34 26 50 70 48 122 14-40 12-74 2-104 26 34 30 80 14 130l-10 50z"/>
+  </g>
+  <rect x="372" y="372" width="34" height="52" fill="#D94040"/>
+  <path d="M389 372v52M372 398h34" stroke="#030303" stroke-width="4"/>
+  <rect x="494" y="300" width="24" height="40" rx="12" fill="#E9E1CF" fill-opacity="0.85"/>
+  <rect x="282" y="430" width="26" height="34" fill="#3A2222"/>
+  <g fill="#E9E1CF">
+    <ellipse cx="300" cy="610" rx="420" ry="26" opacity="0.060"/>
+    <ellipse cx="900" cy="650" rx="520" ry="30" opacity="0.05"/>
+    <ellipse cx="620" cy="560" rx="360" ry="18" opacity="0.040"/>
+  </g>
+</svg>

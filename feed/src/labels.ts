@@ -54,6 +54,20 @@ export const SUBGENRE_LABELS: Record<string, Labels> = {
     zombie: {"en": "Zombies", "he": "‏זומבים", "ar": "زومبي", "pt": "Zumbis", "ru": "Зомби"},
 };
 
+/**
+ * "What do you feel like tonight?": SCARY's moods, in the order of its chips. Each is a list picked from the films
+ * that carry a hand-given scare level (see moods.ts).
+ */
+export const MOOD_LABELS: Record<string, Labels> = {
+    gentle: {"en": "Scared, but not too much", "he": "מפחיד, אבל לא יותר מדי", "ar": "مخيف، لكن ليس كثيرًا", "pt": "Medo, mas não demais", "ru": "Страшно, но в меру"},
+    mind_games: {"en": "Mind games", "he": "משחקי מוח", "ar": "ألعاب العقل", "pt": "Jogos mentais", "ru": "Игры разума"},
+    ghosts: {"en": "Ghosts and demons", "he": "רוחות ושדים", "ar": "أشباح وشياطين", "pt": "Fantasmas e demônios", "ru": "Призраки и демоны"},
+    blood: {"en": "Blood and screams", "he": "דם וצרחות", "ar": "دماء وصراخ", "pt": "Sangue e gritos", "ru": "Кровь и крики"},
+    classics: {"en": "Old-school classics", "he": "קלאסיקות של פעם", "ar": "كلاسيكيات الزمن القديم", "pt": "Clássicos de outros tempos", "ru": "Старая классика"},
+    relentless: {"en": "Don't sleep tonight", "he": "לא לישון הלילה", "ar": "لا نوم الليلة", "pt": "Hoje ninguém dorme", "ru": "Сегодня не уснуть"},
+    short: {"en": "Short and sharp", "he": "קצר וחד", "ar": "قصير وحاد", "pt": "Curto e afiado", "ru": "Коротко и остро"},
+};
+
 export const GENRE_LABELS: Record<'horror' | 'thriller', Labels> = {
     horror: {"en": "Horror", "he": "אימה", "ar": "رعب", "pt": "Terror", "ru": "Ужасы"},
     thriller: {"en": "Thriller", "he": "מתח", "ar": "إثارة", "pt": "Suspense", "ru": "Триллер"},

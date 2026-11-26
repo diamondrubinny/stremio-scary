@@ -4,6 +4,8 @@
 
 The output files keep the names Stremio Web already uses, so no source file has to change to show them.
 Run from anywhere: python3 scripts/make-brand-assets.py   (needs Pillow)
+The illustrations (empty states, the guest picture, the subtitles preview) are drawn in brand/illustrations/ and
+rendered by scripts/render-illustrations.cjs.
 """
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
@@ -63,19 +65,6 @@ def wordmark(width: int, height: int, background=None) -> Image.Image:
     return image
 
 
-def placeholder(size: tuple[int, int]) -> Image.Image:
-    """An empty-state picture: SCARY's mark, dimmed, on nothing. Replaces Stremio's mascot."""
-    width, height = size
-    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    side = int(min(width, height) * 0.62)
-    mark = Image.open(BRAND / "ic_launcher_monochrome.png").convert("RGBA").resize((side, side), Image.LANCZOS)
-    # The monochrome mark is a shape in its alpha channel: paint it bone, at a third of its strength.
-    tinted = Image.new("RGBA", (side, side), BONE + (0,))
-    tinted.putalpha(mark.getchannel("A").point(lambda alpha: alpha // 3))
-    image.paste(tinted, ((width - side) // 2, (height - side) // 2), tinted)
-    return image
-
-
 def main() -> None:
     any_icon(512).save(IMAGES / "icon.png")
     any_icon(512).save(IMAGES / "icon_512x512.png")
@@ -86,10 +75,6 @@ def main() -> None:
     launcher(196).save(IMAGES / "maskable_icon_196x196.png")
     Image.open(BRAND / "ic_launcher_monochrome.png").convert("RGBA").resize((512, 512), Image.LANCZOS).save(IMAGES / "monochrome_icon_512x512.png")
     wordmark(670, 195).save(IMAGES / "logo.png")
-    for name in ("empty", "library_placeholder", "calendar_placeholder", "anonymous", "default_avatar"):
-        target = IMAGES / f"{name}.png"
-        size = Image.open(target).size
-        placeholder((min(size[0], 512), min(size[1], 512))).save(target, optimize=True)
     any_icon(256).save(FAVICONS / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
     count = 0
     for splash in sorted((IMAGES / "splash").glob("*.jpg")):

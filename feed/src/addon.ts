@@ -4,8 +4,9 @@
 // Turns the checked feed into the files of a static Stremio add-on: a manifest and catalog pages, one set per
 // language. Catalogs only: no streams, no sources. Film pages and images come from Cinemeta, by IMDb id.
 
-import { ADDON_DESCRIPTIONS, ALL_FILMS_LABELS, ALL_SERIES_LABELS, LANGUAGES, ROW_LABELS, SUBGENRE_LABELS } from './labels.ts';
+import { ADDON_DESCRIPTIONS, ALL_FILMS_LABELS, ALL_SERIES_LABELS, LANGUAGES, MOOD_LABELS, ROW_LABELS, SUBGENRE_LABELS } from './labels.ts';
 import type { Language } from './labels.ts';
+import { pickMoods } from './moods.ts';
 import type { Feed, Film, FilmType } from './validate.ts';
 
 export const ADDON_ID = 'network.scary.catalogs';
@@ -125,6 +126,13 @@ export const buildLanguage = (feed: Feed, language: Language): Files => {
         const id = `scary_${row.id}`;
         catalogs.push({ type, id, name: ROW_LABELS[row.id][language] });
         files.set(`catalog/${type}/${id}.json`, { metas: ofType.map((film) => toMeta(film, language, true)) });
+    }
+
+    // SCARY's moods, after its rows: "scared, but not too much", "mind games", "don't sleep tonight"…
+    for (const mood of pickMoods(feed.films)) {
+        const id = `scary_mood_${mood.id}`;
+        catalogs.push({ type: 'movie', id, name: MOOD_LABELS[mood.id][language] });
+        files.set(`catalog/movie/${id}.json`, { metas: mood.films.map((film) => toMeta(film, language, true)) });
     }
 
     for (const type of ['movie', 'series'] as const) {
