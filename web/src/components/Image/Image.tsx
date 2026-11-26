@@ -11,7 +11,10 @@ type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
     onError?: (event: React.SyntheticEvent<HTMLImageElement>) => void,
 };
 
-const ImageContent = ({ className, src, alt, fallbackSrc, renderFallback, ...props }: Props) => {
+const ImageContent = ({ className, src, alt: givenAlt, fallbackSrc, renderFallback, ...props }: Props) => {
+    // SCARY: a picture with nothing to say (Stremio Web passes a single space) is marked as decoration, which is
+    // an empty alt; a space is read by some screen readers as an unnamed image.
+    const alt = typeof givenAlt === 'string' ? givenAlt.trim() : '';
     const [broken, setBroken] = useState(false);
     const onError = useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
         if (typeof props.onError === 'function') {

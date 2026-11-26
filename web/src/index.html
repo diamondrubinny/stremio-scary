@@ -3,6 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
+    <!--
+        SCARY Web: what this page may load. Scripts come from the app itself only (plus YouTube's player, which the app
+        loads only after the viewer allowed trailers). Pictures, video and data may come from anywhere over HTTPS,
+        because add-ons are the viewer's own choice; plain HTTP is allowed to this device only (Stremio's streaming
+        server). No plug-ins, no outside forms, no outside base address. A server should send the same policy as a
+        header and add frame-ancestors 'none', which a page cannot set for itself.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob: https://www.youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; media-src 'self' https: blob: data: http://127.0.0.1:11470; connect-src 'self' https: blob: data: http://127.0.0.1:11470; font-src 'self' data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">

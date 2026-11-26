@@ -122,11 +122,11 @@ const SearchBar = React.memo(({ className, query, active }) => {
             }
             {
                 currentQuery.length > 0 ?
-                    <Button className={styles['submit-button-container']} onClick={queryInputClear}>
+                    <Button className={styles['submit-button-container']} title={t('SCARY_CLEAR_SEARCH')} aria-label={t('SCARY_CLEAR_SEARCH')} onClick={queryInputClear}>
                         <Icon className={styles['icon']} name={'close'} />
                     </Button>
                     :
-                    <Button className={styles['submit-button-container']}>
+                    <Button className={styles['submit-button-container']} title={t('SCARY_SEARCH')} aria-label={t('SCARY_SEARCH')}>
                         <Icon className={styles['icon']} name={'search'} />
                     </Button>
             }
@@ -194,7 +194,7 @@ const SearchBarFallback = ({ className }) => {
             <div className={styles['search-input']}>
                 <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
             </div>
-            <Button className={styles['submit-button-container']} tabIndex={-1}>
+            <Button className={styles['submit-button-container']} tabIndex={-1} title={t('SCARY_SEARCH')} aria-label={t('SCARY_SEARCH')}>
                 <Icon className={styles['icon']} name={'search'} />
             </Button>
         </label>

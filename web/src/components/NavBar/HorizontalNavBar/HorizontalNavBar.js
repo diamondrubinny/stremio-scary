@@ -17,7 +17,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     const goBack = useGoBack(originPath);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
-        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
+        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} title={t('SCARY_MENU')} aria-label={t('SCARY_MENU')} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
             {children}
         </Button>
@@ -27,7 +27,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         <nav {...props} className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
-                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={onBackButtonClick || goBack}>
+                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} title={t('SCARY_BACK')} aria-label={t('SCARY_BACK')} onClick={onBackButtonClick || goBack}>
                         <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :

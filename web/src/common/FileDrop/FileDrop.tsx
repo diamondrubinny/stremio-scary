@@ -112,7 +112,7 @@ const FileDropProvider = ({ children }: Props) => {
         <FileDropContext.Provider value={value}>
             { children }
             <div className={classNames(styles['file-drop-container'], { 'active': active })}>
-                <input type={'file'} className={styles['file-input']} onChange={onChange} />
+                <input type={'file'} className={styles['file-input']} onChange={onChange} aria-hidden={true} tabIndex={-1} />
             </div>
         </FileDropContext.Provider>
     );

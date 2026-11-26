@@ -21,6 +21,9 @@ import type { ScaryState } from '../state/store';
 
 type Effect = keyof ScaryState['effects'];
 
+/** The name a switch is read out by: the label of its row. */
+const named = (label: string) => ({ 'aria-label': label }) as Record<string, string>;
+
 const SettingsPage = () => {
     const { t } = useTranslation();
     const toast = useToast();
@@ -144,7 +147,7 @@ const SettingsPage = () => {
     const sleepLeft = sleepUntil === null ? 0 : Math.max(1, Math.ceil((sleepUntil - Date.now()) / 60_000));
     const effect = (id: Effect, label: string) => (
         <Row rowId={`scary-${id}`} label={label}>
-            <Toggle checked={effects[id]} onClick={() => toggleEffect(id)} />
+            <Toggle {...named(label)} checked={effects[id]} onClick={() => toggleEffect(id)} />
         </Row>
     );
 
@@ -152,10 +155,10 @@ const SettingsPage = () => {
         <React.Fragment>
             <Group title={t('SCARY_SETTINGS_SECTION_PARENTS')} description={t('SCARY_PIN_NOTE')}>
                 <Row rowId={'scary-family'} label={t('SCARY_SETTINGS_FAMILY_NIGHT')}>
-                    <Toggle checked={familyNight} onClick={toggleFamilyNight} />
+                    <Toggle {...named(t('SCARY_SETTINGS_FAMILY_NIGHT'))} checked={familyNight} onClick={toggleFamilyNight} />
                 </Row>
                 <Row rowId={'scary-lock'} label={t('SCARY_SETTINGS_PARENTAL')}>
-                    <Toggle checked={lock.enabled} onClick={toggleLock} />
+                    <Toggle {...named(t('SCARY_SETTINGS_PARENTAL'))} checked={lock.enabled} onClick={toggleLock} />
                 </Row>
                 <Row rowId={'scary-lock-level'} label={t('SCARY_SETTINGS_LOCK_LEVEL')} control={'wide'} stackOnPhone={true}>
                     <Chips
@@ -215,10 +218,10 @@ const SettingsPage = () => {
             </Group>
             <Group rowId={'scary-privacy'} title={t('SCARY_PRIVACY')} description={t('SCARY_CONSENT_NOTE')}>
                 <Row rowId={'scary-consent-media'} label={t('SCARY_CONSENT_TRAILERS')} description={t('SCARY_CONSENT_GATE')}>
-                    <Toggle checked={consent.media === true} onClick={() => store.update(answerConsent(consent.media !== true))} />
+                    <Toggle {...named(t('SCARY_CONSENT_TRAILERS'))} checked={consent.media === true} onClick={() => store.update(answerConsent(consent.media !== true))} />
                 </Row>
                 <Row rowId={'scary-consent-voice'} label={t('SCARY_VOICE_SEARCH')} description={t('SCARY_VOICE_TEXT')}>
-                    <Toggle checked={consent.voice} onClick={() => store.update((state) => ({ consent: { ...state.consent, voice: !state.consent.voice } }))} />
+                    <Toggle {...named(t('SCARY_VOICE_SEARCH'))} checked={consent.voice} onClick={() => store.update((state) => ({ consent: { ...state.consent, voice: !state.consent.voice } }))} />
                 </Row>
             </Group>
             <Group title={t('SCARY_BACKUP')} description={t('SCARY_BACKUP_NOTE')}>

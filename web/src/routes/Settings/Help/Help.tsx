@@ -54,6 +54,9 @@ const Help = ({ streamingServer }: Props) => {
                 </Row>
             </Group>
             <Group title={t('SETTINGS_GROUP_LEGAL')}>
+                <LinkRow label={t('SCARY_PRIVACY_POLICY')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/docs/PRIVACY.md`} />
+                <LinkRow label={t('SCARY_TERMS')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/docs/TERMS.md`} />
+                <LinkRow label={t('SCARY_ACCESSIBILITY')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/docs/ACCESSIBILITY.md`} />
                 <LinkRow label={t('SETTINGS_SOURCE_CODE')} href={`${SOURCE_URL}/tree/${process.env.COMMIT_HASH}`} />
                 <LinkRow label={t('SCARY_LICENSE')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/NOTICE`} />
                 <LinkRow label={t('SCARY_BASED_ON')} href={'https://github.com/Stremio/stremio-web'} />

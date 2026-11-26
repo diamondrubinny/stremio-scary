@@ -36,7 +36,6 @@ const Description = ({ className, text }: Props) => {
     return (
         <p
             className={classNames(className, styles['description'], { [styles['expandable']]: expanded || clamped, [styles['expanded']]: expanded })}
-            aria-expanded={expanded}
             onMouseEnter={onMouseEnter}
             onClick={onClick}
         >

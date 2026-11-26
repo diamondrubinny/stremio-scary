@@ -46,6 +46,12 @@ type ScaryStrings = {
     SCARY_TMDB_NOTE: string,
     SCARY_TMDB_SAVED: string,
     SCARY_STUDIOS: string,
+    SCARY_MENU: string,
+    SCARY_PRIVACY_POLICY: string,
+    SCARY_TERMS: string,
+    SCARY_ACCESSIBILITY: string,
+    SCARY_SEARCH: string,
+    SCARY_CLEAR_SEARCH: string,
 };
 
 const STRINGS: Record<FeedLanguage, ScaryStrings> = {
@@ -90,6 +96,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_TMDB_NOTE: 'With your own TMDB key, a film\'s page shows its cast with pictures, the companies that made it, and where it can be watched, rented or bought in your country; and the home screen shows what is coming to cinemas. The key is kept in this browser and sent only to api.themoviedb.org. TMDB receives the ids of the films you open and your IP address. This product uses the TMDB API but is not endorsed or certified by TMDB.',
         SCARY_TMDB_SAVED: 'TMDB accepted the key.',
         SCARY_STUDIOS: 'Made by',
+        SCARY_MENU: 'Menu',
+        SCARY_PRIVACY_POLICY: 'Privacy and cookies',
+        SCARY_TERMS: 'Terms of use',
+        SCARY_ACCESSIBILITY: 'Accessibility statement',
+        SCARY_SEARCH: 'Search',
+        SCARY_CLEAR_SEARCH: 'Clear the search',
     },
     he: {
         SCARY_SEARCH_FILMS: 'סרטים',
@@ -132,6 +144,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_TMDB_NOTE: 'עם מפתח TMDB משלכם, עמוד הסרט מציג את השחקנים עם תמונות, את החברות שיצרו אותו, ואיפה אפשר לצפות בו, לשכור או לקנות אותו במדינה שלכם; ומסך הבית מציג מה מגיע בקרוב לקולנוע. המפתח נשמר בדפדפן הזה ונשלח רק ל־api.themoviedb.org. TMDB מקבלת את מזהי הסרטים שאתם פותחים ואת כתובת ה־IP שלכם. המוצר משתמש ב־API של TMDB אך אינו מאושר או מוסמך על ידי TMDB.',
         SCARY_TMDB_SAVED: 'TMDB אישרה את המפתח.',
         SCARY_STUDIOS: 'הופק על ידי',
+        SCARY_MENU: 'תפריט',
+        SCARY_PRIVACY_POLICY: 'פרטיות ועוגיות',
+        SCARY_TERMS: 'תנאי שימוש',
+        SCARY_ACCESSIBILITY: 'הצהרת נגישות',
+        SCARY_SEARCH: 'חיפוש',
+        SCARY_CLEAR_SEARCH: 'ניקוי החיפוש',
     },
     ar: {
         SCARY_SEARCH_FILMS: 'أفلام',
@@ -174,6 +192,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_TMDB_NOTE: 'بمفتاح TMDB خاص بك، تعرض صفحة الفيلم ممثليه مع صورهم والشركات التي أنتجته وأين يمكن مشاهدته أو استئجاره أو شراؤه في بلدك؛ وتعرض الشاشة الرئيسية ما سيُعرض قريبًا في السينما. يُحفظ المفتاح في هذا المتصفح ويُرسل فقط إلى api.themoviedb.org. تستلم TMDB معرّفات الأفلام التي تفتحها وعنوان IP الخاص بك. يستخدم هذا المنتج واجهة TMDB لكنه غير معتمد أو مصدَّق من TMDB.',
         SCARY_TMDB_SAVED: 'قبلت TMDB المفتاح.',
         SCARY_STUDIOS: 'من إنتاج',
+        SCARY_MENU: 'القائمة',
+        SCARY_PRIVACY_POLICY: 'الخصوصية وملفات تعريف الارتباط',
+        SCARY_TERMS: 'شروط الاستخدام',
+        SCARY_ACCESSIBILITY: 'بيان إمكانية الوصول',
+        SCARY_SEARCH: 'بحث',
+        SCARY_CLEAR_SEARCH: 'مسح البحث',
     },
     pt: {
         SCARY_SEARCH_FILMS: 'Filmes',
@@ -216,6 +240,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_TMDB_NOTE: 'Com a sua própria chave do TMDB, a página do filme mostra o elenco com fotos, as empresas que o fizeram e onde assistir, alugar ou comprar no seu país; e a tela inicial mostra o que está chegando aos cinemas. A chave fica neste navegador e é enviada só para api.themoviedb.org. O TMDB recebe os ids dos filmes que você abre e seu endereço IP. Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.',
         SCARY_TMDB_SAVED: 'O TMDB aceitou a chave.',
         SCARY_STUDIOS: 'Produzido por',
+        SCARY_MENU: 'Menu',
+        SCARY_PRIVACY_POLICY: 'Privacidade e cookies',
+        SCARY_TERMS: 'Termos de uso',
+        SCARY_ACCESSIBILITY: 'Declaração de acessibilidade',
+        SCARY_SEARCH: 'Buscar',
+        SCARY_CLEAR_SEARCH: 'Limpar a busca',
     },
     ru: {
         SCARY_SEARCH_FILMS: 'Фильмы',
@@ -258,6 +288,12 @@ const STRINGS: Record<FeedLanguage, ScaryStrings> = {
         SCARY_TMDB_NOTE: 'С вашим собственным ключом TMDB страница фильма показывает актёров с фотографиями, компании-производители и где фильм можно посмотреть, взять напрокат или купить в вашей стране; а на главном экране видно, что скоро выйдет в кино. Ключ хранится в этом браузере и отправляется только на api.themoviedb.org. TMDB получает идентификаторы открытых фильмов и ваш IP-адрес. Этот продукт использует API TMDB, но не одобрен и не сертифицирован TMDB.',
         SCARY_TMDB_SAVED: 'TMDB принял ключ.',
         SCARY_STUDIOS: 'Производство',
+        SCARY_MENU: 'Меню',
+        SCARY_PRIVACY_POLICY: 'Конфиденциальность и cookie',
+        SCARY_TERMS: 'Условия использования',
+        SCARY_ACCESSIBILITY: 'Заявление о доступности',
+        SCARY_SEARCH: 'Поиск',
+        SCARY_CLEAR_SEARCH: 'Очистить поиск',
     },
 };
 

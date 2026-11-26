@@ -66,6 +66,9 @@ const Button = forwardRef(({ className, href, disabled, children, onLongPress, o
         component,
         {
             tabIndex: 0,
+            // SCARY: a button that is not a link says so, for screen readers (and so that aria-pressed and
+            // aria-label on it mean something). A role given by the caller (a switch) is kept.
+            ...(component === 'div' ? { role: 'button' } : {}),
             ...props,
             ref,
             className: classNames(className, styles['button-container'], { 'disabled': disabled }),

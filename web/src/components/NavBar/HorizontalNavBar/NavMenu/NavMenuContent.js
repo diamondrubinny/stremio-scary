@@ -17,6 +17,7 @@ const useToast = require('stremio/common/Toast/useToast');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useStreamingServer = require('stremio/common/useStreamingServer');
 const { ACCOUNTS_ENABLED } = require('stremio/scary/account');
+const { SOURCE_URL } = require('stremio/scary/about');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -126,6 +127,14 @@ const NavMenuContent = ({ onClick }) => {
                 <Button className={styles['nav-menu-option-container']} title={ t('PLAY_URL_MAGNET_LINK') } onClick={onPlayMagnetLinkClick}>
                     <Icon className={styles['icon']} name={'magnet-link'} />
                     <div className={styles['nav-menu-option-label']}>{ t('PLAY_URL_MAGNET_LINK') }</div>
+                </Button>
+            </div>
+            <div className={styles['nav-menu-section']}>
+                <Button className={styles['nav-menu-option-container']} title={ t('SCARY_CONSENT_MANAGE') } href={'#/settings/scary'}>
+                    <div className={styles['nav-menu-option-label']}>{ t('SCARY_CONSENT_MANAGE') }</div>
+                </Button>
+                <Button className={styles['nav-menu-option-container']} title={ t('SCARY_ACCESSIBILITY') } href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/docs/ACCESSIBILITY.md`} target={'_blank'}>
+                    <div className={styles['nav-menu-option-label']}>{ t('SCARY_ACCESSIBILITY') }</div>
                 </Button>
             </div>
         </div>

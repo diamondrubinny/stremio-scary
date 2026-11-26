@@ -57,6 +57,17 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/router/routerPaths.tsx` (נוסף) | הנתיב `/scary/:page` | בורר הטעם, Bucket list, "השנה שלך בפחד" |
 | `web/src/components/NavBar/HorizontalNavBar/SearchBar/SearchBar.js` | `useLocalSearch` → `useScaryLocalSearch`; `<ScaryVoiceButton />` | הצעות חיפוש מהמאגר של SCARY; חיפוש קולי |
 | `web/assets/screenshots/*` | צילומי מסך של SCARY Web במקום של Stremio | מופיעים בחלון ההתקנה של ה-PWA |
+| `web/src/index.html` (נוסף) | `<meta>` של Content-Security-Policy ו-`referrer` | סקריפטים מהאפליקציה בלבד (ו-YouTube אחרי הסכמה); בלי `object`, בלי `base` חיצוני |
+| `web/src/components/Button/Button.tsx` | `role="button"` כשהכפתור הוא `div` | קוראי מסך מכריזים עליו ככפתור (נגישות) |
+| `web/src/components/Image/Image.tsx` | `alt` ריק או רווח → `alt=""` | תמונה דקורטיבית מסומנת ככזו |
+| `web/src/common/FileDrop/FileDrop.tsx` | `aria-hidden`, `tabIndex={-1}` על שדה הקובץ הנסתר | שדה בלי שם לא נחשף לקורא מסך |
+| `web/src/components/NavBar/HorizontalNavBar/HorizontalNavBar.js`, `.../SearchBar/SearchBar.js` (נוסף) | `title` ו-`aria-label` לכפתורי "חזרה", "תפריט", "חיפוש", "ניקוי החיפוש" | כפתורי אייקון עם שם |
+| `web/src/routes/Details/Hero/Description.tsx` | הוסר `aria-expanded` מהפסקה | התכונה לא חוקית על `<p>`; כפתור "עוד" כבר נושא אותה |
+| `web/src/routes/Settings/Help/Help.tsx` (נוסף) | קישורים לטיוטות: פרטיות, תנאים, הצהרת נגישות | מסמכים קבועים ונגישים |
+| `web/src/components/NavBar/HorizontalNavBar/NavMenu/NavMenuContent.js` (נוסף) | "הגדרות פרטיות" ו"הצהרת נגישות" בתפריט | קישור קבוע לניהול ההסכמה |
+| 14 קובצי `.less`: `SegmentedControl`, `UpdateBanner`, `Calendar/{List/Item/Item,Table/Cell/Cell}`, `SpotlightSettings/{CatalogCard,CatalogsEmpty,CatalogTray,CatalogSheet}`, `Board/Spotlight/Slide`, `Discover/{styles,FiltersSheet/Selection/Selection,Guide/Row/Row}`, `Player/NextVideoPopup/styles`, `Details/EpisodePicker/EpisodePicker` | שורה אחת בכל קובץ: רקע שמתחת לטקסט `--primary-accent-color` → `--secondary-accent-color` | ניגודיות: טקסט בהיר על האדום הבהיר היה 3.1–3.4:1; על אדום הדם 6.5:1 |
+| `Details/Actions/PlayButton.less`, `Details/EpisodePicker/EpisodePicker.less`, `Discover/Guide/{Row/Row,Skeleton/Skeleton}.less`, `App/GamepadModal/styles.less` | צבעים קשיחים של Stremio (סגול, ירוק) → משתני הפלטה של SCARY | כפתור "צפייה" הפך ירוק במעבר עכבר; שאריות סגול |
+| `Settings/Menu/Menu.less`, `Calendar/Selector/Selector.less`, `Addons/Addon/styles.less`, `components/Scale/Scale.less`, `components/MetaPreview/Links.less` | `opacity` של טקסט מעומעם (לא מושבת) 0.3–0.5 → 0.65 | ניגודיות 4.5:1 לפחות |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".
