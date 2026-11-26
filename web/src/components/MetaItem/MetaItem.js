@@ -16,10 +16,13 @@ const { default: WatchedBadge } = require('stremio/components/WatchedBadge');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
+const { default: useScaryTile } = require('stremio/scary/ui/useScaryTile');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
+const MetaItem = React.memo(({ className, type, name: itemName, poster: itemPoster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
     const { t } = useTranslation();
+    // SCARY: a film behind the parental lock shows no poster and no title.
+    const { poster, name } = useScaryTile(props.id, itemPoster, itemName);
     const artwork = poster && typeof poster === 'object' ? poster : { src: poster, shape: posterShape, changeCursor: posterChangeCursor };
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
@@ -202,6 +205,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
 MetaItem.displayName = 'MetaItem';
 
 MetaItem.propTypes = {
+    id: PropTypes.string,
     className: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,

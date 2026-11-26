@@ -16,6 +16,7 @@
         "checkJs": false,
         "noEmit": false,
         "strict": true,
+        "downlevelIteration": true,
     },
     "include": [
         "src/",

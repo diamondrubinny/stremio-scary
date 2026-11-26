@@ -26,6 +26,7 @@ import Account from './Account';
 import Shortcuts from './Shortcuts';
 import Help from './Help';
 import styles from './Settings.less';
+import ScarySettingsPage from 'stremio/scary/ui/SettingsPage';
 
 const Settings = () => {
     const { page: pageId } = useParams();
@@ -185,6 +186,7 @@ const Settings = () => {
                 {page.id === PAGES.ACCOUNT && <Account profile={profile} dataExport={dataExport} />}
                 {page.id === PAGES.SHORTCUTS && <Shortcuts />}
                 {page.id === PAGES.HELP && <Help streamingServer={streamingServer} />}
+                {page.id === PAGES.SCARY && <ScarySettingsPage />}
             </Page>
         );
     }

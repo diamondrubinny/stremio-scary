@@ -7,6 +7,7 @@ const PAGES = {
     ACCOUNT: 'account',
     SHORTCUTS: 'shortcuts',
     HELP: 'help',
+    SCARY: 'scary',
 };
 
 export {

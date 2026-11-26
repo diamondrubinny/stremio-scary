@@ -35,6 +35,7 @@ const useSettingsPages = () => {
                 id: 'preferences',
                 label: t('SETTINGS_GROUP_PREFERENCES'),
                 pages: [
+                    { id: PAGES.SCARY, icon: 'eye', label: t('SCARY_SETTINGS_TITLE'), scope: savedScope },
                     { id: PAGES.INTERFACE, icon: 'grid', label: t('INTERFACE'), scope: savedScope },
                     { id: PAGES.PLAYER, icon: 'movies-outline', label: t('SETTINGS_NAV_PLAYER'), scope: savedScope },
                     { id: PAGES.INTEGRATIONS, icon: 'link', label: t('SETTINGS_NAV_INTEGRATIONS'), scope: null },

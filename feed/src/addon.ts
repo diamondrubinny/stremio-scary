@@ -184,6 +184,7 @@ export const buildIndex = (feed: Feed): unknown => ({
         ...(film.subgenres.length > 0 ? { s: film.subgenres } : {}),
         ...(film.fear !== null ? { f: film.fear } : {}),
         ...(film.director !== '' ? { d: film.director } : {}),
+        ...(film.minutes > 0 ? { m: film.minutes } : {}),
     })),
 });
 

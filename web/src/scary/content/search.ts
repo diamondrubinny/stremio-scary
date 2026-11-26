@@ -14,8 +14,11 @@ type IndexFilm = {
     y: number,
     r?: number,
     s?: string[],
+    /** SCARY's hand-given scare level, 1 to 5; absent for a film nobody rated. */
     f?: number,
     d?: string,
+    /** Length in minutes (a series: of one episode); absent when unknown. */
+    m?: number,
 };
 
 type SearchResult = { film: IndexFilm, score: number };

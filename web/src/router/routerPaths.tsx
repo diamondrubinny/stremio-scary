@@ -5,6 +5,7 @@ import routes from 'stremio/routes';
 import { PLAYER_PATH, META_DETAILS_PATH, LEGACY_META_DETAILS_PATH } from './getBackFallback';
 
 import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
+import ScaryPages from 'stremio/scary/ui/Pages';
 
 export default [
     ...(ACCOUNTS_ENABLED ? [{
@@ -51,6 +52,11 @@ export default [
         path: '/addons/:type?/:transportUrl?/:catalogId?',
         view: 3,
         element: <routes.Addons />,
+    },
+    {
+        path: '/scary/:page?',
+        view: 3,
+        element: <ScaryPages />,
     },
     {
         path: '/settings/:page?',

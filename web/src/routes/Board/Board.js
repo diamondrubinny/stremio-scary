@@ -8,6 +8,7 @@ const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = 
 const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const { default: useScaryBoard } = require('stremio/scary/content/useScaryBoard');
+const { default: ScaryBoardExtras } = require('stremio/scary/ui/BoardExtras');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const { default: Spotlight, Placeholder: SpotlightPlaceholder } = require('./Spotlight');
@@ -30,9 +31,11 @@ const Board = () => {
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
-    const spotlightItems = board.spotlight?.type === 'Ready' ? board.spotlight.content : [];
+    const scaryBoard = useScaryBoard(board.catalogs, loadBoardRows);
+    const spotlightItems = board.spotlight?.type === 'Ready' ? scaryBoard.allowed(board.spotlight.content) : [];
     const spotlightVisible = spotlightItems.length > 0 || board.spotlight?.type === 'Loading';
-    const boardCatalogsOffset =
+    // One more row above the catalogs: SCARY's own (moods, the time planner, seasonal rows), always there.
+    const boardCatalogsOffset = 1 +
         (spotlightVisible ? 1 : 0) +
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
@@ -41,7 +44,6 @@ const Board = () => {
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);
-    const scaryBoard = useScaryBoard(board.catalogs, loadBoardRows);
     const { catalogRows, scrollContainerRef, onScroll } = useVisibleCatalogs({
         catalogs: scaryBoard.catalogs,
         loadRange: scaryBoard.loadRange,
@@ -94,6 +96,7 @@ const Board = () => {
                             :
                             null
                     }
+                    <ScaryBoardExtras rowClassName={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')} />
                     {catalogRows.map(({ catalog, index }) => {
                         switch (catalog.content?.type) {
                             case 'Ready': {

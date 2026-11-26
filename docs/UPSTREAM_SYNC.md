@@ -48,6 +48,13 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/webpack.config.js` (נוסף) | שלושה `alias`: קובץ הפלטה של Stremio → `src/scary/theme/stremio-colors.less`; `@stremio/stremio-icons/react` → `src/scary/icons`; `stremio-icons-original` → הערכה המקורית | צבעי SCARY ואייקוני SCARY בכל המסכים בלי לגעת בהם |
 | `web/src/routes/Settings/Interface/SpotlightSettings/useBoardCatalogs.ts` | סינון לקטלוגי SCARY | בורר הספוטלייט מציע רק שורות של SCARY |
 | `web/assets/images/*` (נוסף) | איורים מקוריים במקום הקמע של Stremio ותמונת Big Buck Bunny | `scripts/render-illustrations.cjs` מ-`brand/illustrations/` |
+| `web/tsconfig.json` | `"downlevelIteration": true` | פריסת `Set`/`Map` נשברת ב-ES5 בלי זה |
+| `web/src/App/App.js` (נוסף) | `<ScaryOverlays />` | שער הנעילה, חלון ה-PIN, צמרמורת, ערפל, שומר מסך, טיימר שינה |
+| `web/src/routes/Board/Board.js` (נוסף) | `<ScaryBoardExtras />`, סינון הספוטלייט, היסט של שורה אחת | מצבי רוח, תכנון זמן, שורות עונתיות; ערב משפחתי |
+| `web/src/components/MetaItem/MetaItem.js` | `useScaryTile` (שתי שורות) + `id` ב-propTypes | אריח נעול בלי פוסטר ושם |
+| `web/src/routes/Details/Hero/Hero.tsx`, `web/src/components/MetaPreview/MetaPreview.tsx` | `<ScaryDetailsExtras />` | מד פחד, אהבתי/לא בשבילי, Bucket list, "עוד כאלה" |
+| `web/src/routes/Settings/{constants.ts,useSettingsPages.ts,Settings.tsx}` | עמוד "הגדרות SCARY" | ערב משפחתי, נעילה, אפקטים, טיימר שינה, רשימות, גיבוי |
+| `web/src/router/routerPaths.tsx` (נוסף) | הנתיב `/scary/:page` | בורר הטעם, Bucket list, "השנה שלך בפחד" |
 | `web/assets/screenshots/*` | צילומי מסך של SCARY Web במקום של Stremio | מופיעים בחלון ההתקנה של ה-PWA |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub

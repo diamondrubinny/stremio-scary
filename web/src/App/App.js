@@ -17,6 +17,7 @@ const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
 const { default: useInterfaceScale } = require('./useInterfaceScale');
 const { default: useScarySetup } = require('stremio/scary/content/useScarySetup');
+const { default: ScaryOverlays } = require('stremio/scary/ui/Overlays');
 const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
@@ -185,6 +186,7 @@ const App = () => {
                                     <DeepLinkHandler />
                                     <ShellOpenHandler />
                                     <UpdaterBanner className={styles['updater-banner-container']} />
+                                    <ScaryOverlays />
                                     <ProtectedRoutes />
                                 </DiscordProvider>
                             </FullscreenProvider>

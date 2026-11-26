@@ -62,6 +62,7 @@ const ICONS: Record<string, Glyph> = {
     'chevron-back': ['M15 4l-8 8 8 8'],
     'chevron-forward': ['M9 4l8 8-8 8'],
     'caret-down': [fill('M5 9h14l-7 8z')],
+    'caret-up': [fill('M5 15h14l-7-8z')],
     'caret-left': [fill('M15 5v14l-8-7z')],
     'caret-right': [fill('M9 5v14l8-7z')],
     'more-horizontal': [dot(5, 12, 1.7), dot(12, 12, 1.7), dot(19, 12, 1.7)],

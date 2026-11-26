@@ -11,6 +11,7 @@ import Links from './Links';
 import Actions from './Actions';
 import type { ShowAction } from './Actions';
 import styles from './MetaPreview.less';
+import ScaryDetailsExtras from 'stremio/scary/ui/DetailsExtras';
 
 type Props = {
     className?: string,
@@ -93,6 +94,7 @@ const MetaPreview = ({
                             null
                     }
                 </Facts>
+                <ScaryDetailsExtras links={links} />
                 {metadata}
                 {
                     typeof description === 'string' && description.length > 0 ?

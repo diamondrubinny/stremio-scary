@@ -12,6 +12,7 @@ import Still from './Still';
 import Facts from 'stremio/components/MetaPreview/Facts';
 import Description from './Description';
 import Links from './Links';
+import ScaryDetailsExtras from 'stremio/scary/ui/DetailsExtras';
 import styles from './Hero.less';
 
 type Props = {
@@ -51,6 +52,7 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                             ]}
                             imdb={imdb}
                         />
+                        <ScaryDetailsExtras id={metaItem.id} links={metaItem.links} />
                         <Description className={classNames(styles['description'], { [styles['expanded']]: collapsible && expanded })} text={metaItem.description} />
                         {
                             collapsible ?

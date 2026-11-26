@@ -1,0 +1,527 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
+
+// The styles of SCARY's own pieces. Colours come from the theme (theme/theme.less).
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.fear-meter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    overflow: visible;
+
+    svg {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        overflow: visible;
+    }
+
+    // Full drops are the one red; empty ones are an outline, so the level never rests on colour alone.
+    .drop-full path {
+        fill: var(--scary-accent);
+        stroke: var(--scary-accent);
+        stroke-width: 1.5;
+    }
+
+    .drop-empty path {
+        fill: none;
+        stroke: var(--scary-ash);
+        stroke-width: 1.5;
+    }
+}
+
+.section {
+    padding: 0 2rem;
+    margin-bottom: 1.5rem;
+    overflow: visible;
+
+    .section-title {
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: var(--primary-foreground-color);
+        margin-bottom: 0.75rem;
+    }
+
+    .section-note {
+        color: var(--scary-ash);
+        margin: 0.5rem 0;
+        line-height: 1.5;
+    }
+
+    .chips-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+        overflow: visible;
+    }
+
+    @media only screen and (max-width: @minimum) {
+        padding: 0 1rem;
+    }
+}
+
+.chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border-radius: 2.75rem;
+    border: 1px solid var(--scary-line);
+    color: var(--primary-foreground-color);
+    background-color: var(--overlay-color);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover, &:focus-visible {
+        border-color: var(--scary-bone);
+    }
+
+    &:focus-visible {
+        outline: var(--focus-outline-size) solid var(--scary-bone);
+        outline-offset: 2px;
+    }
+
+    &.chosen {
+        background-color: var(--scary-blood);
+        border-color: var(--scary-accent);
+    }
+
+    &.quiet {
+        border-style: dashed;
+    }
+
+    svg {
+        flex: none;
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    background-color: var(--scary-blood);
+    color: var(--scary-bone);
+    font-weight: 700;
+}
+
+.details-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0.9rem 0;
+    overflow: visible;
+
+    .line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        overflow: visible;
+    }
+
+    .more-title {
+        font-weight: 700;
+        color: var(--scary-ash);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 0.9rem;
+    }
+
+    .more-strip {
+        display: flex;
+        gap: 0.7rem;
+        overflow-x: auto;
+        padding: 0.25rem;
+        scrollbar-width: thin;
+
+        .more-film {
+            flex: none;
+            width: 6.5rem;
+            border-radius: var(--border-radius);
+            color: var(--scary-ash);
+            font-size: 0.85rem;
+            text-align: center;
+
+            &:hover, &:focus-visible {
+                color: var(--scary-bone);
+                outline: var(--focus-outline-size) solid var(--scary-bone);
+            }
+
+            img {
+                display: block;
+                width: 6.5rem;
+                height: 9.5rem;
+                object-fit: cover;
+                border-radius: var(--border-radius);
+                background-color: var(--overlay-color);
+                margin-bottom: 0.3rem;
+            }
+        }
+    }
+}
+
+// Fog and film grain over everything but the player. They never take a click, and stand still for a viewer who
+// asked the device for less motion.
+.atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+
+    .fog {
+        position: absolute;
+        inset: -20%;
+        background:
+            radial-gradient(ellipse 45% 30% at 20% 85%, rgba(233, 225, 207, 0.055), transparent 70%),
+            radial-gradient(ellipse 50% 28% at 80% 95%, rgba(233, 225, 207, 0.045), transparent 70%),
+            radial-gradient(ellipse 40% 24% at 55% 105%, rgba(142, 27, 27, 0.10), transparent 70%);
+        animation: scary-fog 46s ease-in-out infinite alternate;
+    }
+
+    .grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.07;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.88 0 0 0 0 0.8 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .fog {
+            animation: none;
+        }
+    }
+}
+
+@keyframes scary-fog {
+    from { transform: translate3d(-3%, 0, 0); }
+    to { transform: translate3d(3%, -2%, 0); }
+}
+
+// The shiver: the title trembles in the dark for a moment before the film. Small, slow movements; no flashing.
+.shiver {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--scary-void);
+    pointer-events: none;
+    animation: scary-shiver-out 2.2s ease-in forwards;
+
+    .shiver-title {
+        max-width: 80vw;
+        text-align: center;
+        font-family: 'Rubik', 'Assistant', 'Cairo', sans-serif;
+        font-weight: 700;
+        font-size: 3.2rem;
+        color: var(--scary-bone);
+        text-shadow: 0.08em 0.08em 0 var(--scary-blood);
+        animation: scary-tremble 0.5s steps(2, jump-none) infinite;
+        overflow: visible;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .shiver-title {
+            animation: none;
+        }
+    }
+}
+
+@keyframes scary-tremble {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(0.03em, -0.02em); }
+    50% { transform: translate(-0.03em, 0.02em); }
+    75% { transform: translate(0.02em, 0.03em); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes scary-shiver-out {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+.gate {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    padding: 2rem;
+    background-color: var(--scary-void);
+    text-align: center;
+
+    .gate-icon {
+        width: 4rem;
+        height: 4rem;
+        color: var(--scary-accent);
+    }
+
+    .gate-text {
+        max-width: 34rem;
+        font-size: 1.3rem;
+        line-height: 1.5;
+        color: var(--scary-bone);
+    }
+}
+
+.pin {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-width: min(24rem, 80vw);
+    overflow: visible;
+
+    .pin-label {
+        color: var(--scary-bone);
+        font-size: 1.1rem;
+    }
+
+    .pin-input {
+        height: 3.5rem;
+        padding: 0 1rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--scary-line);
+        background-color: var(--overlay-color);
+        color: var(--scary-bone);
+        font-size: 1.6rem;
+        letter-spacing: 0.5em;
+        text-align: center;
+        user-select: text;
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+        }
+    }
+
+    .pin-error {
+        min-height: 1.5rem;
+        color: var(--scary-accent);
+        font-weight: 700;
+    }
+}
+
+.screensaver {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background-color: var(--scary-void);
+    cursor: none;
+
+    img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 2.5s ease-in-out;
+
+        &.shown {
+            opacity: 0.55;
+        }
+    }
+
+    .screensaver-title {
+        position: absolute;
+        inset-inline-start: 4vw;
+        bottom: 6vh;
+        font-family: 'Rubik', 'Assistant', 'Cairo', sans-serif;
+        font-weight: 700;
+        font-size: 2.6rem;
+        color: var(--scary-bone);
+        text-shadow: 0 0 1rem var(--scary-void);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        img {
+            transition: none;
+        }
+    }
+}
+
+.page {
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem 0 4rem;
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--scary-bone);
+        padding: 0 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+        gap: 1rem;
+        padding: 0.5rem 2rem;
+        overflow: visible;
+    }
+
+    .pick {
+        position: relative;
+        border-radius: var(--border-radius);
+        border: 2px solid transparent;
+        cursor: pointer;
+        color: var(--scary-ash);
+        text-align: center;
+        font-size: 0.9rem;
+        overflow: visible;
+
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            background-color: var(--overlay-color);
+            margin-bottom: 0.3rem;
+        }
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+        }
+
+        &.chosen {
+            border-color: var(--scary-accent);
+            color: var(--scary-bone);
+
+            &::after {
+                content: '♥';
+                position: absolute;
+                top: 0.4rem;
+                inset-inline-end: 0.4rem;
+                width: 1.9rem;
+                height: 1.9rem;
+                line-height: 1.9rem;
+                border-radius: 50%;
+                background-color: var(--scary-blood);
+                color: var(--scary-bone);
+            }
+        }
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+        gap: 1rem;
+        padding: 0.5rem 2rem;
+
+        .stat {
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--scary-line);
+            background-color: var(--overlay-color);
+
+            .stat-value {
+                font-family: 'Rubik', 'Assistant', 'Cairo', sans-serif;
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--scary-bone);
+                margin-bottom: 0.3rem;
+            }
+
+            .stat-label {
+                color: var(--scary-ash);
+            }
+        }
+    }
+
+    .bucket {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 0.5rem 2rem;
+
+        .bucket-film {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--scary-line);
+            overflow: visible;
+
+            .bucket-number {
+                flex: none;
+                width: 2.2rem;
+                font-family: 'Rubik', 'Assistant', 'Cairo', sans-serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--scary-accent);
+                text-align: center;
+            }
+
+            img {
+                flex: none;
+                width: 3.2rem;
+                height: 4.7rem;
+                object-fit: cover;
+                border-radius: 0.3rem;
+                background-color: var(--overlay-color);
+            }
+
+            .bucket-name {
+                flex: 1;
+                color: var(--scary-bone);
+                font-weight: 700;
+            }
+
+            .bucket-time {
+                flex: none;
+                color: var(--scary-ash);
+            }
+        }
+    }
+
+    @media only screen and (max-width: @minimum) {
+        .page-title, .grid, .stats, .bucket {
+            padding-inline: 1rem;
+        }
+    }
+}
+
+.icon-button {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    color: var(--scary-bone);
+    background-color: var(--overlay-color);
+    cursor: pointer;
+
+    &:hover, &:focus-visible {
+        outline: var(--focus-outline-size) solid var(--scary-bone);
+    }
+
+    &[disabled] {
+        opacity: 0.35;
+        cursor: default;
+    }
+
+    svg {
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+}
