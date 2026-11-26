@@ -16,6 +16,7 @@ const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
 const useToast = require('stremio/common/Toast/useToast');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useStreamingServer = require('stremio/common/useStreamingServer');
+const { ACCOUNTS_ENABLED } = require('stremio/scary/account');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -66,7 +67,7 @@ const NavMenuContent = ({ onClick }) => {
 
     return (
         <div className={classnames(styles['nav-menu-container'], 'animation-fade-in', { [styles['with-warning']]: !streamingServerWarningDismissed } )} onClick={onClick}>
-            <div className={styles['user-info-container']}>
+            {ACCOUNTS_ENABLED ? <div className={styles['user-info-container']}>
                 <div
                     className={styles['avatar-container']}
                     style={{
@@ -87,7 +88,7 @@ const NavMenuContent = ({ onClick }) => {
                         <div className={styles['logout-label']}>{profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : t('LOG_OUT')}</div>
                     </Button>
                 </div>
-            </div>
+            </div> : null}
             {
                 (supported && !isAndroidPWA) || install !== null ?
                     <div className={styles['nav-menu-section']}>
@@ -126,26 +127,6 @@ const NavMenuContent = ({ onClick }) => {
                     <Icon className={styles['icon']} name={'magnet-link'} />
                     <div className={styles['nav-menu-option-label']}>{ t('PLAY_URL_MAGNET_LINK') }</div>
                 </Button>
-                <Button className={styles['nav-menu-option-container']} title={ t('HELP_FEEDBACK') } href={'https://stremio.zendesk.com/'} target={'_blank'}>
-                    <Icon className={styles['icon']} name={'help'} />
-                    <div className={styles['nav-menu-option-label']}>{ t('HELP_FEEDBACK') }</div>
-                </Button>
-            </div>
-            <div className={styles['nav-menu-section']}>
-                <Button className={styles['nav-menu-option-container']} title={ t('TERMS_OF_SERVICE') } href={'https://www.stremio.com/tos'} target={'_blank'}>
-                    <div className={styles['nav-menu-option-label']}>{ t('TERMS_OF_SERVICE') }</div>
-                </Button>
-                <Button className={styles['nav-menu-option-container']} title={ t('PRIVACY_POLICY') } href={'https://www.stremio.com/privacy'} target={'_blank'}>
-                    <div className={styles['nav-menu-option-label']}>{ t('PRIVACY_POLICY') }</div>
-                </Button>
-                {
-                    profile.auth !== null ?
-                        <Button className={styles['nav-menu-option-container']} title={ t('USER_PANEL') } href={'https://www.stremio.com/acc-settings'} target={'_blank'}>
-                            <div className={styles['nav-menu-option-label']}>{ t('USER_PANEL') }</div>
-                        </Button>
-                        :
-                        null
-                }
             </div>
         </div>
     );

@@ -103,6 +103,9 @@ module.exports = (env, argv) => ({
                         options: {
                             postcssOptions: {
                                 plugins: [
+                                    // SCARY: right-to-left rules for Hebrew and Arabic, generated from the same styles.
+                                    // Needs dir="ltr" or dir="rtl" on <html> at all times (src/index.html, useScarySetup).
+                                    ['postcss-rtlcss', {}],
                                     ['cssnano', {
                                         preset: [
                                             'advanced',

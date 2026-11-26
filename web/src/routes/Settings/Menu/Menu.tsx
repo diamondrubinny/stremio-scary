@@ -10,6 +10,7 @@ import { PAGES } from '../constants';
 import AccountRow from '../AccountRow';
 import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Menu.less';
+import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
 
 type Props = {
     groups: SettingsGroup[],
@@ -25,7 +26,7 @@ const Menu = ({ groups, profile, selected, query, onQueryChange, onNavigate }: P
 
     return (
         <nav className={styles['menu']} aria-label={t('SETTINGS')}>
-            <AccountRow profile={profile} selected={selected === PAGES.ACCOUNT} onClick={onNavigate} />
+            {ACCOUNTS_ENABLED && <AccountRow profile={profile} selected={selected === PAGES.ACCOUNT} onClick={onNavigate} />}
             <SearchField className={styles['search']} value={query} onChange={onQueryChange} />
             {
                 groups.map((group) => (

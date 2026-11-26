@@ -5,13 +5,15 @@
 // fed from them, and the page's language and direction. Everything here stays in this browser: there is no account,
 // so nothing is synchronised anywhere.
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCore } from 'stremio/core';
 import { addSubgenreLabels } from '../i18n/register';
-import { ADDON_ID, SPOTLIGHT_CATALOGS, feedBaseUrl, feedLanguageOf, isRtl, isScaryTransportUrl, transportUrlOf } from './addon';
+import { ADDON_ID, SPOTLIGHT_CATALOGS, feedBaseUrl, feedLanguageOf, interfaceLanguageOfBrowser, isRtl, isScaryTransportUrl, transportUrlOf } from './addon';
 
 const SETUP_KEY = 'scary.setup';
 const SETUP_VERSION = '1';
+/** How long the first run waits for the engine to take the browser's language before going on without it. */
+const LANGUAGE_TIMEOUT = 3000;
 
 /** Stremio's general catalogs that a new profile comes with and SCARY has no use for. Removed once, on first run. */
 const isGeneralCatalogAddon = (transportUrl: string): boolean =>
@@ -70,6 +72,10 @@ const useScarySetup = (profile: Profile): void => {
     const language = feedLanguageOf(profile.settings?.interfaceLanguage);
     const addons = profile.addons;
     const spotlight = profile.settings?.boardSpotlight;
+    const interfaceLanguage = profile.settings?.interfaceLanguage;
+    // On the first run the interface takes the browser's language, when it is one of SCARY's. Nothing else is set up
+    // until that is settled, so no later change is made from settings that still hold the old language.
+    const [settled, setSettled] = useState(firstRunDone);
 
     useEffect(() => {
         document.documentElement.setAttribute('lang', language);
@@ -80,9 +86,24 @@ const useScarySetup = (profile: Profile): void => {
         loadLabels();
     }, []);
 
+    useEffect(() => {
+        if (settled || typeof interfaceLanguage !== 'string') return;
+        const wanted = interfaceLanguageOfBrowser(window.navigator?.language);
+        if (wanted === null || wanted === interfaceLanguage) {
+            setSettled(true);
+            return;
+        }
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: { action: 'UpdateSettings', args: { ...profile.settings, interfaceLanguage: wanted } },
+        });
+        const timer = setTimeout(() => setSettled(true), LANGUAGE_TIMEOUT);
+        return () => clearTimeout(timer);
+    }, [settled, interfaceLanguage, profile.settings, core.transport]);
+
     // SCARY's catalogs, in the interface language and of the newest feed.
     useEffect(() => {
-        if (!Array.isArray(addons)) return;
+        if (!settled || !Array.isArray(addons)) return;
         let cancelled = false;
         const transportUrl = transportUrlOf(language);
         loadManifest(transportUrl).then((manifest) => {
@@ -105,20 +126,20 @@ const useScarySetup = (profile: Profile): void => {
         return () => {
             cancelled = true;
         };
-    }, [addons, language, core.transport]);
+    }, [settled, addons, language, core.transport]);
 
     // Once per browser: remove the general catalogs a new profile comes with.
     useEffect(() => {
-        if (!Array.isArray(addons) || firstRunDone()) return;
+        if (!settled || !Array.isArray(addons) || firstRunDone()) return;
         for (const addon of addons.filter((addon) => isGeneralCatalogAddon(addon.transportUrl))) {
             core.transport.dispatch({ action: 'Ctx', args: { action: 'UninstallAddon', args: addon } });
         }
         markFirstRunDone();
-    }, [addons, core.transport]);
+    }, [settled, addons, core.transport]);
 
     // The spotlight shows SCARY's rows. A viewer's own choice among them is kept.
     useEffect(() => {
-        if (!Array.isArray(addons) || !spotlight) return;
+        if (!settled || !Array.isArray(addons) || !spotlight) return;
         const transportUrl = transportUrlOf(language);
         const scary = addons.find((addon) => addon.transportUrl === transportUrl);
         if (scary === undefined) return;
@@ -134,7 +155,7 @@ const useScarySetup = (profile: Profile): void => {
                 args: { ...profile.settings, boardSpotlight: { ...spotlight, catalogs } },
             },
         });
-    }, [addons, language, spotlight, profile.settings, core.transport]);
+    }, [settled, addons, language, spotlight, profile.settings, core.transport]);
 };
 
 export default useScarySetup;

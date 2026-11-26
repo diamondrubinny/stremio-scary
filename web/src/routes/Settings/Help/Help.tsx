@@ -4,6 +4,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePlatform, useToast } from 'stremio/common';
 import { Group, LinkRow, Row, RowButton } from '../components';
+import { SOURCE_URL } from 'stremio/scary/about';
 import styles from './Help.less';
 
 type Props = {
@@ -39,10 +40,8 @@ const Help = ({ streamingServer }: Props) => {
 
     return (
         <React.Fragment>
-            <Group title={t('SETTINGS_GROUP_HELP')}>
-                <LinkRow label={t('SETTINGS_SUPPORT')} href={'https://stremio.zendesk.com/hc/en-us'} />
-            </Group>
-            <Group title={t('ABOUT_STREMIO')}>
+            <Group title={t('SCARY_ABOUT')}>
+                <Row rowId={'scaryNotice'} label={t('SCARY_ABOUT_NOTICE')} variant={'thin'} />
                 {
                     versions.map(({ id, label, value, display }) => (
                         <Row key={id} rowId={id} label={label} variant={'thin'}>
@@ -55,9 +54,10 @@ const Help = ({ streamingServer }: Props) => {
                 </Row>
             </Group>
             <Group title={t('SETTINGS_GROUP_LEGAL')}>
-                <LinkRow label={t('TERMS_OF_SERVICE')} href={'https://www.stremio.com/tos'} />
-                <LinkRow label={t('PRIVACY_POLICY')} href={'https://www.stremio.com/privacy'} />
-                <LinkRow label={t('SETTINGS_SOURCE_CODE')} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`} />
+                <LinkRow label={t('SETTINGS_SOURCE_CODE')} href={`${SOURCE_URL}/tree/${process.env.COMMIT_HASH}`} />
+                <LinkRow label={t('SCARY_LICENSE')} href={`${SOURCE_URL}/blob/${process.env.COMMIT_HASH}/NOTICE`} />
+                <LinkRow label={t('SCARY_BASED_ON')} href={'https://github.com/Stremio/stremio-web'} />
+                <LinkRow label={'Powered by SCARY · Open source'} href={'https://github.com/diamondrubinny/Scary'} />
                 <LinkRow label={'Big Buck Bunny © 2008 Blender Foundation · CC BY 3.0'} href={'https://peach.blender.org/about/'} />
             </Group>
         </React.Fragment>

@@ -28,6 +28,21 @@ const feedLanguageOf = (interfaceLanguage: unknown): FeedLanguage => {
 
 const isRtl = (language: FeedLanguage): boolean => RTL_LANGUAGES.includes(language);
 
+/** Stremio Web's name for each of SCARY's languages, as stored in the settings. */
+const INTERFACE_LANGUAGE: Record<FeedLanguage, string> = { en: 'en-US', he: 'he-IL', ar: 'ar-AR', pt: 'pt-BR', ru: 'ru-RU' };
+
+/**
+ * The interface language for a browser language ("he", "he-IL", "pt-PT", "ru"…), when it is one of SCARY's and not
+ * English; null otherwise, and the interface stays as it is. Android and old browsers call Hebrew "iw".
+ */
+const interfaceLanguageOfBrowser = (browserLanguage: unknown): string | null => {
+    if (typeof browserLanguage !== 'string') return null;
+    const code = browserLanguage.toLowerCase();
+    const short = code.startsWith('iw') ? 'he' : code.slice(0, 2);
+    if (short === 'en' || !(FEED_LANGUAGES as readonly string[]).includes(short)) return null;
+    return code === 'pt-pt' ? 'pt-PT' : INTERFACE_LANGUAGE[short as FeedLanguage];
+};
+
 /** Where the feed is served: "feed/" beside the page, whatever folder the app is published in. */
 const feedBaseUrl = (pageUrl: string = document.baseURI): string => new URL('feed/', pageUrl.split('#')[0]).href;
 
@@ -65,6 +80,7 @@ export {
     discoverHref,
     feedBaseUrl,
     feedLanguageOf,
+    interfaceLanguageOfBrowser,
     isRtl,
     isScaryCatalog,
     isScaryTransportUrl,

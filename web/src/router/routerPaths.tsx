@@ -4,12 +4,14 @@ import React from 'react';
 import routes from 'stremio/routes';
 import { PLAYER_PATH, META_DETAILS_PATH, LEGACY_META_DETAILS_PATH } from './getBackFallback';
 
+import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
+
 export default [
-    {
+    ...(ACCOUNTS_ENABLED ? [{
         path: '/intro',
         view: 1,
         element: <routes.Intro />,
-    },
+    }] : []),
     {
         path: '/discover/:transportUrl?/:type?/:catalogId?',
         view: 1,

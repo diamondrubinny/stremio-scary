@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { usePlatform } from 'stremio/common';
 import usePWA from 'stremio/common/usePWA';
 import { PAGES } from './constants';
+import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
 
 type SettingsPage = {
     id: string,
@@ -29,7 +30,7 @@ const useSettingsPages = () => {
     const groups = useMemo<SettingsGroup[]>(() => {
         const savedScope = installed ? t('SETTINGS_SCOPE_SAVED_ON_DEVICE') : t('SETTINGS_SCOPE_SAVED_IN_BROWSER');
 
-        return [
+        const all = [
             {
                 id: 'preferences',
                 label: t('SETTINGS_GROUP_PREFERENCES'),
@@ -63,6 +64,11 @@ const useSettingsPages = () => {
                 ],
             },
         ];
+        if (ACCOUNTS_ENABLED) return all;
+        // Without accounts there is no account page, and nothing to integrate an account with (Trakt, calendar feed).
+        return all
+            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT && id !== PAGES.INTEGRATIONS) }))
+            .filter((group) => group.pages.length > 0);
     }, [t, installed, platform.shell.active, platform.isMobile]);
 
     const pages = useMemo(() => groups.flatMap(({ pages }) => pages), [groups]);

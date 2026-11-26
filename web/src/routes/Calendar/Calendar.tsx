@@ -14,6 +14,7 @@ import useCalendar from './useCalendar';
 import useCalendarDate from './useCalendarDate';
 import styles from './Calendar.less';
 import classNames from 'classnames';
+import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
 
 const Calendar = () => {
     const { year, month } = useParams();
@@ -40,7 +41,7 @@ const Calendar = () => {
     return (
         <MainNavBars className={styles['calendar']} route={'calendar'}>
             {
-                profile.auth !== null ?
+                profile.auth !== null || !ACCOUNTS_ENABLED ?
                     <div className={classNames(styles['content'], 'animation-fade-in')}>
                         <div className={styles['main']}>
                             <Selector

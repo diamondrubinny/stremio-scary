@@ -37,6 +37,14 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/routes/Discover/useDiscover.js` | 5 שורות: ברירת מחדל וסינון ל-SCARY | גילוי של SCARY בלבד |
 | `web/src/routes/Search/Search.js` | שורה אחת: `useSearch` → `useScarySearch` | חיפוש מקומי במאגר (5 שפות), השאילתה לא יוצאת מהדפדפן |
 | `web/src/common/useTranslate.js` | תנאי אחד ב-`catalogTitle` | שמות השורות של SCARY בלי " - Movie" |
+| `web/src/router/routerPaths.tsx` | הנתיב `/intro` מותנה ב-`ACCOUNTS_ENABLED` | בלי התחברות |
+| `web/src/components/NavBar/HorizontalNavBar/NavMenu/NavMenuContent.js` | אזור המשתמש מוסתר; הוסרו קישורי העזרה, התנאים והפרטיות של Stremio | בלי התחברות; המסמכים של Stremio לא מתארים את SCARY Web |
+| `web/src/routes/Library/Library.js`, `web/src/routes/Calendar/Calendar.tsx` | התנאי `profile.auth !== null` הורחב | ספרייה ולוח שנה מקומיים, בלי חשבון |
+| `web/src/routes/Settings/Menu/Menu.tsx`, `web/src/routes/Settings/useSettingsPages.ts` | כרטיס החשבון ועמודי "חשבון" ו"אינטגרציות" מוסתרים | בלי התחברות |
+| `web/src/routes/Settings/Help/Help.tsx` | "על SCARY Web": הודעת "לא רשמי", קישור לקוד המקור הזה, לרישיונות ול-upstream | GPL-2.0 (הודעה על שינוי + קוד מקור), מיתוג |
+| `web/src/common/interfaceLanguages.json` | 6 שפות ממשק במקום 50+ | חמש השפות של SCARY (פורטוגזית בשתי גרסאות) |
+| `web/package.json`, `web/pnpm-lock.yaml` | נוסף `postcss-rtlcss` 6.0.0 | RTL בזמן בנייה |
+| `web/webpack.config.js` (נוסף) | `postcss-rtlcss` בשרשרת ה-PostCSS | RTL |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

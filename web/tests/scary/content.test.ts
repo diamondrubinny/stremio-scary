@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
 
-import { discoverHref, feedBaseUrl, feedLanguageOf, isRtl, isScaryCatalog, isScaryTransportUrl, transportUrlOf, transportUrlOfDiscoverLink } from '../../src/scary/content/addon';
+import { discoverHref, feedBaseUrl, feedLanguageOf, interfaceLanguageOfBrowser, isRtl, isScaryCatalog, isScaryTransportUrl, transportUrlOf, transportUrlOfDiscoverLink } from '../../src/scary/content/addon';
 import { engineRange, scaryRows } from '../../src/scary/content/board';
 import { defaultDiscoverRequest, narrowDiscover } from '../../src/scary/content/discover';
 import { normalize, readIndex, searchFilms } from '../../src/scary/content/search';
@@ -21,6 +21,12 @@ describe('SCARY add-on addresses', () => {
             .toEqual(['he', 'he', 'ar', 'pt', 'pt', 'pt', 'ru', 'en', 'en']);
         expect(['fr-FR', '', null, undefined, 42].map(feedLanguageOf)).toEqual(['en', 'en', 'en', 'en', 'en']);
         expect([isRtl('he'), isRtl('ar'), isRtl('en'), isRtl('ru'), isRtl('pt')]).toEqual([true, true, false, false, false]);
+    });
+
+    test('the first run takes the browser\'s language when it is one of SCARY\'s', () => {
+        expect(['he', 'he-IL', 'iw', 'iw-IL', 'ar-EG', 'pt-BR', 'pt', 'pt-PT', 'ru', 'RU-ru'].map(interfaceLanguageOfBrowser))
+            .toEqual(['he-IL', 'he-IL', 'he-IL', 'he-IL', 'ar-AR', 'pt-BR', 'pt-BR', 'pt-PT', 'ru-RU', 'ru-RU']);
+        expect(['en', 'en-GB', 'fr-FR', '', undefined, 7].map(interfaceLanguageOfBrowser)).toEqual([null, null, null, null, null, null]);
     });
 
     test('only SCARY\'s own manifests count as SCARY', () => {

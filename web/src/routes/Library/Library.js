@@ -13,6 +13,7 @@ const { DelayedRenderer, Chips, Image, MainNavBars, LibItem, MultiselectMenu } =
 const { default: Placeholder } = require('./Placeholder');
 const useLibrary = require('./useLibrary');
 const useSelectableInputs = require('./useSelectableInputs');
+const { ACCOUNTS_ENABLED } = require('stremio/scary/account');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_TRESHOLD = 400;
@@ -73,7 +74,7 @@ const Library = ({ model }) => {
     return (
         <MainNavBars className={styles['library-container']} route={model}>
             {
-                profile.auth !== null ?
+                profile.auth !== null || !ACCOUNTS_ENABLED ?
                     <div className={styles['library-content']}>
                         <div className={styles['selectable-inputs-container']}>
                             <MultiselectMenu {...typeSelect} className={styles['select-input-container']} />
