@@ -81,9 +81,16 @@ const SettingsPage = () => {
 
     const saveBackup = useCallback(() => {
         const backup = createBackup(window.localStorage);
+        const name = `scary-web-backup-${backup.savedAt.slice(0, 10)}.json`;
+        // Inside the Android app there is no download: the app is asked to save the file, and asks the viewer where.
+        const android = (window as { ScaryAndroid?: { postMessage?: (message: string) => void } }).ScaryAndroid;
+        if (typeof android?.postMessage === 'function') {
+            android.postMessage(JSON.stringify({ type: 'saveFile', name, text: JSON.stringify(backup) }));
+            return;
+        }
         const link = document.createElement('a');
         link.href = URL.createObjectURL(new Blob([JSON.stringify(backup)], { type: 'application/json' }));
-        link.download = `scary-web-backup-${backup.savedAt.slice(0, 10)}.json`;
+        link.download = name;
         link.click();
         URL.revokeObjectURL(link.href);
     }, []);

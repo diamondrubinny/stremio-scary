@@ -23,7 +23,8 @@ Stremio Web. **מוצר לא רשמי**, בלי חשבון, בלי התחברו�
 | Path | What it is | License |
 |---|---|---|
 | `web/` | The web app: Stremio Web (git subtree) plus the SCARY layer in `web/src/scary/` | GPL-2.0 |
-| `feed/` | *(planned)* Builds SCARY's film feed into static catalog files | GPL-2.0 |
+| `feed/` | Builds SCARY's film feed into static catalog files | GPL-2.0 |
+| `android/` | The same web app as an Android app (phones, tablets, Android TV): a WebView around the built site. See [docs/ANDROID.md](docs/ANDROID.md) | GPL-2.0 |
 | `src/`, `package.json` | `stremio-video`, the player library this repository was forked from, unchanged | MIT |
 | `docs/` | Spec, spike findings, upstream sync guide, policies (drafts) | |
 | `scripts/` | Development helpers | GPL-2.0 |

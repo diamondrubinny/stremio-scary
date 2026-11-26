@@ -11,7 +11,7 @@ This repository holds works under different licenses:
               (the SCARY layer in web/src/scary/ and the edits listed in the git history since the
               import commit). GNU General Public License, version 2: see web/LICENSE.md.
               The complete source of the published web app is this repository.
-- feed/, scripts/
+- feed/, scripts/, android/
               Copyright 2026 diamondrubinny. GNU General Public License, version 2.
 - src/, package.json, eslint.config.mjs (repository root)
               stremio-video, Copyright (C) 2017-2026 Smart Code OOD. MIT License. Unchanged.
