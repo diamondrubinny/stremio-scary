@@ -1,0 +1,59 @@
+# SCARY Web: lint, test and build the web app (web/) on every push and pull request.
+# No secrets are used. The job can read the repository and nothing else.
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - "claude/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web app
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6.1.1
+        with:
+          version: 11.8.0
+          run_install: false
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: web/.nvmrc
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+      - name: Upload the build
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-build
+          path: web/build
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,68 @@
+# SCARY Web: publish the web app to GitHub Pages (the preview site).
+# Runs when master changes, or by hand from the Actions tab. Needs Pages to be enabled once in the repository
+# settings (Settings -> Pages -> Source: GitHub Actions). No secrets are used.
+name: Deploy preview
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6.1.1
+        with:
+          version: 11.8.0
+          run_install: false
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: web/.nvmrc
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/build
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

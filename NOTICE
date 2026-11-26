@@ -1,0 +1,23 @@
+SCARY Web
+Powered by SCARY · Open source · https://github.com/diamondrubinny/Scary
+Copyright 2026 diamondrubinny
+
+SCARY Web is an unofficial, modified version of Stremio Web. It is not made, endorsed or supported by
+Stremio / Smart Code OOD. "Stremio" is a trademark of its owner.
+
+This repository holds works under different licenses:
+
+- web/        Stremio Web, Copyright (C) 2017-2026 Smart Code OOD, with changes by diamondrubinny
+              (the SCARY layer in web/src/scary/ and the edits listed in the git history since the
+              import commit). GNU General Public License, version 2: see web/LICENSE.md.
+              The complete source of the published web app is this repository.
+- feed/, scripts/
+              Copyright 2026 diamondrubinny. GNU General Public License, version 2.
+- src/, package.json, eslint.config.mjs (repository root)
+              stremio-video, Copyright (C) 2017-2026 Smart Code OOD. MIT License. Unchanged.
+- docs/       Copyright 2026 diamondrubinny.
+
+Data and third-party material:
+- The film feed comes from SCARY (https://github.com/diamondrubinny/Scary), built from Wikidata
+  (CC0 1.0, https://www.wikidata.org) and Cinemeta (https://www.strem.io).
+- Movie metadata and images come from Cinemeta (Stremio) and belong to their owners.
