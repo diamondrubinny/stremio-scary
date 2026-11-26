@@ -9,18 +9,18 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router';
 import { useToast } from 'stremio/common';
-import Icon from '@stremio/stremio-icons/react';
 import { backgroundOf, detailsHref, titleOf } from '../content/items';
 import { isRated, minutesOf } from '../domain/film';
 import { nextInBucket } from '../domain/lists';
 import { NO_LOCKOUT, afterWrongPin, remainingWait } from '../domain/lock';
-import { filmIdOfPath, isPlayerPath } from '../domain/paths';
+import { filmIdOfPath, isFilmPath, isPlayerPath } from '../domain/paths';
 import { isValidPin, verifyPin } from '../domain/pin';
-import { useFeedLanguage, useScaryRules, useScaryState, useSession } from '../hooks';
-import { askPin, isUnlocked, setSleepTimer, unlock } from '../state/session';
+import { useFeedLanguage, useScaryHold, useScaryRules, useScaryState, useSession } from '../hooks';
+import { setSleepTimer, unlock } from '../state/session';
 import { answerConsent, store } from '../state/store';
 import Chip from './Chip';
 import Dialog from './Dialog';
+import HeldDialog from './HeldDialog';
 import styles from './scary.less';
 
 const SHIVER_MS = 2_200;
@@ -116,32 +116,13 @@ const PinDialog = () => {
     );
 };
 
-/** Stands in front of a film that family night or the parental lock does not let through. */
-const Gate = ({ filmId }: { filmId: string | null }) => {
-    const { t } = useTranslation();
-    const navigate = useNavigate();
-    const { lock } = useScaryState();
-    const { pinRequest } = useSession();
-    const rules = useScaryRules(filmId !== null);
-    const hasPin = lock.pin !== null;
-    const guarded = rules.familyNight || (lock.enabled && hasPin);
-    if (filmId === null || !guarded || pinRequest !== null) return null;
-    const film = rules.library.byId.get(filmId) ?? null;
-    const loading = rules.library.status === 'loading';
-    const byFamily = rules.familyNight && rules.isHidden(film) && !isUnlocked();
-    const byLock = rules.isLocked(film);
-    if (!loading && !byFamily && !byLock) return null;
-    const back = () => navigate('/');
-    return (
-        <Dialog label={t('SCARY_LOCKED_BADGE')} onClose={back}>
-            <Icon className={styles['gate-icon']} name={'warning'} />
-            <p className={styles['gate-text']}>{loading ? '' : byFamily ? t('SCARY_FAMILY_GATE') : t('SCARY_LOCK_GATE')}</p>
-            <div className={styles['chips-line']} style={{ display: 'flex', gap: '0.6rem' }}>
-                {hasPin && !loading ? <Chip label={t('SCARY_PIN_LABEL')} chosen={true} onClick={() => askPin('verify')} /> : null}
-                <Chip label={t('SCARY_BACK')} onClick={back} />
-            </div>
-        </Dialog>
-    );
+/**
+ * The gate in front of a film's page and of a player that names its film. A page about something SCARY does not know
+ * is gated like the scariest film; a player that names no film is ui/PlayerGate's to judge.
+ */
+const Gate = ({ filmId, watched }: { filmId: string | null, watched: boolean }) => {
+    const hold = useScaryHold(filmId);
+    return !watched || hold === 'no' ? null : <HeldDialog hold={hold} />;
 };
 
 /** The film's title trembles in the dark for a moment as the player opens. */
@@ -349,7 +330,7 @@ const Overlays = () => {
             {effects.atmosphere && !playing ? <div className={styles['atmosphere']} aria-hidden={'true'}><div className={styles['fog']} /><div className={styles['grain']} /></div> : null}
             <Shiver filmId={filmId} playing={playing} />
             <Screensaver enabled={effects.screensaver && !playing} />
-            <Gate filmId={filmId} />
+            <Gate filmId={filmId} watched={isFilmPath(location.pathname) && (filmId !== null || !playing)} />
             <BucketPrompt filmId={filmId} playing={playing} />
             <PinDialog />
             {!playing ? <ConsentBanner /> : null}

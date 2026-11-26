@@ -49,7 +49,7 @@ const DetailsExtras = ({ id: givenId, type, links }: Props) => {
     const { loved, notForMe, bucket } = useScaryState();
     const rules = useScaryRules(id !== null);
     const film = id !== null ? library.byId.get(id) ?? null : null;
-    const similar = useMemo(() => film === null ? [] : moreLikeThis(library.films, film, new Set(notForMe), rules.isHidden).slice(0, 12), [library.films, film, notForMe, rules.isHidden]);
+    const similar = useMemo(() => film === null ? [] : moreLikeThis(library.films, film, new Set(notForMe), (other) => rules.isHidden(other) || rules.isLocked(other)).slice(0, 12), [library.films, film, notForMe, rules]);
     const tmdb = useTmdbFilm(id, type === 'series' || (film !== null && isSeries(film)));
     const offers = tmdb.details?.offers ?? null;
     const qr = useMemo(() => id === null ? null : qrCode(`https://www.imdb.com/title/${id}/`), [id]);

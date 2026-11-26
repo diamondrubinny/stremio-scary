@@ -24,4 +24,15 @@ const filmIdOfPath = (pathname: string): string | null => {
     return afterType !== null ? afterType[1] : ids[0].replace('/', '');
 };
 
-export { filmIdOfPath, isFilmPath, isPlayerPath };
+/** The film a tile leads to, read from the links the engine gives the tile; null when none of them names one. */
+const filmIdOfLinks = (links: unknown): string | null => {
+    if (typeof links !== 'object' || links === null) return null;
+    for (const key of ['metaDetailsVideos', 'metaDetailsStreams', 'player']) {
+        const href = (links as Record<string, unknown>)[key];
+        const id = typeof href === 'string' ? filmIdOfPath(href.replace(/^#/, '')) : null;
+        if (id !== null) return id;
+    }
+    return null;
+};
+
+export { filmIdOfLinks, filmIdOfPath, isFilmPath, isPlayerPath };

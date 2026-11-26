@@ -68,6 +68,10 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | 14 קובצי `.less`: `SegmentedControl`, `UpdateBanner`, `Calendar/{List/Item/Item,Table/Cell/Cell}`, `SpotlightSettings/{CatalogCard,CatalogsEmpty,CatalogTray,CatalogSheet}`, `Board/Spotlight/Slide`, `Discover/{styles,FiltersSheet/Selection/Selection,Guide/Row/Row}`, `Player/NextVideoPopup/styles`, `Details/EpisodePicker/EpisodePicker` | שורה אחת בכל קובץ: רקע שמתחת לטקסט `--primary-accent-color` → `--secondary-accent-color` | ניגודיות: טקסט בהיר על האדום הבהיר היה 3.1–3.4:1; על אדום הדם 6.5:1 |
 | `Details/Actions/PlayButton.less`, `Details/EpisodePicker/EpisodePicker.less`, `Discover/Guide/{Row/Row,Skeleton/Skeleton}.less`, `App/GamepadModal/styles.less` | צבעים קשיחים של Stremio (סגול, ירוק) → משתני הפלטה של SCARY | כפתור "צפייה" הפך ירוק במעבר עכבר; שאריות סגול |
 | `Settings/Menu/Menu.less`, `Calendar/Selector/Selector.less`, `Addons/Addon/styles.less`, `components/Scale/Scale.less`, `components/MetaPreview/Links.less` | `opacity` של טקסט מעומעם (לא מושבת) 0.3–0.5 → 0.65 | ניגודיות 4.5:1 לפחות |
+| `web/src/components/MetaItem/MetaItem.js` (נוסף) | `deepLinks` מועבר ל-`useScaryTile` | האריח מזוהה גם כשהמסך לא נותן לו `id` (גילוי, ספרייה, "המשך צפייה") — נעילת הורים וערב משפחתי |
+| `web/src/routes/Discover/Discover.js` | `useScaryHeld` + 4 שורות: התצוגה המקדימה של סרט נעול מוסתרת | נעילת הורים |
+| `web/src/routes/Board/Board.js` (נוסף) | הספוטלייט דרך `scaryBoard.spotlight`; באנר "שרת ההזרמה" מותנה ב-`SERVER_BANNER_ENABLED` | סרט נעול לא מוצג בספוטלייט; בלי הצעה להתקין את שרת Stremio בכניסה |
+| `web/src/components/MetaPreview/Facts.tsx` | `dir="auto"` לכל עובדה; "119 min" → בשפת הממשק | RTL: "2026-" ו"55 דק׳" מוצגים נכון |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

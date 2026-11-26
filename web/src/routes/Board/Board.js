@@ -7,6 +7,7 @@ const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalo
 const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = require('stremio/common');
 const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
+const { SERVER_BANNER_ENABLED } = require('stremio/scary/account');
 const { default: useScaryBoard } = require('stremio/scary/content/useScaryBoard');
 const { default: ScaryBoardExtras } = require('stremio/scary/ui/BoardExtras');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -32,7 +33,7 @@ const Board = () => {
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
     const scaryBoard = useScaryBoard(board.catalogs, loadBoardRows);
-    const spotlightItems = board.spotlight?.type === 'Ready' ? scaryBoard.allowed(board.spotlight.content) : [];
+    const spotlightItems = board.spotlight?.type === 'Ready' ? scaryBoard.spotlight(board.spotlight.content) : [];
     const spotlightVisible = spotlightItems.length > 0 || board.spotlight?.type === 'Loading';
     // One more row above the catalogs: SCARY's own (moods, the time planner, seasonal rows), always there.
     const boardCatalogsOffset = 1 +
@@ -40,7 +41,7 @@ const Board = () => {
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
     const showStreamingServerWarning = React.useMemo(() => {
-        return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
+        return SERVER_BANNER_ENABLED && streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);

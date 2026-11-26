@@ -7,4 +7,11 @@
  */
 const ACCOUNTS_ENABLED = false;
 
-export { ACCOUNTS_ENABLED };
+/**
+ * Stremio Web greets a visitor who has no streaming server with a banner that offers to install Stremio's. SCARY Web
+ * shows horror and plays what the viewer adds; it does not send a first-time visitor to install anything. The server
+ * is still there for whoever wants it: Settings, "Streaming".
+ */
+const SERVER_BANNER_ENABLED = false;
+
+export { ACCOUNTS_ENABLED, SERVER_BANNER_ENABLED };

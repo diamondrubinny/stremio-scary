@@ -34,5 +34,16 @@ const engineRange = (indexes: number[], range: Range): Range | null => {
     return { start: indexes[first], end: indexes[last] };
 };
 
-export { engineRange, scaryRows };
+/**
+ * The spotlight shows a film's art, name and story in full, so a film behind the parental lock has no place in it (in
+ * a row the same film is a tile that says "Locked"). While the lock is on and the library has not answered, or could
+ * not be loaded, nothing is shown.
+ */
+const spotlightItems = <I extends { id?: unknown }>(items: I[], lockActive: boolean, libraryReady: boolean, isLockedId: (id: string) => boolean): I[] => {
+    if (!lockActive) return items;
+    if (!libraryReady) return [];
+    return items.filter((item) => typeof item.id === 'string' && !isLockedId(item.id));
+};
+
+export { engineRange, scaryRows, spotlightItems };
 export type { Range };

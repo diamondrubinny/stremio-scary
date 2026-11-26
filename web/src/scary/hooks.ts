@@ -44,5 +44,24 @@ const useScaryRules = (wanted = true): Rules => {
     return useMemo(() => ({ library, familyNight, isHidden, isLocked, isUnwanted }), [library, familyNight, isHidden, isLocked, isUnwanted]);
 };
 
-export { useFeedLanguage, useScaryRules, useScaryState, useSession };
-export type { Rules };
+/** Why a film is held back: by family night, by the parental lock, not yet known ('loading'), or not at all. */
+type Hold = 'no' | 'loading' | 'by-family' | 'by-lock';
+
+/**
+ * Whether family night or the parental lock stands in front of a film. A film SCARY does not know (no id, or an id
+ * that is not in the library) is treated as the scariest, as on Android TV; while the library has not answered, the
+ * film is held; and a correct PIN opens what is held, for a while. Asks for nothing when nothing guards.
+ */
+const useScaryHold = (id: string | null | undefined): Hold => {
+    const { familyNight, lock } = useScaryState();
+    const guarded = familyNight || (lock.enabled && lock.pin !== null);
+    const rules = useScaryRules(guarded);
+    if (!guarded) return 'no';
+    if (rules.library.status === 'loading') return 'loading';
+    const film = typeof id === 'string' ? rules.library.byId.get(id) ?? null : null;
+    if (rules.isHidden(film) && !isUnlocked()) return 'by-family';
+    return rules.isLocked(film) ? 'by-lock' : 'no';
+};
+
+export { useFeedLanguage, useScaryHold, useScaryRules, useScaryState, useSession };
+export type { Hold, Rules };

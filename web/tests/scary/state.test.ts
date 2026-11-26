@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
 
-import { filmIdOfPath, isPlayerPath } from '../../src/scary/domain/paths';
+import { filmIdOfLinks, filmIdOfPath, isPlayerPath } from '../../src/scary/domain/paths';
 import { createBackup, readBackup, restoreBackup } from '../../src/scary/state/backup';
 import { CONSENT_VERSION, DEFAULT_STATE, STORAGE_KEY, answerConsent, createStore, sanitize } from '../../src/scary/state/store';
 
@@ -118,5 +118,14 @@ describe('which film an address is about', () => {
         expect(filmIdOfPath('/detail/movie/%E0%A4%A')).toBeNull();
         expect(filmIdOfPath('/')).toBeNull();
         expect([isPlayerPath('/player/x'), isPlayerPath('/detail/movie/tt0081505')]).toEqual([true, false]);
+    });
+
+    test('a tile is known by where it leads', () => {
+        expect(filmIdOfLinks({ metaDetailsVideos: null, metaDetailsStreams: '#/detail/movie/tt0081505/tt0081505', player: null })).toBe('tt0081505');
+        expect(filmIdOfLinks({ metaDetailsVideos: '#/detail/series/tt4574334', metaDetailsStreams: null })).toBe('tt4574334');
+        expect(filmIdOfLinks({ player: '#/player/abc/x/y/movie/tt0070047/tt0070047' })).toBe('tt0070047');
+        expect(filmIdOfLinks({ metaDetailsStreams: '#/detail/movie/kitsu%3A1/kitsu%3A1' })).toBeNull();
+        expect(filmIdOfLinks({ metaDetailsStreams: 7, search: '#/search?search=tt0081505' })).toBeNull();
+        expect([filmIdOfLinks(null), filmIdOfLinks('tt0081505'), filmIdOfLinks({})]).toEqual([null, null, null]);
     });
 });

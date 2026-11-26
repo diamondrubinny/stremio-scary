@@ -3,7 +3,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { useScaryRules, useScaryState } from '../hooks';
-import { engineRange, scaryRows } from './board';
+import { engineRange, scaryRows, spotlightItems } from './board';
 import type { Range } from './board';
 
 type Item = { id?: string, watched?: boolean };
@@ -15,8 +15,9 @@ type Loaded = { content?: { type?: string, content?: unknown } | null };
  * night leaves only the gentlest films, a film marked "not for me" is left out, and films already watched go last.
  */
 const useScaryBoard = <T extends Row>(catalogs: T[] | null | undefined, loadRange: (range: Range) => void) => {
-    const { familyNight, notForMe } = useScaryState();
-    const rules = useScaryRules(familyNight);
+    const { familyNight, notForMe, lock } = useScaryState();
+    const lockActive = lock.enabled && lock.pin !== null;
+    const rules = useScaryRules(familyNight || lockActive);
     const rows = useMemo(() => scaryRows(catalogs), [catalogs]);
 
     const allowed = useCallback(<I extends Item>(items: I[]): I[] => {
@@ -25,6 +26,10 @@ const useScaryBoard = <T extends Row>(catalogs: T[] | null | undefined, loadRang
         const kept = items.filter((item) => typeof item.id === 'string' && !notForMe.includes(item.id) && !rules.isHidden(rules.library.byId.get(item.id)));
         return [...kept.filter((item) => item.watched !== true), ...kept.filter((item) => item.watched === true)];
     }, [familyNight, notForMe, rules]);
+
+    const spotlight = useCallback(<I extends Item>(items: I[]): I[] =>
+        spotlightItems(allowed(items), lockActive, rules.library.status === 'ready', (id) => rules.isLocked(rules.library.byId.get(id) ?? null)),
+    [allowed, lockActive, rules]);
 
     const shown = useMemo(() => rows.catalogs.map((catalog) => {
         const loaded = (catalog as Loaded).content;
@@ -39,7 +44,7 @@ const useScaryBoard = <T extends Row>(catalogs: T[] | null | undefined, loadRang
         if (translated !== null) loadRange(translated);
     }, [rows.indexes, loadRange]);
 
-    return { catalogs: shown as T[], loadRange: loadScaryRange, allowed };
+    return { catalogs: shown as T[], loadRange: loadScaryRange, allowed, spotlight };
 };
 
 export default useScaryBoard;

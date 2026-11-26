@@ -20,7 +20,7 @@ const useScaryLocalSearch = () => {
     const rules = useScaryRules(false);
     const items = useMemo(() => {
         if (!active) return [];
-        const titles = searchFilms(library.films.filter((film) => !rules.isHidden(film)), query, MAX_SUGGESTIONS * 2).map((film) => titleOf(film, language));
+        const titles = searchFilms(library.films.filter((film) => !rules.isHidden(film) && !rules.isLocked(film)), query, MAX_SUGGESTIONS * 2).map((film) => titleOf(film, language));
         return Array.from(new Set(titles)).slice(0, MAX_SUGGESTIONS).map((title) => ({
             query: title,
             deepLinks: { search: `#/search?search=${encodeURIComponent(title)}` },

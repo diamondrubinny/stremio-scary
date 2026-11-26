@@ -21,8 +21,8 @@ const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name: itemName, poster: itemPoster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
     const { t } = useTranslation();
-    // SCARY: a film behind the parental lock shows no poster and no title.
-    const { poster, name } = useScaryTile(props.id, itemPoster, itemName);
+    // SCARY: a film that family night or the parental lock holds back shows no poster and no title.
+    const { poster, name } = useScaryTile(props.id, itemPoster, itemName, deepLinks);
     const artwork = poster && typeof poster === 'object' ? poster : { src: poster, shape: posterShape, changeCursor: posterChangeCursor };
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);

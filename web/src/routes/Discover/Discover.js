@@ -15,6 +15,7 @@ const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
 const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const { default: MetaPreviewSheet } = require('stremio/components/MetaPreviewSheet');
+const { useScaryHeld } = require('stremio/scary/ui/useScaryTile');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: FiltersSheet } = require('./FiltersSheet');
@@ -288,7 +289,9 @@ const Discover = () => {
     };
 
     const showHref = selectedMetaItem?.deepLinks.player ?? selectedMetaItem?.deepLinks.metaDetailsStreams ?? selectedMetaItem?.deepLinks.metaDetailsVideos ?? null;
-    const metaPreviewProps = selectedMetaItem && {
+    // SCARY: nothing of a film that family night or the parental lock holds back is previewed.
+    const selectedLocked = useScaryHeld(selectedMetaItem?.id);
+    const metaPreviewProps = selectedMetaItem && (selectedLocked ? { name: t('SCARY_LOCKED_BADGE') } : {
         name: selectedMetaItem.name,
         logo: selectedMetaItem.logo,
         runtime: selectedMetaItem.runtime,
@@ -300,7 +303,7 @@ const Discover = () => {
         onToggleLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
         watched: selectedMetaItem.watched,
         onToggleWatched: toggleWatched,
-    };
+    });
 
     const renderMetaPreview = () => {
         if (isMobile) {
@@ -329,8 +332,8 @@ const Discover = () => {
                 <MetaPreview
                     {...metaPreviewProps}
                     className={styles['preview']}
-                    background={selectedMetaItem.poster}
-                    links={selectedMetaItem.links}
+                    background={selectedLocked ? null : selectedMetaItem.poster}
+                    links={selectedLocked ? [] : selectedMetaItem.links}
                     show={showHref !== null ? { href: showHref } : null}
                 />
             );
@@ -375,8 +378,8 @@ const Discover = () => {
         return (
             <MetaPreview
                 {...metaPreviewProps}
-                background={selectedMetaItem.background || selectedMetaItem.poster}
-                links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
+                background={selectedLocked ? null : selectedMetaItem.background || selectedMetaItem.poster}
+                links={selectedLocked ? [] : selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
                 show={showHref !== null ? { href: showHref, icon: 'chevron-forward', onClick: onMobileShowClick } : null}
             />
         );

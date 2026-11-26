@@ -2,7 +2,7 @@
 // SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
 
 import { discoverHref, feedBaseUrl, feedLanguageOf, interfaceLanguageOfBrowser, isRtl, isScaryCatalog, isScaryTransportUrl, transportUrlOf, transportUrlOfDiscoverLink } from '../../src/scary/content/addon';
-import { engineRange, scaryRows } from '../../src/scary/content/board';
+import { engineRange, scaryRows, spotlightItems } from '../../src/scary/content/board';
 import { defaultDiscoverRequest, narrowDiscover } from '../../src/scary/content/discover';
 import { normalize, readIndex, searchFilms } from '../../src/scary/content/search';
 
@@ -65,6 +65,23 @@ describe('home rows', () => {
         expect(engineRange(rows.indexes, { start: -3, end: 0 })).toEqual({ start: 2, end: 2 });
         expect(engineRange([], { start: 0, end: 4 })).toBeNull();
         expect(scaryRows(null, PAGE)).toEqual({ catalogs: [], indexes: [] });
+    });
+});
+
+describe('the spotlight under the parental lock', () => {
+    const items = [{ id: 'tt0000001' }, { id: 'tt0000002' }, { id: 7 }];
+    const lockedIds = (id: string): boolean => id === 'tt0000002';
+
+    it('is left as it is without a lock', () => {
+        expect(spotlightItems(items, false, false, () => true)).toEqual(items);
+    });
+
+    it('never shows a locked film, nor an item without an id', () => {
+        expect(spotlightItems(items, true, true, lockedIds)).toEqual([{ id: 'tt0000001' }]);
+    });
+
+    it('shows nothing while it is not known what is locked', () => {
+        expect(spotlightItems(items, true, false, () => false)).toEqual([]);
     });
 });
 

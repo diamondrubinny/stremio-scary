@@ -6,6 +6,7 @@
 import i18n from 'i18next';
 import { FEED_LANGUAGES } from '../content/addon';
 import type { FeedLanguage } from '../content/addon';
+import { GAP_STRINGS } from './gaps';
 import { NATIVE_STRINGS } from './native';
 import { STRINGS } from './strings';
 
@@ -49,7 +50,7 @@ const renameApp = (): void => {
 const addScaryStrings = (): void => {
     const add = () => {
         renameApp();
-        FEED_LANGUAGES.forEach((language) => addBundle(language, { ...NATIVE_STRINGS[language], ...STRINGS[language] }));
+        FEED_LANGUAGES.forEach((language) => addBundle(language, { ...GAP_STRINGS[language], ...NATIVE_STRINGS[language], ...STRINGS[language] }));
     };
     if (i18n.isInitialized) add();
     else i18n.on('initialized', add);
