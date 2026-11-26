@@ -22,7 +22,8 @@ const useTranslate = () => {
             const partialKey = `${addon.manifest.id.split('.').join('_')}_${id}`;
             const translatedName = stringWithPrefix(partialKey, 'CATALOG_', name);
 
-            if (type && withType) {
+            // SCARY's rows carry their own names ("Masks and blades"): no " - Movie" after them.
+            if (type && withType && addon.manifest.id !== 'network.scary.catalogs') {
                 const translatedType = stringWithPrefix(type, 'TYPE_');
                 return `${translatedName} - ${translatedType}`;
             }

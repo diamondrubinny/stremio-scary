@@ -17,10 +17,19 @@ const BLOCKED_HOSTS: ReadonlySet<string> = new Set([
     'link.stremio.com',
 ]);
 
+/**
+ * Cinemeta's general catalogs (every genre): SCARY shows horror only, from its own feed, so they are never asked for.
+ * Cinemeta's film pages (/meta/…) are not catalogs and stay reachable.
+ */
+const isGeneralCatalog = (address: URL): boolean =>
+    address.hostname === 'cinemeta-catalogs.strem.io' ||
+    (address.hostname === 'v3-cinemeta.strem.io' && address.pathname.startsWith('/catalog/'));
+
 /** True when a request to this address must not leave the browser. Relative and unreadable addresses are allowed. */
 const isBlockedUrl = (url: string, base?: string): boolean => {
     try {
-        return BLOCKED_HOSTS.has(new URL(url, base).hostname.toLowerCase());
+        const address = new URL(url, base);
+        return BLOCKED_HOSTS.has(address.hostname.toLowerCase()) || isGeneralCatalog(address);
     } catch {
         return false;
     }

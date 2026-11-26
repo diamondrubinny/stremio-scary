@@ -31,6 +31,12 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/assets/images/*`, `web/assets/favicons/favicon.ico` | התוכן הוחלף (אותם שמות קבצים) ע"י `scripts/make-brand-assets.py` | מיתוג בלי לגעת בקוד |
 | `web/tests/copyright.spec.js` | מדלג על `src/scary` | לקבצי SCARY כותרת רישיון משלהם (נבדקת ב-`tests/scary/credit.test.js`) |
 | `web/jest.config.js` | קובץ חדש | הרצת בדיקות TypeScript בלי תלות חדשה |
+| `web/webpack.config.js` (נוסף) | העתקת `../feed/dist` ל-`feed/`; החרגת `feed/` מה-precache של ה-Service Worker | קטלוגי SCARY מוגשים לצד האפליקציה ומתעדכנים כל שבוע |
+| `web/src/App/App.js` | 2 שורות: `useScarySetup(profile)` | התקנה מקומית של קטלוגי SCARY, ספוטלייט, `lang`/`dir` |
+| `web/src/routes/Board/Board.js` | 3 שורות: `useScaryBoard` | הבית מציג רק את שורות SCARY |
+| `web/src/routes/Discover/useDiscover.js` | 5 שורות: ברירת מחדל וסינון ל-SCARY | גילוי של SCARY בלבד |
+| `web/src/routes/Search/Search.js` | שורה אחת: `useSearch` → `useScarySearch` | חיפוש מקומי במאגר (5 שפות), השאילתה לא יוצאת מהדפדפן |
+| `web/src/common/useTranslate.js` | תנאי אחד ב-`catalogTitle` | שמות השורות של SCARY בלי " - Movie" |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

@@ -4,6 +4,8 @@ const React = require('react');
 const UrlUtils = require('url');
 const { useCore } = require('stremio/core');
 const { useModelState } = require('stremio/common');
+const { default: useScaryAddon } = require('stremio/scary/content/useScaryAddon');
+const { defaultDiscoverRequest, narrowDiscover } = require('stremio/scary/content/discover');
 
 const map = (discover) => ({
     ...discover,
@@ -24,6 +26,7 @@ const map = (discover) => ({
 
 const useDiscover = (urlParams, queryParams) => {
     const core = useCore();
+    const scaryAddon = useScaryAddon();
     const loadNextPage = React.useCallback(() => {
         core.transport.dispatch({
             action: 'CatalogWithFilters',
@@ -59,7 +62,7 @@ const useDiscover = (urlParams, queryParams) => {
                 action: 'Load',
                 args: {
                     model: 'CatalogWithFiltersSelection',
-                    args: null
+                    args: scaryAddon !== null ? { request: defaultDiscoverRequest(scaryAddon) } : null
                 }
             };
         }
@@ -67,9 +70,10 @@ const useDiscover = (urlParams, queryParams) => {
         return {
             action: 'Unload'
         };
-    }, [urlParams, queryParams]);
+    }, [urlParams, queryParams, scaryAddon]);
     const discover = useModelState({ model: 'discover', action, map, deps: ['ctx'] });
-    return [discover, loadNextPage];
+    const scaryDiscover = React.useMemo(() => narrowDiscover(discover, scaryAddon), [discover, scaryAddon]);
+    return [scaryDiscover, loadNextPage];
 };
 
 module.exports = useDiscover;

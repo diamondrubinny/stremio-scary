@@ -19,6 +19,14 @@ describe('network guard', () => {
         expect(isBlockedUrl('http://127.0.0.1:11470/settings')).toBe(false);
     });
 
+    test('blocks Cinemeta\'s general catalogs, and not its film pages', () => {
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/catalog/movie/top.json')).toBe(true);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/catalog/series/top/search=friends.json')).toBe(true);
+        expect(isBlockedUrl('https://cinemeta-catalogs.strem.io/feed.json')).toBe(true);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/meta/series/tt4574334.json')).toBe(false);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/manifest.json')).toBe(false);
+    });
+
     test('is not fooled by look-alike addresses', () => {
         expect(isBlockedUrl('https://api.strem.io.example.org/api/getGeo')).toBe(false);
         expect(isBlockedUrl('https://example.org/api.strem.io')).toBe(false);

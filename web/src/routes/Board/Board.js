@@ -7,6 +7,7 @@ const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalo
 const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = require('stremio/common');
 const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
+const { default: useScaryBoard } = require('stremio/scary/content/useScaryBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const { default: Spotlight, Placeholder: SpotlightPlaceholder } = require('./Spotlight');
@@ -40,9 +41,10 @@ const Board = () => {
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);
+    const scaryBoard = useScaryBoard(board.catalogs, loadBoardRows);
     const { catalogRows, scrollContainerRef, onScroll } = useVisibleCatalogs({
-        catalogs: board.catalogs,
-        loadRange: loadBoardRows,
+        catalogs: scaryBoard.catalogs,
+        loadRange: scaryBoard.loadRange,
         leadingRows: boardCatalogsOffset,
         preloadRows: THRESHOLD,
     });

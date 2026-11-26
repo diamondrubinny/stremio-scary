@@ -7,7 +7,7 @@ const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalo
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { withCoreSuspender } = require('stremio/common');
 const { Image, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
-const useSearch = require('./useSearch');
+const { default: useSearch } = require('stremio/scary/content/useScarySearch');
 const styles = require('./styles');
 const { useSearchParams } = require('react-router-dom');
 

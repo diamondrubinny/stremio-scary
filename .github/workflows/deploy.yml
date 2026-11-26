@@ -1,5 +1,5 @@
 # SCARY Web: publish the web app to GitHub Pages (the preview site).
-# Runs when master changes, or by hand from the Actions tab. Needs Pages to be enabled once in the repository
+# Runs when master changes, once a week (after SCARY publishes its new film feed), or by hand from the Actions tab. Needs Pages to be enabled once in the repository
 # settings (Settings -> Pages -> Source: GitHub Actions). No secrets are used.
 name: Deploy preview
 
@@ -9,7 +9,10 @@ on:
       - master
     paths:
       - "web/**"
+      - "feed/**"
       - ".github/workflows/deploy.yml"
+  schedule:
+    - cron: "17 4 * * 4"
   workflow_dispatch:
 
 permissions:
@@ -44,6 +47,17 @@ jobs:
           cache-dependency-path: web/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      # The feed is public data and is read as untrusted: a file that is refused, or that shrank, is not used.
+      - name: SCARY's catalogs, from the newest film feed (the bundled feed if that one cannot be used)
+        working-directory: feed
+        run: |
+          if curl -fsSL --max-time 60 -o data/latest.json https://github.com/diamondrubinny/Scary/releases/download/film-feed/feed.json \
+            && node src/cli.ts --feed data/latest.json --legacy data/legacy.json --out dist --min-films 4000; then
+            echo "Built from the newest feed."
+          else
+            echo "::warning::The newest feed could not be used; building from the bundled one."
+            npm run build
+          fi
       - name: Build
         run: pnpm build
       - name: Upload the site

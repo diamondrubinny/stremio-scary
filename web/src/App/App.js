@@ -16,6 +16,7 @@ const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
 const { default: useInterfaceScale } = require('./useInterfaceScale');
+const { default: useScarySetup } = require('stremio/scary/content/useScarySetup');
 const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
@@ -25,6 +26,7 @@ const App = () => {
     const core = useCore();
     const profile = useProfile();
     const changeInterfaceScale = useInterfaceScale(profile);
+    useScarySetup(profile);
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const location = useLocation();

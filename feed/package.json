@@ -1,0 +1,15 @@
+{
+    "name": "scary-feed",
+    "version": "1.0.0",
+    "description": "Builds SCARY's film feed into static catalog files (the Stremio add-on protocol) for SCARY Web",
+    "private": true,
+    "type": "module",
+    "license": "GPL-2.0-only",
+    "engines": {
+        "node": ">=22.18"
+    },
+    "scripts": {
+        "build": "node src/cli.ts --feed data/feed.json --legacy data/legacy.json --out dist",
+        "test": "node --test"
+    }
+}

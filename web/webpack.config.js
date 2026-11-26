@@ -230,6 +230,8 @@ module.exports = (env, argv) => ({
         argv.mode === 'production' &&
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
+                // SCARY's catalogs are data that changes every week: fetched when asked for, never precached.
+                exclude: [/\.map$/, /^manifest.*\.js$/, /^feed\//],
                 clientsClaim: true,
                 skipWaiting: false
             }),
@@ -239,6 +241,8 @@ module.exports = (env, argv) => ({
                 { from: 'assets/images', to: 'images' },
                 { from: 'assets/screenshots/*.webp', to: 'screenshots/[name][ext]' },
                 { from: 'manifest.json', to: 'manifest.json' },
+                // SCARY's catalogs, built by the feed/ package (node src/cli.ts in ../feed).
+                { from: '../feed/dist', to: 'feed', noErrorOnMissing: true, info: { minimized: true } },
             ]
         }),
         new MiniCssExtractPlugin({
