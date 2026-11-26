@@ -148,11 +148,14 @@ const useScarySetup = (profile: Profile): void => {
             .filter(({ type, id }) => (scary.manifest.catalogs ?? []).some((catalog) => catalog.type === type && catalog.id === id))
             .map(({ type, id }) => ({ base: transportUrl, path: { resource: 'catalog', type, id, extra: [] } }));
         if (catalogs.length === 0) return;
+        // Stremio Web ships with the spotlight off. SCARY turns it on the first time; after that (a change of
+        // language moves it to the same rows in the new language) the viewer's own switch is kept.
+        const wasScary = spotlight.catalogs.length > 0 && spotlight.catalogs.every((request) => isScaryTransportUrl(request.base));
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
-                args: { ...profile.settings, boardSpotlight: { ...spotlight, catalogs } },
+                args: { ...profile.settings, boardSpotlight: { ...spotlight, enabled: wasScary ? spotlight.enabled : true, catalogs } },
             },
         });
     }, [settled, addons, language, spotlight, profile.settings, core.transport]);

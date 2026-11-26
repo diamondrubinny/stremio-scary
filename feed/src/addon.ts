@@ -24,6 +24,9 @@ export type MetaPreview = {
     imdbRating?: string,
     genres: string[],
     runtime?: string,
+    /** Wide artwork and the title's logo: only on the films of home rows, which is where the spotlight draws from. */
+    background?: string,
+    logo?: string,
 };
 
 type CatalogExtra = { name: string, isRequired?: boolean, options?: string[] };
@@ -50,7 +53,7 @@ const releaseInfo = (film: Film): string => {
     return film.endYear !== null && film.endYear > film.year ? `${film.year}-${film.endYear}` : String(film.year);
 };
 
-export const toMeta = (film: Film, language: Language): MetaPreview => ({
+export const toMeta = (film: Film, language: Language, withArtwork: boolean = false): MetaPreview => ({
     id: film.imdb,
     type: film.type,
     name: film.titles[language] ?? film.titles.en,
@@ -61,6 +64,10 @@ export const toMeta = (film: Film, language: Language): MetaPreview => ({
     ...(film.rating !== null ? { imdbRating: film.rating.toFixed(1) } : {}),
     genres: [film.thriller ? 'Thriller' : 'Horror', ...film.genres],
     ...(film.minutes > 0 ? { runtime: `${film.minutes} min` } : {}),
+    ...(withArtwork ? {
+        background: `https://images.metahub.space/background/medium/${film.imdb}/img`,
+        logo: `https://images.metahub.space/logo/medium/${film.imdb}/img`,
+    } : {}),
 });
 
 /**
@@ -117,7 +124,7 @@ export const buildLanguage = (feed: Feed, language: Language): Files => {
         if (ofType.length === 0) continue;
         const id = `scary_${row.id}`;
         catalogs.push({ type, id, name: ROW_LABELS[row.id][language] });
-        files.set(`catalog/${type}/${id}.json`, { metas: ofType.map((film) => toMeta(film, language)) });
+        files.set(`catalog/${type}/${id}.json`, { metas: ofType.map((film) => toMeta(film, language, true)) });
     }
 
     for (const type of ['movie', 'series'] as const) {

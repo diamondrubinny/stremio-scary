@@ -103,6 +103,9 @@ test('titles follow the language and fall back to English', () => {
     assert.equal(toMeta(shining, 'he').name, 'הניצוץ');
     assert.equal(toMeta(shining, 'ru').name, 'The Shining');
     assert.equal(toMeta(shining, 'he').poster, `https://images.metahub.space/poster/small/${imdb(700_001)}/img`);
+    assert.equal(toMeta(shining, 'he').background, undefined);
+    assert.equal(toMeta(shining, 'he', true).background, `https://images.metahub.space/background/medium/${imdb(700_001)}/img`);
+    assert.equal(toMeta(shining, 'he', true).logo, `https://images.metahub.space/logo/medium/${imdb(700_001)}/img`);
 });
 
 test('pages: both orders of skip and genre, and an empty page at the end', () => {
