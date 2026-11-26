@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 286" width="500" height="286" fill="none" stroke="#E9E1CF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- An empty library: a quiet graveyard under a red moon. -->
+  <path d="M398 34a34 34 0 1 0 34 50 28 28 0 1 1-34-50z" stroke="#D94040" fill="#D94040" fill-opacity="0.18"/>
+  <path d="M300 62q7-9 14-1 7-8 14 1M338 96q5-7 10-1 5-6 10 1" stroke-width="2.2" opacity="0.75"/>
+  <path d="M18 252Q250 204 482 252" opacity="0.7"/>
+  <path d="M112 240v-74a26 26 0 0 1 52 0v70"/>
+  <path d="M126 176h24M126 190h24M126 204h14" stroke-width="2.2" opacity="0.6"/>
+  <path d="M214 232V122a36 36 0 0 1 72 0v106"/>
+  <path d="M250 112v48M234 130h32"/>
+  <path d="M352 232v-80h-18v-20h18v-24h22v24h18v20h-18v78"/>
+  <path d="M70 250l6-14 5 12M184 240l5-12 6 11M312 236l5-13 5 12M430 248l5-12 6 12" stroke-width="2.2" opacity="0.6"/>
+</svg>

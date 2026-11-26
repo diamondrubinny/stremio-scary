@@ -10,6 +10,8 @@ permissions:
 
 jobs:
   publish:
+    # Only the upstream repository publishes @stremio/stremio-video to npm; this fork never does.
+    if: github.repository == 'Stremio/stremio-video'
     runs-on: ubuntu-latest
     steps:
     - name: Setup NodeJS

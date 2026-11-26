@@ -1,0 +1,44 @@
+[
+    {
+        "name": "العربية",
+        "codes": [
+            "ar-AR",
+            "ara"
+        ]
+    },
+    {
+        "name": "English",
+        "codes": [
+            "en-US",
+            "eng"
+        ]
+    },
+    {
+        "name": "עברית",
+        "codes": [
+            "he-IL",
+            "heb"
+        ]
+    },
+    {
+        "name": "Português Brazil",
+        "codes": [
+            "pt-BR",
+            "por"
+        ]
+    },
+    {
+        "name": "Português",
+        "codes": [
+            "pt-PT",
+            "por"
+        ]
+    },
+    {
+        "name": "Русский язык",
+        "codes": [
+            "ru-RU",
+            "rus"
+        ]
+    }
+]

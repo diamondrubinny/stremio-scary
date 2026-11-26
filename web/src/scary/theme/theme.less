@@ -1,0 +1,105 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
+
+// SCARY's look, laid over Stremio Web's own variables (src/App/styles.less). The palette and the fonts are the ones
+// of SCARY for Android TV (ui/theme/Theme.kt): void black, bone, blood.
+
+// The Noir palette: bone on pure black, and one red. Light is the only emphasis: what matters is bone, the rest is
+// ash, and red is kept for the few marks that should be found at a glance.
+@void: rgb(0, 0, 0);
+@crypt: rgb(15, 15, 15);
+@bone: rgb(233, 225, 207);
+@bone-dim: rgb(207, 200, 184);
+@ash: rgb(163, 158, 146);
+@blood: rgb(142, 27, 27);
+@blood-dim: rgb(58, 34, 34);
+// The one accent: 4.7:1 on black, so it may carry short words.
+@accent: rgb(217, 64, 64);
+
+@font-face {
+    font-family: 'Assistant';
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Assistant-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Assistant';
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Assistant-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rubik';
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Rubik-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rubik';
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/scary/Rubik-Bold.ttf') format('truetype');
+}
+
+// Arabic only: the browser fetches Cairo when Arabic text is on the screen.
+@font-face {
+    font-family: 'Cairo';
+    font-weight: 400;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    src: url('/assets/fonts/scary/Cairo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-weight: 700;
+    font-display: swap;
+    unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+    src: url('/assets/fonts/scary/Cairo-Bold.ttf') format('truetype');
+}
+
+// `html:root` outranks Stremio Web's `:root` and `html` rules whatever the order of the style sheets.
+html:root {
+    --primary-background-color: @void;
+    --secondary-background-color: @crypt;
+    --primary-foreground-color: fade(@bone, 92%);
+    --secondary-foreground-color: @void;
+    --primary-accent-color: @accent;
+    // Stremio Web's green (a confirmation, a switch that is on): a blood surface under bone words.
+    --secondary-accent-color: @blood;
+    // Stremio Web's gold (a badge, a chosen mark), always under dark words: in Noir what is lit is the bone itself.
+    --tertiary-accent-color: @bone;
+    // Stremio Web's blue, for the chosen one of a few (a sort order, a tab).
+    --quaternary-accent-color: @blood;
+    --warning-accent-color: @accent;
+    --danger-accent-color: @accent;
+    --overlay-color: fade(@bone, 6%);
+    --modal-background-color: @crypt;
+    --outer-glow: 0px 0px 15px fade(@bone, 18%);
+    --color-placeholder: fade(@ash, 50%);
+    --color-placeholder-text: fade(@ash, 80%);
+    --color-placeholder-background: fade(@bone, 6%);
+    --border-radius: 0.5rem;
+    --scary-void: @void;
+    --scary-crypt: @crypt;
+    --scary-bone: @bone;
+    --scary-bone-dim: @bone-dim;
+    --scary-ash: @ash;
+    --scary-blood: @blood;
+    --scary-blood-dim: @blood-dim;
+    // A blood surface under the pointer or the focus: still 4.5:1 under bone words.
+    --scary-blood-lit: lighten(@blood, 8%);
+    --scary-accent: @accent;
+    --scary-line: fade(@bone, 14%);
+
+    // Assistant for Latin and Hebrew, Rubik for Cyrillic, Cairo for Arabic: each letter takes the first font that has it.
+    font-family: 'Assistant', 'Rubik', 'Cairo', 'Arial', 'Helvetica', 'TwemojiFlags', sans-serif;
+}
+
+// Icons that point along the reading direction (back, forward, "see all") turn around in Hebrew and Arabic.
+html[dir='rtl'] svg[data-scary-directional] {
+    transform: scaleX(-1);
+}

@@ -1,0 +1,83 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
+
+import { BLOCKED_HOSTS, installNetworkGuard, isBlockedUrl } from '../../src/scary/network/guard';
+
+describe('network guard', () => {
+    test('blocks the account services', () => {
+        expect(isBlockedUrl('https://api.strem.io/api/getGeo')).toBe(true);
+        expect(isBlockedUrl('https://api.strem.io/config')).toBe(true);
+        expect(isBlockedUrl('http://API.STREM.IO/api/getModal')).toBe(true);
+        expect(isBlockedUrl('https://www.strem.io/trakt/auth/x')).toBe(true);
+        expect(isBlockedUrl('https://link.stremio.com/api/v2/create?type=Create')).toBe(true);
+    });
+
+    test('lets film information, images and add-ons through', () => {
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/meta/movie/tt0081505.json')).toBe(false);
+        expect(isBlockedUrl('https://images.metahub.space/poster/small/tt0081505/img')).toBe(false);
+        expect(isBlockedUrl('https://example.org/manifest.json')).toBe(false);
+        expect(isBlockedUrl('http://127.0.0.1:11470/settings')).toBe(false);
+    });
+
+    test('blocks Cinemeta\'s general catalogs, and not its film pages', () => {
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/catalog/movie/top.json')).toBe(true);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/catalog/series/top/search=friends.json')).toBe(true);
+        expect(isBlockedUrl('https://cinemeta-catalogs.strem.io/feed.json')).toBe(true);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/meta/series/tt4574334.json')).toBe(false);
+        expect(isBlockedUrl('https://v3-cinemeta.strem.io/manifest.json')).toBe(false);
+    });
+
+    test('lets Cinemeta\'s horror, thriller and mystery lists through, and the viewer\'s own series', () => {
+        const base = 'https://v3-cinemeta.strem.io/catalog';
+        for (const allowed of ['movie/top/genre=Horror.json', 'series/top/genre=Thriller.json', 'movie/imdbRating/genre=Mystery.json',
+            'movie/top/genre=Horror&skip=100.json', 'movie/top/skip=200&genre=Horror.json', 'movie/top/genre%3DHorror%26skip%3D100.json',
+            'series/calendar-videos/calendarVideosIds=tt1,tt2.json', 'series/last-videos/lastVideosIds=tt1.json']) {
+            expect([allowed, isBlockedUrl(`${base}/${allowed}`)]).toEqual([allowed, false]);
+        }
+        for (const blocked of ['movie/top/genre=Comedy.json', 'movie/top/genre=Horror&search=x.json', 'movie/top/genre=Horror&genre=Comedy.json',
+            'movie/top/skip=100.json', 'movie/year/genre=2026.json', 'movie/top/genre=Horror/extra.json', 'movie/top/genre=horror.json',
+            'channel/top/genre=Horror.json', 'movie/top/genre=Horror&skip=1e9.json', 'movie/top/%E0%A4%A.json']) {
+            expect([blocked, isBlockedUrl(`${base}/${blocked}`)]).toEqual([blocked, true]);
+        }
+    });
+
+    test('is not fooled by look-alike addresses', () => {
+        expect(isBlockedUrl('https://api.strem.io.example.org/api/getGeo')).toBe(false);
+        expect(isBlockedUrl('https://example.org/api.strem.io')).toBe(false);
+        expect(isBlockedUrl('https://user@api.strem.io/config')).toBe(true);
+        expect(isBlockedUrl('https://api.strem.io:443/config')).toBe(true);
+        expect(isBlockedUrl('https://api.strem.io./config')).toBe(false);
+    });
+
+    test('allows relative and unreadable addresses', () => {
+        expect(isBlockedUrl('/feed/en/manifest.json', 'https://scary.example/')).toBe(false);
+        expect(isBlockedUrl('', undefined)).toBe(false);
+        expect(isBlockedUrl('not a url')).toBe(false);
+    });
+
+    test('a guarded fetch rejects blocked requests and forwards the rest', async () => {
+        const calls: string[] = [];
+        const scope = {
+            fetch: (input: never) => {
+                calls.push(String(input));
+                return Promise.resolve('ok');
+            },
+            location: { href: 'https://scary.example/' },
+        };
+        installNetworkGuard(scope);
+        const guarded = scope.fetch as unknown as (input: unknown) => Promise<unknown>;
+
+        await expect(guarded('https://api.strem.io/api/getGeo')).rejects.toThrow('SCARY network guard');
+        await expect(guarded({ url: 'https://api.strem.io/config' })).rejects.toThrow(TypeError);
+        await expect(guarded(new URL('https://www.strem.io/x'))).rejects.toThrow(TypeError);
+        await expect(guarded('https://v3-cinemeta.strem.io/manifest.json')).resolves.toBe('ok');
+        await expect(guarded('feed/en/manifest.json')).resolves.toBe('ok');
+        expect(calls).toEqual(['https://v3-cinemeta.strem.io/manifest.json', 'feed/en/manifest.json']);
+    });
+
+    test('the list holds host names only', () => {
+        for (const host of BLOCKED_HOSTS) {
+            expect(host).toMatch(/^[a-z0-9.-]+$/);
+        }
+    });
+});

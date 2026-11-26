@@ -1,0 +1,12 @@
+# The same versions as SCARY for Android TV (github.com/diamondrubinny/Scary, gradle/libs.versions.toml).
+[versions]
+agp = "9.4.1"
+activity = "1.13.0"
+webkit = "1.17.1"
+
+[libraries]
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

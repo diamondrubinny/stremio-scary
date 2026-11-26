@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">SCARY Web</string>
+    <string name="no_browser">No app on this device can open this link.</string>
+    <string name="backup_saved">Backup saved.</string>
+    <string name="backup_failed">The backup could not be saved.</string>
+</resources>

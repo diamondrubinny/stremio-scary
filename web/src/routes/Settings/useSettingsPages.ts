@@ -1,0 +1,88 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { usePlatform } from 'stremio/common';
+import usePWA from 'stremio/common/usePWA';
+import { PAGES } from './constants';
+import { ACCOUNTS_ENABLED } from 'stremio/scary/account';
+
+type SettingsPage = {
+    id: string,
+    icon: string,
+    label: string,
+    scope: string | null,
+};
+
+type SettingsGroup = {
+    id: string,
+    label: string,
+    pages: SettingsPage[],
+};
+
+const useSettingsPages = () => {
+    const { t } = useTranslation();
+    const platform = usePlatform();
+    const [isIOSPWA, isStandalonePWA] = usePWA();
+
+    const installed = platform.shell.active || isIOSPWA || isStandalonePWA;
+
+    const groups = useMemo<SettingsGroup[]>(() => {
+        const savedScope = installed ? t('SETTINGS_SCOPE_SAVED_ON_DEVICE') : t('SETTINGS_SCOPE_SAVED_IN_BROWSER');
+
+        const all = [
+            {
+                id: 'preferences',
+                label: t('SETTINGS_GROUP_PREFERENCES'),
+                pages: [
+                    { id: PAGES.SCARY, icon: 'eye', label: t('SCARY_SETTINGS_TITLE'), scope: savedScope },
+                    { id: PAGES.INTERFACE, icon: 'grid', label: t('INTERFACE'), scope: savedScope },
+                    { id: PAGES.PLAYER, icon: 'movies-outline', label: t('SETTINGS_NAV_PLAYER'), scope: savedScope },
+                    { id: PAGES.INTEGRATIONS, icon: 'link', label: t('SETTINGS_NAV_INTEGRATIONS'), scope: null },
+                ],
+            },
+            {
+                id: 'device',
+                label: installed ? t('SETTINGS_GROUP_THIS_DEVICE') : t('SETTINGS_GROUP_THIS_BROWSER'),
+                pages: [
+                    { id: PAGES.DEVICE, icon: 'channels-outline', label: platform.shell.active ? t('SETTINGS_NAV_PLAYBACK_AND_APP') : t('PLAYBACK'), scope: null },
+                    { id: PAGES.STREAMING, icon: 'network', label: t('SETTINGS_NAV_STREAMING'), scope: null },
+                ],
+            },
+            {
+                id: 'account',
+                label: t('ACCOUNT'),
+                pages: [
+                    { id: PAGES.ACCOUNT, icon: 'account', label: t('ACCOUNT'), scope: null },
+                ],
+            },
+            {
+                id: 'help',
+                label: t('SETTINGS_GROUP_HELP'),
+                pages: [
+                    ...(!platform.isMobile ? [{ id: PAGES.SHORTCUTS, icon: 'keyboard', label: t('SETTINGS_NAV_SHORTCUTS'), scope: null }] : []),
+                    { id: PAGES.HELP, icon: 'help', label: t('SETTINGS_NAV_HELP_AND_ABOUT'), scope: null },
+                ],
+            },
+        ];
+        if (ACCOUNTS_ENABLED) return all;
+        // Without accounts there is no account page, and nothing to integrate an account with (Trakt, calendar feed).
+        return all
+            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT && id !== PAGES.INTEGRATIONS) }))
+            .filter((group) => group.pages.length > 0);
+    }, [t, installed, platform.shell.active, platform.isMobile]);
+
+    const pages = useMemo(() => groups.flatMap(({ pages }) => pages), [groups]);
+
+    const menuGroups = useMemo(() => {
+        return groups
+            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT) }))
+            .filter((group) => group.pages.length > 0);
+    }, [groups]);
+
+    return { groups, pages, menuGroups };
+};
+
+export type { SettingsPage, SettingsGroup };
+
+export default useSettingsPages;

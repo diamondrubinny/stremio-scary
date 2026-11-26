@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_browser">אין במכשיר אפליקציה שיכולה לפתוח את הקישור הזה.</string>
+    <string name="backup_saved">הגיבוי נשמר.</string>
+    <string name="backup_failed">לא ניתן היה לשמור את הגיבוי.</string>
+</resources>
