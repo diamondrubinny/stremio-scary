@@ -113,7 +113,7 @@ const AiSettings = () => {
             {
                 saved.provider === 'custom' ?
                     <form onSubmit={saveUrl} style={row}>
-                        <input className={styles['text-input']} type={'url'} dir={'ltr'} autoComplete={'off'} spellCheck={false} maxLength={300} value={typedUrl} placeholder={'https://…/v1'} aria-label={t('SCARY_AI_ADDRESS')} onChange={(event) => setTypedUrl(event.target.value)} />
+                        <input className={styles['text-input']} type={'url'} dir={typedUrl.length > 0 ? 'ltr' : undefined} autoComplete={'off'} spellCheck={false} maxLength={300} value={typedUrl} placeholder={'https://…/v1'} aria-label={t('SCARY_AI_ADDRESS')} onChange={(event) => setTypedUrl(event.target.value)} />
                         <RowButton label={t('SCARY_PROFILE_SAVE')} variant={'primary'} disabled={typedUrl.trim().length === 0} onClick={() => saveUrl()} />
                     </form>
                     :
@@ -122,7 +122,7 @@ const AiSettings = () => {
             {
                 provider.key !== 'none' ?
                     <form onSubmit={check} style={row}>
-                        <input className={styles['text-input']} type={'password'} dir={'ltr'} autoComplete={'off'} spellCheck={false} maxLength={400} value={typedKey} placeholder={hasKey ? '••••••••' : t('SCARY_AI_KEY')} aria-label={`${t('SCARY_AI_KEY')}: ${labelOf(saved.provider)}`} onChange={(event) => setTypedKey(event.target.value)} />
+                        <input className={styles['text-input']} type={'password'} dir={typedKey.length > 0 ? 'ltr' : undefined} autoComplete={'off'} spellCheck={false} maxLength={400} value={typedKey} placeholder={hasKey ? '••••••••' : t('SCARY_AI_KEY')} aria-label={`${t('SCARY_AI_KEY')}: ${labelOf(saved.provider)}`} onChange={(event) => setTypedKey(event.target.value)} />
                         <RowButton label={checking ? t('SCARY_AI_CHECKING') : t('SCARY_AI_KEY_SAVE')} variant={'primary'} disabled={checking || (typedKey.trim().length === 0 && !hasKey && provider.key === 'needed')} onClick={() => check()} />
                         {hasKey ? <RowButton label={t('SCARY_AI_KEY_DELETE')} variant={'danger'} onClick={deleteKey} /> : null}
                     </form>
@@ -132,7 +132,7 @@ const AiSettings = () => {
             {
                 provider.key !== 'none' ?
                     <form onSubmit={saveModel} style={row}>
-                        <input className={styles['text-input']} type={'text'} dir={'ltr'} autoComplete={'off'} spellCheck={false} maxLength={120} list={'scary-ai-models'} value={typedModel} placeholder={provider.model !== null ? t('SCARY_AI_MODEL_DEFAULT', { a: provider.model }) : t('SCARY_AI_MODEL')} aria-label={t('SCARY_AI_MODEL')} aria-describedby={'scary-ai-model-note'} onChange={(event) => setTypedModel(event.target.value)} />
+                        <input className={styles['text-input']} type={'text'} dir={typedModel.length > 0 ? 'ltr' : undefined} autoComplete={'off'} spellCheck={false} maxLength={120} list={'scary-ai-models'} value={typedModel} placeholder={provider.model !== null ? t('SCARY_AI_MODEL_DEFAULT', { a: provider.model }) : t('SCARY_AI_MODEL')} aria-label={t('SCARY_AI_MODEL')} aria-describedby={'scary-ai-model-note'} onChange={(event) => setTypedModel(event.target.value)} />
                         <datalist id={'scary-ai-models'}>
                             {models.map((id) => <option key={id} value={id} />)}
                         </datalist>
