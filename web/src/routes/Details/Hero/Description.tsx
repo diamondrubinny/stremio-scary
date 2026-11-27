@@ -38,6 +38,8 @@ const Description = ({ className, text }: Props) => {
             className={classNames(className, styles['description'], { [styles['expandable']]: expanded || clamped, [styles['expanded']]: expanded })}
             onMouseEnter={onMouseEnter}
             onClick={onClick}
+            dir={'auto'}
+            data-scary-outside={''}
         >
             {text}
         </p>

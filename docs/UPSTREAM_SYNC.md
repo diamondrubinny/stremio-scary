@@ -79,6 +79,9 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `.github/workflows/jekyll-gh-pages.yml` | **הוסר** | התבנית של GitHub פרסמה את ה-README במקום האפליקציה; הפריסה היא `deploy.yml` |
 | `web/package.json`, `web/pnpm-lock.yaml`, `web/pnpm-workspace.yaml` (נוסף) | `react-router` ו-`react-router-dom` 6.30.0 → 6.30.6; `overrides` ל-`qs`, `zod`, `@babel/runtime` | תיקוני אבטחה (`pnpm audit`) — לבדוק מול upstream בכל סנכרון |
 | `web/src/index.html` (נוסף) | תגיות Open Graph | תצוגה מקדימה בשיתוף קישור |
+| `web/src/routes/Calendar/Table/Table.tsx` | סדר ימי השבוע וההיסט של ה-1 בחודש דרך `scary/domain/week` | השבוע מתחיל ביום ראשון בעברית (שבת בערבית), לא תמיד בשני |
+| `web/src/routes/Details/Hero/Description.tsx` (נוסף), `web/src/components/MetaPreview/MetaPreview.tsx` (נוסף), `web/src/routes/Details/Videos/Video.tsx` | `dir="auto"` + `data-scary-outside` על התקציר ועל שם הפרק | טקסט באנגלית במסך בעברית נקרא בכיוון הנכון ונשאר מיושר לצד של המסך |
+| `web/src/routes/Board/Spotlight/Slide.tsx` | `data-scary-film` ו-`data-scary-name` על השקופית המוצגת; `dir="auto"` על התיאור | טריילר שמתנגן מעצמו גם בספוטלייט |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

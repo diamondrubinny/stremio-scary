@@ -32,7 +32,8 @@ const Slide = ({ id, item, active, onToggleLibrary }: Props) => {
     const libraryLabel = item.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB');
 
     return (
-        <div id={id} className={classNames(styles['slide'], { [styles['on']]: active })} role={'tabpanel'} aria-hidden={!active}>
+        // SCARY: the film of the slide on show, for the trailer that plays by itself when the viewer rests on it.
+        <div id={id} className={classNames(styles['slide'], { [styles['on']]: active })} role={'tabpanel'} aria-hidden={!active} data-scary-film={active ? detailsHref ?? undefined : undefined} data-scary-name={active ? item.name : undefined}>
             <Button className={styles['title']} href={detailsHref ?? undefined} title={item.name}>
                 <Logo className={styles['logo']} logo={item.logo} name={item.name} />
             </Button>
@@ -46,7 +47,7 @@ const Slide = ({ id, item, active, onToggleLibrary }: Props) => {
             </Facts>
             {
                 typeof item.description === 'string' && item.description.length > 0 ?
-                    <p className={styles['description']}>{item.description}</p>
+                    <p className={styles['description']} dir={'auto'} data-scary-outside={''}>{item.description}</p>
                     :
                     null
             }

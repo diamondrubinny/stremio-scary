@@ -316,6 +316,17 @@ const Overlays = () => {
         });
     }, [playing, filmId]);
 
+    // A player's controls keep their order in every language: time runs from left to right, as on every player.
+    useEffect(() => {
+        if (!playing) return;
+        const root = document.documentElement;
+        const before = root.getAttribute('dir');
+        root.setAttribute('dir', 'ltr');
+        return () => {
+            if (before !== null) root.setAttribute('dir', before);
+        };
+    }, [playing]);
+
     // The sleep timer: when the time is up, whatever plays is paused.
     useEffect(() => {
         if (sleepUntil === null) return;

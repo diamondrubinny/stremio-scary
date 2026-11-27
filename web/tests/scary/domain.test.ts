@@ -200,3 +200,16 @@ describe('lists, stats and seasons', () => {
         expect(pickSeason(films, 'friday_13th').map((entry) => entry.f)).toEqual([2]);
     });
 });
+
+describe('the week in the calendar', () => {
+    test('starts on the day it starts on in the interface language', () => {
+        const { leadingDays, weekDaysFrom, weekStartOf } = jest.requireActual('../../src/scary/domain/week') as typeof import('../../src/scary/domain/week');
+        expect(['he-IL', 'en-US', 'pt-BR', 'ar-AR', 'ru-RU', 'pt-PT', '', null].map(weekStartOf)).toEqual([6, 6, 6, 5, 0, 0, 0, 0]);
+        expect(weekDaysFrom(6)).toEqual(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+        expect(weekDaysFrom(5)[0]).toBe('Saturday');
+        expect(weekDaysFrom(0)[0]).toBe('Monday');
+        // November 2026 starts on a Sunday (6, counting from Monday).
+        expect([leadingDays(6, 0), leadingDays(6, 6), leadingDays(6, 5)]).toEqual([6, 0, 1]);
+        expect([leadingDays(0, 6), leadingDays(2, 5), leadingDays(9, 6), leadingDays('x', 6)]).toEqual([1, 4, 0, 0]);
+    });
+});

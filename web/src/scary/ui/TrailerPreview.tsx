@@ -47,12 +47,18 @@ const trailerOf = (film: FilmLink): Promise<string | null> => {
 
 const prefersLessMotion = (): boolean => typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** The film of the tile an event happened on, with the name the tile shows. */
+/**
+ * The film of the tile an event happened on, with the name the tile shows. A place that shows one film without being
+ * a link to it (the slide of the home screen's spotlight) says which film it is about itself.
+ */
 const tileOf = (target: EventTarget | null): { film: FilmLink, name: string } | null => {
     if (!(target instanceof Element)) return null;
     const link = target.closest('a[href]');
-    const film = filmOfHref(link?.getAttribute('href'));
-    return link !== null && link !== undefined && film !== null ? { film, name: (link.getAttribute('title') ?? '').slice(0, 120) } : null;
+    const linked = filmOfHref(link?.getAttribute('href'));
+    if (link !== null && link !== undefined && linked !== null) return { film: linked, name: (link.getAttribute('title') ?? '').slice(0, 120) };
+    const place = target.closest('[data-scary-film]');
+    const shown = filmOfHref(place?.getAttribute('data-scary-film'));
+    return place !== null && place !== undefined && shown !== null ? { film: shown, name: (place.getAttribute('data-scary-name') ?? '').slice(0, 120) } : null;
 };
 
 const TrailerPreview = () => {
