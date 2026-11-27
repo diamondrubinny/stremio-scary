@@ -184,6 +184,9 @@ const SettingsPage = () => {
             </Group>
             <Group title={t('SCARY_SETTINGS_SECTION_SOUND')}>
                 {effect('sound', t('SCARY_SETTINGS_SOUNDS'))}
+                <Row rowId={'scary-trailers'} label={t('SCARY_SETTINGS_TRAILER_AUTOPLAY')} description={t('SCARY_SETTINGS_TRAILER_NOTE')}>
+                    <Toggle {...named(t('SCARY_SETTINGS_TRAILER_AUTOPLAY'))} checked={effects.trailers} onClick={() => toggleEffect('trailers')} />
+                </Row>
                 <Row rowId={'scary-sleep'} label={t('SCARY_SETTINGS_SLEEP_TIMER')} description={sleepUntil !== null ? t('SCARY_SLEEP_LEFT', { a: sleepLeft }) : undefined} control={'wide'} stackOnPhone={true}>
                     <Chips
                         options={SLEEP_MINUTES.map((minutes) => ({ label: minutes === 0 ? t('SCARY_SLEEP_OFF') : t('SCARY_MINUTES', { a: minutes }), value: String(minutes) }))}

@@ -27,7 +27,8 @@ type ScaryState = {
     bucket: string[],
     /** Films opened in the player, newest last. */
     history: Watch[],
-    effects: { atmosphere: boolean, shiver: boolean, sound: boolean, screensaver: boolean, seasonal: boolean },
+    /** `trailers`: a film's trailer plays by itself when the viewer rests on it (only once YouTube is allowed). */
+    effects: { atmosphere: boolean, shiver: boolean, sound: boolean, screensaver: boolean, seasonal: boolean, trailers: boolean },
     /**
      * What the viewer said about content from outside: trailers play from YouTube (Google). `media` is null until
      * they answer, and nothing from YouTube loads unless it is true. `at` is when they answered. `voice` is asked the
@@ -42,7 +43,7 @@ type ScaryState = {
 };
 
 /** The version of the privacy text the consent was given to. A new version asks again. */
-const CONSENT_VERSION = 1;
+const CONSENT_VERSION = 2;
 
 const DEFAULT_STATE: ScaryState = {
     familyNight: false,
@@ -53,7 +54,7 @@ const DEFAULT_STATE: ScaryState = {
     bucket: [],
     history: [],
     // Sound starts off: a browser page that makes noise by itself is not welcome.
-    effects: { atmosphere: true, shiver: true, sound: false, screensaver: true, seasonal: true },
+    effects: { atmosphere: true, shiver: true, sound: false, screensaver: true, seasonal: true, trailers: true },
     consent: { media: null, voice: false, at: null, version: CONSENT_VERSION },
     tmdbKey: null,
 };
@@ -93,6 +94,7 @@ const sanitize = (value: unknown): ScaryState => {
             sound: flag(effects.sound, DEFAULT_STATE.effects.sound),
             screensaver: flag(effects.screensaver, DEFAULT_STATE.effects.screensaver),
             seasonal: flag(effects.seasonal, DEFAULT_STATE.effects.seasonal),
+            trailers: flag(effects.trailers, DEFAULT_STATE.effects.trailers),
         },
         consent: {
             media: answered ? consent.media as boolean : null,

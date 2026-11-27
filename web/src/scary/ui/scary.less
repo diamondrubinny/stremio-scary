@@ -851,3 +851,79 @@
     color: var(--scary-bone);
     text-align: center;
 }
+
+// A trailer that plays by itself: a window in the corner at the end of the line, above the fog and the grain, with
+// nothing drawn over YouTube's player. The bar with the name and the cross sits above the player, not on it.
+.trailer {
+    position: fixed;
+    z-index: 50;
+    bottom: 1.5rem;
+    inset-inline-end: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: clamp(20rem, 30vw, 30rem);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--scary-line);
+    background-color: var(--scary-void);
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+
+    .trailer-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+        background-color: var(--scary-crypt);
+    }
+
+    .trailer-name {
+        flex: 1;
+        min-width: 0;
+        color: var(--scary-bone);
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .trailer-close {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: transparent;
+        color: var(--scary-bone);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--overlay-color);
+        }
+
+        .icon {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    .trailer-frame {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: none;
+        background-color: var(--scary-void);
+        // The trailer is for looking at: a click on it does nothing, the film's tile is where things happen.
+        pointer-events: none;
+        // Until the player says it plays, its place is dark: what YouTube shows while loading, or when a trailer cannot
+        // be played here, is not seen.
+        opacity: 0;
+
+        &.live {
+            opacity: 1;
+        }
+    }
+}
