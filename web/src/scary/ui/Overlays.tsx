@@ -21,6 +21,7 @@ import { answerConsent, store } from '../state/store';
 import Chip from './Chip';
 import Dialog from './Dialog';
 import HeldDialog from './HeldDialog';
+import { ProfileChooser } from './Profiles';
 import styles from './scary.less';
 
 const SHIVER_MS = 2_200;
@@ -333,6 +334,7 @@ const Overlays = () => {
             <Gate filmId={filmId} watched={isFilmPath(location.pathname) && (filmId !== null || !playing)} />
             <BucketPrompt filmId={filmId} playing={playing} />
             <PinDialog />
+            {!playing ? <ProfileChooser /> : null}
             {!playing ? <ConsentBanner /> : null}
         </React.Fragment>
     );

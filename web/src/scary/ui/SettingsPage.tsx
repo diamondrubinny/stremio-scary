@@ -10,7 +10,7 @@ import { useToast } from 'stremio/common';
 import { Chips, Toggle } from 'stremio/components';
 import { Group, Row, RowButton } from 'stremio/routes/Settings/components';
 import { hashPin } from '../domain/pin';
-import { useScaryState, useSession } from '../hooks';
+import { useProfiles, useScaryState, useSession } from '../hooks';
 import { createBackup, readBackup, restoreBackup } from '../state/backup';
 import { askPin, lockAgain, setSleepTimer } from '../state/session';
 import { SLEEP_MINUTES, answerConsent, store } from '../state/store';
@@ -27,6 +27,8 @@ const named = (label: string) => ({ 'aria-label': label }) as Record<string, str
 const SettingsPage = () => {
     const { t } = useTranslation();
     const toast = useToast();
+    const profiles = useProfiles();
+    const { gentle } = profiles.active;
     const { familyNight, lock, effects, bucket, loved, consent, tmdbKey } = useScaryState();
     const [typedKey, setTypedKey] = useState('');
     const [checkingKey, setCheckingKey] = useState(false);
@@ -52,10 +54,12 @@ const SettingsPage = () => {
 
     const toggleFamilyNight = useCallback(async () => {
         // Turning family night on is free; leaving it takes the PIN.
+        // In a gentle profile family night is not a switch: it is what the profile is.
+        if (gentle) return;
         if (familyNight && !await confirmed()) return;
         store.update(() => ({ familyNight: !familyNight }));
         if (!familyNight) lockAgain();
-    }, [familyNight, confirmed]);
+    }, [familyNight, gentle, confirmed]);
 
     const toggleLock = useCallback(async () => {
         if (lock.enabled) {
@@ -154,7 +158,7 @@ const SettingsPage = () => {
     return (
         <React.Fragment>
             <Group title={t('SCARY_SETTINGS_SECTION_PARENTS')} description={t('SCARY_PIN_NOTE')}>
-                <Row rowId={'scary-family'} label={t('SCARY_SETTINGS_FAMILY_NIGHT')}>
+                <Row rowId={'scary-family'} label={t('SCARY_SETTINGS_FAMILY_NIGHT')} description={gentle ? t('SCARY_PROFILE_GENTLE_FAMILY') : undefined}>
                     <Toggle {...named(t('SCARY_SETTINGS_FAMILY_NIGHT'))} checked={familyNight} onClick={toggleFamilyNight} />
                 </Row>
                 <Row rowId={'scary-lock'} label={t('SCARY_SETTINGS_PARENTAL')}>
@@ -189,6 +193,9 @@ const SettingsPage = () => {
                 </Row>
             </Group>
             <Group title={t('SCARY_LISTS')}>
+                <Row rowId={'scary-profiles'} label={`${t('SCARY_PROFILES')} (${profiles.list.length})`}>
+                    <RowButton label={t('SCARY_PROFILES_TITLE')} href={'#/scary/profiles'} />
+                </Row>
                 <Row rowId={'scary-taste'} label={`${t('SCARY_TASTE_TITLE')} (${loved.length})`}>
                     <RowButton label={t('SCARY_TASTE_TITLE')} href={'#/scary/taste'} />
                 </Row>

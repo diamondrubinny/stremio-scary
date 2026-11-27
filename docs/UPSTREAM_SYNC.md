@@ -72,6 +72,7 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/routes/Discover/Discover.js` | `useScaryHeld` + 4 שורות: התצוגה המקדימה של סרט נעול מוסתרת | נעילת הורים |
 | `web/src/routes/Board/Board.js` (נוסף) | הספוטלייט דרך `scaryBoard.spotlight`; באנר "שרת ההזרמה" מותנה ב-`SERVER_BANNER_ENABLED` | סרט נעול לא מוצג בספוטלייט; בלי הצעה להתקין את שרת Stremio בכניסה |
 | `web/src/components/MetaPreview/Facts.tsx` | `dir="auto"` לכל עובדה; "119 min" → בשפת הממשק | RTL: "2026-" ו"55 דק׳" מוצגים נכון |
+| `web/src/components/NavBar/HorizontalNavBar/NavMenu/NavMenuContent.js` (נוסף) | שורה: `<ScaryProfileMenuRow />` | "פרופיל: … החלפת פרופיל" בתפריט |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

@@ -7,6 +7,9 @@
 
 import { STORAGE_KEY, sanitize } from './store';
 
+/** Who the profiles are (their names) stays in the browser: a backup holds the profile on screen only. */
+const NOT_SAVED: readonly string[] = ['scary.profiles'];
+
 const APP = 'scary-web';
 const VERSION = 1;
 const MAX_FILE_CHARS = 30_000_000;
@@ -35,7 +38,7 @@ const createBackup = (storage: KeyValueStorage, now: Date = new Date()): Backup 
     const entries: Record<string, string> = {};
     for (let index = 0; index < storage.length; index++) {
         const key = storage.key(index);
-        if (key === null || !KEY_PATTERN.test(key)) continue;
+        if (key === null || !KEY_PATTERN.test(key) || NOT_SAVED.includes(key)) continue;
         const value = storage.getItem(key);
         if (typeof value === 'string') entries[key] = key === STORAGE_KEY ? withoutLock(value) : value;
     }
@@ -73,6 +76,7 @@ const restoreBackup = (storage: KeyValueStorage, entries: Record<string, string>
         }
     })());
     for (const [key, value] of Object.entries(entries)) {
+        if (NOT_SAVED.includes(key)) continue;
         if (key !== STORAGE_KEY) {
             storage.setItem(key, value);
             continue;

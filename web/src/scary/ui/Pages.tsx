@@ -17,6 +17,7 @@ import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
 import { store } from '../state/store';
 import Chip from './Chip';
 import FearMeter from './FearMeter';
+import { ProfilesPage } from './Profiles';
 import styles from './scary.less';
 
 const hoursAndMinutes = (minutes: number): string => `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
@@ -153,7 +154,7 @@ const Pages = () => {
     return (
         <MainNavBars className={styles['page-container']} route={'scary'}>
             <main className={styles['page']}>
-                {page === 'taste' ? <Taste /> : page === 'bucket' ? <Bucket /> : <Stats />}
+                {page === 'taste' ? <Taste /> : page === 'bucket' ? <Bucket /> : page === 'profiles' ? <ProfilesPage /> : <Stats />}
             </main>
         </MainNavBars>
     );

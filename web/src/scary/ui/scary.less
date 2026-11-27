@@ -649,3 +649,205 @@
         outline: var(--focus-outline-size) solid var(--scary-bone);
     }
 }
+
+// "Who is watching?": the profiles as large buttons. The colour is never the only sign: the name is always written.
+.profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding: 0.5rem 2rem 1rem;
+    margin: 0;
+    list-style: none;
+    overflow: visible;
+
+    .profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        overflow: visible;
+    }
+
+    .profile-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        width: 10.5rem;
+        min-height: 12rem;
+        padding: 1.1rem 0.75rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--scary-line);
+        background-color: var(--overlay-color);
+        color: var(--scary-bone);
+        cursor: pointer;
+
+        &.current {
+            border-color: var(--scary-bone);
+        }
+
+        &:hover, &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+        }
+    }
+
+    .profile-name {
+        max-width: 100%;
+        font-size: 1.15rem;
+        font-weight: 600;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-notes {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        min-height: 1.3rem;
+        font-size: 0.9rem;
+        color: var(--scary-bone-dim);
+    }
+
+    .profile-badge {
+        padding: 0.1rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid var(--scary-line);
+    }
+}
+
+.profile-avatar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    font-family: 'Rubik', 'Assistant', 'Cairo', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+}
+
+// The six colours of SCARY for Android TV's profiles, each dark enough for white on it.
+.profile-colour-0 { background-color: rgb(155, 28, 28); }
+.profile-colour-1 { background-color: rgb(138, 90, 18); }
+.profile-colour-2 { background-color: rgb(47, 107, 63); }
+.profile-colour-3 { background-color: rgb(43, 95, 138); }
+.profile-colour-4 { background-color: rgb(107, 63, 138); }
+.profile-colour-5 { background-color: rgb(74, 79, 87); }
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: min(28rem, 86vw);
+    overflow: visible;
+    text-align: start;
+
+    .profile-input {
+        height: 3.2rem;
+        padding: 0 1rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--scary-line);
+        background-color: var(--overlay-color);
+        color: var(--scary-bone);
+        font-size: 1.2rem;
+        user-select: text;
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+        }
+    }
+
+    .profile-colours {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        padding: 0;
+        margin: 0;
+        border: none;
+        overflow: visible;
+
+        legend {
+            width: 100%;
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    .profile-swatch {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        color: rgb(255, 255, 255);
+        font-weight: 700;
+        cursor: pointer;
+        overflow: visible;
+
+        input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        &.picked {
+            border-color: var(--scary-bone);
+            box-shadow: 0 0 0 2px var(--scary-void), 0 0 0 4px var(--scary-bone);
+        }
+
+        &:focus-within {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+            outline-offset: 3px;
+        }
+    }
+
+    .profile-check {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        color: var(--scary-bone);
+        font-size: 1.1rem;
+        cursor: pointer;
+
+        input {
+            flex: none;
+            width: 1.4rem;
+            height: 1.4rem;
+            margin: 0;
+            // Stremio Web takes the look of form controls away; this one is a real, visible checkbox.
+            appearance: auto;
+            -webkit-appearance: checkbox;
+            accent-color: var(--scary-accent);
+            cursor: pointer;
+
+            &:focus-visible {
+                outline: var(--focus-outline-size) solid var(--scary-bone);
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    .profile-help {
+        color: var(--scary-bone-dim);
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+}
+
+.profile-form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--scary-bone);
+    text-align: center;
+}

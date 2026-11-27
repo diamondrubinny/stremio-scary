@@ -18,6 +18,7 @@ const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useStreamingServer = require('stremio/common/useStreamingServer');
 const { ACCOUNTS_ENABLED } = require('stremio/scary/account');
 const { SOURCE_URL } = require('stremio/scary/about');
+const { default: ScaryProfileMenuRow } = require('stremio/scary/ui/ProfileMenuRow');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -130,6 +131,7 @@ const NavMenuContent = ({ onClick }) => {
                 </Button>
             </div>
             <div className={styles['nav-menu-section']}>
+                <ScaryProfileMenuRow className={styles['nav-menu-option-container']} labelClassName={styles['nav-menu-option-label']} />
                 <Button className={styles['nav-menu-option-container']} title={ t('SCARY_CONSENT_MANAGE') } href={'#/settings/scary'}>
                     <div className={styles['nav-menu-option-label']}>{ t('SCARY_CONSENT_MANAGE') }</div>
                 </Button>

@@ -11,12 +11,26 @@ import { useScaryLibrary } from './content/library';
 import type { Library } from './content/library';
 import type { Film } from './domain/film';
 import { familyAllows, needsPin } from './domain/lock';
+import { activeOf } from './domain/profiles';
+import type { Profile } from './domain/profiles';
+import { profilesStore } from './state/profiles';
 import { getSession, isUnlocked, subscribeSession } from './state/session';
 import type { Session } from './state/session';
 import { store } from './state/store';
 import type { ScaryState } from './state/store';
 
-const useScaryState = (): ScaryState => useSyncExternalStore(store.subscribe, store.getState, store.getState);
+/** The profiles of this browser and the one on screen. */
+const useProfiles = (): { list: Profile[], active: Profile } => {
+    const state = useSyncExternalStore(profilesStore.subscribe, profilesStore.getState, profilesStore.getState);
+    return useMemo(() => ({ list: state.list, active: activeOf(state.list, state.activeId) }), [state]);
+};
+
+/** SCARY's state as the screens see it. In a gentle profile family night is always on, whatever the switch says. */
+const useScaryState = (): ScaryState => {
+    const state = useSyncExternalStore(store.subscribe, store.getState, store.getState);
+    const { gentle } = useProfiles().active;
+    return useMemo(() => gentle && !state.familyNight ? { ...state, familyNight: true } : state, [state, gentle]);
+};
 const useSession = (): Session => useSyncExternalStore(subscribeSession, getSession, getSession);
 const useFeedLanguage = (): FeedLanguage => feedLanguageOf(useTranslation().i18n.language);
 
@@ -63,5 +77,5 @@ const useScaryHold = (id: string | null | undefined): Hold => {
     return rules.isLocked(film) ? 'by-lock' : 'no';
 };
 
-export { useFeedLanguage, useScaryHold, useScaryRules, useScaryState, useSession };
+export { useFeedLanguage, useProfiles, useScaryHold, useScaryRules, useScaryState, useSession };
 export type { Hold, Rules };
