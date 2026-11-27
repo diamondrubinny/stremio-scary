@@ -26,11 +26,12 @@ const withoutLock = (stateJson: string | null): string => {
     } catch {
         // An unreadable state is saved as the defaults.
     }
-    const { lock, lockout, tmdbKey, ...rest } = sanitize(state);
+    const { lock, lockout, tmdbKey, ai, ...rest } = sanitize(state);
     void lock;
     void lockout;
     void tmdbKey;
-    return JSON.stringify(rest);
+    // Which AI service and model were chosen is kept; the keys, and what the viewer agreed to in this browser, are not.
+    return JSON.stringify({ ...rest, ai: { ...ai, keys: {}, agreed: null } });
 };
 
 /** The backup of what `storage` holds now. */
@@ -87,7 +88,8 @@ const restoreBackup = (storage: KeyValueStorage, entries: Record<string, string>
         } catch {
             // Falls back to the defaults below.
         }
-        storage.setItem(key, JSON.stringify({ ...sanitize(restored), lock: current.lock, lockout: current.lockout, tmdbKey: current.tmdbKey }));
+        const from = sanitize(restored);
+        storage.setItem(key, JSON.stringify({ ...from, lock: current.lock, lockout: current.lockout, tmdbKey: current.tmdbKey, ai: { ...from.ai, keys: current.ai.keys, agreed: current.ai.agreed } }));
     }
 };
 

@@ -52,7 +52,7 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                             ]}
                             imdb={imdb}
                         />
-                        <ScaryDetailsExtras id={metaItem.id} type={metaItem.type} links={metaItem.links} />
+                        <ScaryDetailsExtras id={metaItem.id} type={metaItem.type} links={metaItem.links} name={metaItem.name} description={metaItem.description} />
                         <Description className={classNames(styles['description'], { [styles['expanded']]: collapsible && expanded })} text={metaItem.description} />
                         {
                             collapsible ?

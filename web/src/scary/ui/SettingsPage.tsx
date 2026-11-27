@@ -16,6 +16,7 @@ import { askPin, lockAgain, setSleepTimer } from '../state/session';
 import { SLEEP_MINUTES, answerConsent, store } from '../state/store';
 import { keyKind } from '../tmdb/client';
 import { checkKey, forgetTmdb } from '../tmdb/useTmdb';
+import AiSettings from './AiSettings';
 import styles from './scary.less';
 import type { ScaryState } from '../state/store';
 
@@ -226,6 +227,7 @@ const SettingsPage = () => {
                     {tmdbKey !== null ? <RowButton label={t('SCARY_TMDB_DELETE')} variant={'danger'} onClick={deleteTmdbKey} /> : null}
                 </form>
             </Group>
+            <AiSettings />
             <Group rowId={'scary-privacy'} title={t('SCARY_PRIVACY')} description={t('SCARY_CONSENT_NOTE')}>
                 <Row rowId={'scary-consent-media'} label={t('SCARY_CONSENT_TRAILERS')} description={t('SCARY_CONSENT_GATE')}>
                     <Toggle {...named(t('SCARY_CONSENT_TRAILERS'))} checked={consent.media === true} onClick={() => store.update(answerConsent(consent.media !== true))} />

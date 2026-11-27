@@ -15,6 +15,7 @@ import { isRated, isSeries, minutesOf } from '../domain/film';
 import { fearStats, moveInList, toggleInList } from '../domain/lists';
 import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
 import { store } from '../state/store';
+import AskPage from './AskPage';
 import Chip from './Chip';
 import FearMeter from './FearMeter';
 import { ProfilesPage } from './Profiles';
@@ -154,7 +155,7 @@ const Pages = () => {
     return (
         <MainNavBars className={styles['page-container']} route={'scary'}>
             <main className={styles['page']}>
-                {page === 'taste' ? <Taste /> : page === 'bucket' ? <Bucket /> : page === 'profiles' ? <ProfilesPage /> : <Stats />}
+                {page === 'taste' ? <Taste /> : page === 'bucket' ? <Bucket /> : page === 'profiles' ? <ProfilesPage /> : page === 'ask' ? <AskPage /> : <Stats />}
             </main>
         </MainNavBars>
     );
