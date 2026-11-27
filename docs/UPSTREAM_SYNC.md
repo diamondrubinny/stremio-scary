@@ -77,6 +77,8 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/routes/Search/Search.js` (נוסף) | שורה: `<ScaryAskLink />` | "לא מצאתם? תארו את הסרט" |
 | `web/package.json`, `web/pnpm-lock.yaml` (נוסף) | נוסף `@anthropic-ai/sdk` 1.14.0 | פנייה ל-Claude דרך הספרייה הרשמית |
 | `.github/workflows/jekyll-gh-pages.yml` | **הוסר** | התבנית של GitHub פרסמה את ה-README במקום האפליקציה; הפריסה היא `deploy.yml` |
+| `web/package.json`, `web/pnpm-lock.yaml`, `web/pnpm-workspace.yaml` (נוסף) | `react-router` ו-`react-router-dom` 6.30.0 → 6.30.6; `overrides` ל-`qs`, `zod`, `@babel/runtime` | תיקוני אבטחה (`pnpm audit`) — לבדוק מול upstream בכל סנכרון |
+| `web/src/index.html` (נוסף) | תגיות Open Graph | תצוגה מקדימה בשיתוף קישור |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

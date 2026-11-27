@@ -38,6 +38,11 @@ if [ -z "$overrides" ]; then
     exit 0
 fi
 
-printf '\noverrides:\n%s' "$overrides" >> "$WEB/pnpm-workspace.yaml"
+# The temporary overrides join the ones the workspace file already has, if any.
+if grep -q '^overrides:' "$WEB/pnpm-workspace.yaml"; then
+    printf '%s' "$overrides" | sed -i '/^overrides:/r /dev/stdin' "$WEB/pnpm-workspace.yaml"
+else
+    printf '\noverrides:\n%s' "$overrides" >> "$WEB/pnpm-workspace.yaml"
+fi
 (cd "$WEB" && pnpm install --no-frozen-lockfile)
 echo "Done. Run web/ scripts with: pnpm --config.verify-deps-before-run=false run <script>"
