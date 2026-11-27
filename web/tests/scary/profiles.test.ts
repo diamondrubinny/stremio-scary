@@ -2,7 +2,7 @@
 // SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
 
 import { FIRST, MAX_PROFILES, activeOf, addProfile, cleanName, nextColour, readProfiles, removeProfile, updateProfile } from '../../src/scary/domain/profiles';
-import { createBackup, restoreBackup } from '../../src/scary/state/backup';
+import { createBackup, readBackup, restoreBackup } from '../../src/scary/state/backup';
 import { PROFILES_KEY, applyPending, createProfilesStore, readProfilesState, requestSwitch } from '../../src/scary/state/profiles';
 import { STORAGE_KEY, sanitize } from '../../src/scary/state/store';
 
@@ -218,17 +218,73 @@ describe('the profiles of this browser', () => {
 });
 
 describe('a backup file and profiles', () => {
-    test('holds the profile on screen only: no names, no parked profiles', () => {
-        const storage = memory({ [PROFILES_KEY]: two, library: '{"dana":1}', 'library@p2': '{"noa":1}', 'scary.lists@p2': '{}', [STORAGE_KEY]: '{}' });
-        const backup = createBackup(storage, new Date(0));
-        expect(Object.keys(backup.storage).sort()).toEqual(['library', STORAGE_KEY].sort());
-        expect(JSON.stringify(backup)).not.toContain('Noa');
+    const three = JSON.stringify({ list: [{ id: 'p1', name: 'Dana', c: 0, g: false }, { id: 'p2', name: 'Noa', c: 1, g: true }, { id: 'p3', name: 'Gil', c: 2, g: false }], active: 'p2', pending: { to: 'p1', remove: null } });
+    const home = () => memory({
+        [PROFILES_KEY]: three,
+        'library': '{"noa":1}',
+        'search_history': '["noa"]',
+        'library@p1': '{"dana":1}',
+        'scary.lists@p1': JSON.stringify({ loved: ['tt0081505'], bucket: [], notForMe: [], history: [] }),
+        'library@p3': '{"gil":1}',
+        'library@p5': '{"nobody":1}',
+        'profile': '{"settings":"shared"}',
+        [STORAGE_KEY]: JSON.stringify({ loved: ['tt0054215'], lock: { enabled: true, fromFear: 3, pin: '60000:c2FsdA==:aGFzaA==' } }),
     });
 
-    test('cannot change who the profiles are', () => {
-        const storage = memory({ [PROFILES_KEY]: two, [STORAGE_KEY]: '{}' });
-        restoreBackup(storage, { [PROFILES_KEY]: '{"list":[],"active":"p1"}', library: '{"x":1}' });
-        expect(storage.getItem(PROFILES_KEY)).toBe(two);
-        expect(storage.getItem('library')).toBe('{"x":1}');
+    test('with one profile, holds what is on screen and says nothing about profiles', () => {
+        const storage = memory({ library: '{"dana":1}', [STORAGE_KEY]: '{}', 'library@p2': '{"left over":1}' });
+        expect(Object.keys(createBackup(storage, new Date(0)).storage).sort()).toEqual(['library', STORAGE_KEY].sort());
+    });
+
+    test('with more, holds every profile and what each holds, but nothing parked for a profile that is not there', () => {
+        const backup = createBackup(home(), new Date(0));
+        expect(backup.version).toBe(2);
+        expect(Object.keys(backup.storage).sort()).toEqual(['library', 'library@p1', 'library@p3', 'profile', 'scary.lists@p1', PROFILES_KEY, STORAGE_KEY, 'search_history'].sort());
+        // The switch that was waiting is not part of the file, nor is the PIN.
+        expect(JSON.parse(backup.storage[PROFILES_KEY])).toEqual({ list: [{ id: 'p1', name: 'Dana', c: 0, g: false }, { id: 'p2', name: 'Noa', c: 1, g: true }, { id: 'p3', name: 'Gil', c: 2, g: false }], active: 'p2', pending: null });
+        expect(JSON.stringify(backup)).not.toContain('aGFzaA');
+    });
+
+    test('restoring it replaces the profiles of this browser, and keeps this browser\'s lock', () => {
+        const file = readBackup(JSON.stringify(createBackup(home(), new Date(0))));
+        expect(file).not.toBeNull();
+        const other = memory({
+            [PROFILES_KEY]: JSON.stringify({ list: [{ id: 'p1', name: 'Someone' }, { id: 'p4', name: 'Else' }], active: 'p1', pending: null }),
+            'library': '{"someone":1}',
+            'library_recent': '{"someone":2}',
+            'library@p4': '{"else":1}',
+            'scary.lists@p4': '{"loved":["tt0070047"]}',
+            [STORAGE_KEY]: JSON.stringify({ loved: ['tt0070047'], lock: { enabled: true, fromFear: 5, pin: '60000:b3RoZXI=:b3RoZXI=' } }),
+        });
+        restoreBackup(other, file ?? {});
+        expect(readProfilesState(other)).toEqual({ list: [{ id: 'p1', name: 'Dana', colour: 0, gentle: false }, { id: 'p2', name: 'Noa', colour: 1, gentle: true }, { id: 'p3', name: 'Gil', colour: 2, gentle: false }], activeId: 'p2', pending: null });
+        // Noa is on screen with her own things; nothing of "Someone" or "Else" is left.
+        expect([other.getItem('library'), other.getItem('library_recent'), other.getItem('search_history')]).toEqual(['{"noa":1}', null, '["noa"]']);
+        expect([other.getItem('library@p1'), other.getItem('library@p3'), other.getItem('library@p4'), other.getItem('scary.lists@p4')]).toEqual(['{"dana":1}', '{"gil":1}', null, null]);
+        expect(JSON.parse(other.getItem('scary.lists@p1') ?? '{}').loved).toEqual(['tt0081505']);
+        expect(stateOf(other)).toMatchObject({ loved: ['tt0054215'], lock: { enabled: true, fromFear: 5, pin: '60000:b3RoZXI=:b3RoZXI=' } });
+        expect([...other.map.values()].some((value) => /someone|else/.test(value))).toBe(false);
+    });
+
+    test('a file that was tampered with cannot park things for a profile it does not name, nor for the one on screen', () => {
+        const storage = memory({ [STORAGE_KEY]: '{}' });
+        restoreBackup(storage, {
+            [PROFILES_KEY]: JSON.stringify({ list: [{ id: 'p1', name: 'A' }, { id: 'p2', name: '\u202EB<script>' }, { id: 'p9', name: 'x' }], active: 'p2' }),
+            'library@p1': '{"a":1}',
+            'library@p2': '{"hidden":1}',
+            'library@p3': '{"nobody":1}',
+            'scary.lists@p1': JSON.stringify({ loved: ['<script>', 'tt0081505'], lock: { enabled: false }, familyNight: true }),
+        });
+        expect(readProfilesState(storage)).toMatchObject({ activeId: 'p2', list: [{ id: 'p1', name: 'A' }, { id: 'p2', name: 'B<script>' }] });
+        expect([storage.getItem('library@p1'), storage.getItem('library@p2'), storage.getItem('library@p3')]).toEqual(['{"a":1}', null, null]);
+        expect(JSON.parse(storage.getItem('scary.lists@p1') ?? '{}')).toEqual({ loved: ['tt0081505'], notForMe: [], bucket: [], history: [] });
+    });
+
+    test('a file without profiles goes into the profile on screen and leaves the others', () => {
+        const storage = home();
+        restoreBackup(storage, { library: '{"from file":1}', [STORAGE_KEY]: JSON.stringify({ loved: ['tt0070047'] }) });
+        expect(readProfilesState(storage).list.map((profile) => profile.name)).toEqual(['Dana', 'Noa', 'Gil']);
+        expect([storage.getItem('library'), storage.getItem('library@p1'), storage.getItem('search_history')]).toEqual(['{"from file":1}', '{"dana":1}', '["noa"]']);
+        expect(stateOf(storage).loved).toEqual(['tt0070047']);
     });
 });

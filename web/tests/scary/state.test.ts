@@ -10,6 +10,7 @@ const memoryStorage = (initial: Record<string, string> = {}) => {
     return {
         getItem: (key: string) => data.get(key) ?? null,
         setItem: (key: string, value: string) => void data.set(key, value),
+        removeItem: (key: string) => void data.delete(key),
         key: (index: number) => Array.from(data.keys())[index] ?? null,
         get length() {
             return data.size;
@@ -78,7 +79,7 @@ describe('the backup file', () => {
             'weird key!': 'x',
         });
         const backup = createBackup(source, new Date('2026-11-26T12:00:00Z'));
-        expect(backup).toMatchObject({ app: 'scary-web', version: 1, savedAt: '2026-11-26T12:00:00.000Z' });
+        expect(backup).toMatchObject({ app: 'scary-web', version: 2, savedAt: '2026-11-26T12:00:00.000Z' });
         expect(Object.keys(backup.storage).sort()).toEqual(['library', 'profile', STORAGE_KEY].sort());
         expect(JSON.stringify(backup)).not.toContain('c2FsdHNhbHR');
         expect(JSON.parse(backup.storage[STORAGE_KEY])).not.toHaveProperty('lock');
@@ -98,12 +99,15 @@ describe('the backup file', () => {
     });
 
     test('a file that is not a backup is refused', () => {
-        for (const text of ['', 'x', '[]', '{}', '{"app":"other","version":1,"storage":{"a":"b"}}', '{"app":"scary-web","version":2,"storage":{"a":"b"}}',
+        for (const text of ['', 'x', '[]', '{}', '{"app":"other","version":1,"storage":{"a":"b"}}', '{"app":"scary-web","version":3,"storage":{"a":"b"}}', '{"app":"scary-web","version":2,"storage":{"library@p9":"x"}}', '{"app":"scary-web","version":2,"storage":{"profile@p2":"x"}}', '{"app":"scary-web","version":2,"storage":{"library@p2@p3":"x"}}',
             '{"app":"scary-web","version":1,"storage":{}}', '{"app":"scary-web","version":1,"storage":{"a":5}}', '{"app":"scary-web","version":1,"storage":{"bad key":"x"}}',
             '{"app":"scary-web","version":1,"storage":[]}']) {
             expect(readBackup(text)).toBeNull();
         }
         expect(readBackup('{"app":"scary-web","version":1,"savedAt":"x","storage":{"profile":"{}"}}')).toEqual({ profile: '{}' });
+        expect(readBackup('{"app":"scary-web","version":2,"savedAt":"x","storage":{"profile":"{}","library@p2":"{}"}}')).toEqual({ 'profile': '{}', 'library@p2': '{}' });
+        // A file of version 1 never held profiles: what it says about them is not taken.
+        expect(readBackup('{"app":"scary-web","version":1,"savedAt":"x","storage":{"profile":"{}","library@p2":"{}","scary.profiles":"{}"}}')).toEqual({ profile: '{}' });
     });
 });
 
