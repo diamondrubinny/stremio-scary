@@ -1,6 +1,7 @@
 # SCARY Web
 
 **The horror cinema of [SCARY](https://github.com/diamondrubinny/Scary), in the browser.**
+**Live:** https://diamondrubinny.github.io/stremio-scary/
 Work in progress. Spec and roadmap (Hebrew): [docs/PLAN.md](docs/PLAN.md). Spike findings: [docs/SPIKE.md](docs/SPIKE.md).
 
 > **Unofficial.** SCARY Web is built on the open-source code of Stremio Web. It is not made, endorsed or supported by
