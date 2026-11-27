@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // SCARY Web · Powered by SCARY · https://github.com/diamondrubinny/Scary · Copyright (C) 2026 diamondrubinny
 
+import i18n from 'i18next';
 import { GAP_STRINGS } from '../../src/scary/i18n/gaps';
+import { addSubgenreLabels } from '../../src/scary/i18n/register';
 import { NATIVE_STRINGS } from '../../src/scary/i18n/native';
 import { STRINGS } from '../../src/scary/i18n/strings';
 
@@ -12,6 +14,15 @@ const placeholders = (text: string): string[] => (text.match(/\{\{\s*[\w.]+\s*\}
 const languages = ['he', 'ar', 'pt', 'ru'] as const;
 
 describe('SCARY words', () => {
+    test('names of subgenres from the feed are taken as plain words only', async () => {
+        await i18n.init({ lng: 'en-US', resources: {} });
+        addSubgenreLabels({ slasher: { en: 'Slasher', he: 'סלאשר' }, constructor: { en: 'x' }, toString: { en: 'x' }, __proto__: { en: 'x' }, 'Bad Id': { en: 'x' }, ghosts: { en: { deep: 'object' } }, long: { en: 'x'.repeat(61) } });
+        const bundle = i18n.getResourceBundle('en-US', 'translation') as Record<string, unknown>;
+        expect(Object.keys(bundle)).toEqual(['slasher']);
+        expect(i18n.getResourceBundle('he-IL', 'translation')).toEqual({ slasher: 'סלאשר' });
+        expect(({} as Record<string, unknown>).x).toBeUndefined();
+    });
+
     test('a word filled in for Stremio Web exists there, and keeps its blanks', () => {
         const wrong: string[] = [];
         for (const language of languages) {

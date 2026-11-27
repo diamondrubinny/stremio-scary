@@ -66,7 +66,8 @@ const addSubgenreLabels = (subgenres: unknown): void => {
         const strings: Record<string, string> = {};
         for (const [id, labels] of Object.entries(subgenres as Record<string, unknown>)) {
             const label = (labels as Record<string, unknown> | null)?.[language];
-            if (SUBGENRE_ID.test(id) && typeof label === 'string' && label.length > 0 && label.length <= MAX_LABEL) {
+            // A name that every object already answers to ("constructor") is not a subgenre: it is never added to the translations.
+            if (SUBGENRE_ID.test(id) && !(id in Object.prototype) && typeof label === 'string' && label.length > 0 && label.length <= MAX_LABEL) {
                 strings[id] = label;
             }
         }

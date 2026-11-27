@@ -2,3 +2,9 @@ minimumReleaseAgeExclude:
   - '@stremio/*'
 
 blockExoticSubdeps: false
+
+# Patched versions of dependencies that come in through others (pnpm audit, 27.11.2026).
+overrides:
+  qs: '^6.16.1'
+  zod: '^4.6.6'
+  '@babel/runtime': '^7.26.10'
