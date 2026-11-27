@@ -927,3 +927,109 @@
         }
     }
 }
+
+// "Ask SCARY": the request, the question about the service before anything is sent, and the films that came back.
+.ask {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 0 2rem 1rem;
+    max-width: 52rem;
+    overflow: visible;
+
+    .chips-line, .section-note {
+        padding: 0;
+    }
+
+    .ask-input {
+        min-height: 5.5rem;
+        padding: 0.8rem 1rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--scary-line);
+        background-color: var(--overlay-color);
+        color: var(--scary-bone);
+        font: inherit;
+        font-size: 1.15rem;
+        line-height: 1.5;
+        resize: vertical;
+        user-select: text;
+
+        &::placeholder {
+            color: var(--scary-ash);
+        }
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--scary-bone);
+        }
+    }
+}
+
+.ask-agree {
+    margin: 0 2rem 1rem;
+    padding: 1rem;
+    max-width: 52rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--scary-bone);
+    background-color: var(--scary-crypt);
+
+    .chips-line, .section-note {
+        padding: 0;
+    }
+
+    .section-note {
+        margin-bottom: 0.8rem;
+        color: var(--scary-bone);
+    }
+}
+
+.ask-status {
+    min-height: 1.5rem;
+    padding: 0 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--scary-bone-dim);
+}
+
+.ask-pick {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.ask-year {
+    color: var(--scary-bone-dim);
+    font-weight: 400;
+}
+
+.ask-why {
+    color: var(--scary-bone-dim);
+    line-height: 1.4;
+}
+
+// "About this film", in the film's page.
+.about-ai {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    overflow: visible;
+
+    .ask-agree {
+        margin: 0;
+    }
+
+    .about-ai-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        max-width: 40rem;
+        color: var(--scary-bone);
+        line-height: 1.5;
+    }
+
+    .about-ai-by {
+        color: var(--scary-bone-dim);
+        font-size: 0.9rem;
+    }
+}

@@ -82,6 +82,7 @@ const BoardExtras = ({ rowClassName }: Props) => {
                         <Chip key={id} label={t(`SCARY_MOOD_${id.toUpperCase()}`)} chosen={mood === id} onClick={() => setMood(mood === id ? null : id)} />
                     ))}
                     <Chip label={t('SCARY_SURPRISE_ME')} quiet={true} onClick={surprise} />
+                    <Chip label={t('SCARY_AI_TITLE')} quiet={true} href={'#/scary/ask'} />
                 </div>
                 {
                     decades.length > 0 ?

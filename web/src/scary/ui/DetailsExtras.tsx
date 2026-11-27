@@ -14,6 +14,7 @@ import { moreLikeThis } from '../domain/recommender';
 import { useFeedLanguage, useScaryRules, useScaryState } from '../hooks';
 import { store } from '../state/store';
 import { useTmdbFilm } from '../tmdb/useTmdb';
+import AiAbout from './AiAbout';
 import Chip from './Chip';
 import FearMeter from './FearMeter';
 import styles from './scary.less';
@@ -26,6 +27,9 @@ type Props = {
     /** "series" for a series; anything else is a film. */
     type?: string | null,
     links?: Link[] | null,
+    /** The film's name and synopsis as its page shows them: what "about this film" is written from. */
+    name?: string | null,
+    description?: string | null,
 };
 
 const IMDB_ID = /tt\d{7,8}/;
@@ -41,7 +45,7 @@ const filmIdOf = (links: Link[] | null | undefined): string | null => {
     return null;
 };
 
-const DetailsExtras = ({ id: givenId, type, links }: Props) => {
+const DetailsExtras = ({ id: givenId, type, links, name, description }: Props) => {
     const { t } = useTranslation();
     const language = useFeedLanguage();
     const id = typeof givenId === 'string' && new RegExp(`^${IMDB_ID.source}$`).test(givenId) ? givenId : filmIdOf(links);
@@ -53,6 +57,13 @@ const DetailsExtras = ({ id: givenId, type, links }: Props) => {
     const tmdb = useTmdbFilm(id, type === 'series' || (film !== null && isSeries(film)));
     const offers = tmdb.details?.offers ?? null;
     const qr = useMemo(() => id === null ? null : qrCode(`https://www.imdb.com/title/${id}/`), [id]);
+    // What "about this film" is written from: the film's own name, year, kinds and the synopsis its page shows.
+    const about = useMemo(() => ({
+        title: film?.t.en ?? (typeof name === 'string' ? name : ''),
+        year: film?.y ?? null,
+        kinds: film === null ? [] : [film.k === 's' ? 'series' : film.k === 't' ? 'thriller' : 'horror', ...(film.s ?? [])],
+        synopsis: typeof description === 'string' ? description : '',
+    }), [film, name, description]);
     if (id === null) return null;
     return (
         <div className={styles['details-extras']}>
@@ -79,6 +90,7 @@ const DetailsExtras = ({ id: givenId, type, links }: Props) => {
                         null
                 }
             </div>
+            {film !== null && typeof description === 'string' && description.trim().length > 0 ? <AiAbout id={film.id} about={about} /> : null}
             {
                 qr !== null ?
                     <div className={styles['qr']}>

@@ -73,6 +73,10 @@ cd web && pnpm install && pnpm lint && pnpm test && pnpm build
 | `web/src/routes/Board/Board.js` (נוסף) | הספוטלייט דרך `scaryBoard.spotlight`; באנר "שרת ההזרמה" מותנה ב-`SERVER_BANNER_ENABLED` | סרט נעול לא מוצג בספוטלייט; בלי הצעה להתקין את שרת Stremio בכניסה |
 | `web/src/components/MetaPreview/Facts.tsx` | `dir="auto"` לכל עובדה; "119 min" → בשפת הממשק | RTL: "2026-" ו"55 דק׳" מוצגים נכון |
 | `web/src/components/NavBar/HorizontalNavBar/NavMenu/NavMenuContent.js` (נוסף) | שורה: `<ScaryProfileMenuRow />` | "פרופיל: … החלפת פרופיל" בתפריט |
+| `web/src/routes/Details/Hero/Hero.tsx` (נוסף) | `name` ו-`description` מועברים ל-`ScaryDetailsExtras` | "על הסרט" (AI) נכתב מהשם ומהתקציר שבעמוד |
+| `web/src/routes/Search/Search.js` (נוסף) | שורה: `<ScaryAskLink />` | "לא מצאתם? תארו את הסרט" |
+| `web/package.json`, `web/pnpm-lock.yaml` (נוסף) | נוסף `@anthropic-ai/sdk` 1.14.0 | פנייה ל-Claude דרך הספרייה הרשמית |
+| `.github/workflows/jekyll-gh-pages.yml` | **הוסר** | התבנית של GitHub פרסמה את ה-README במקום האפליקציה; הפריסה היא `deploy.yml` |
 
 ## פעולות חד-פעמיות של בעל הריפו ב-GitHub
 1. **Actions:** בפורק הם כבויים כברירת מחדל — לשונית Actions → "I understand my workflows, go ahead and enable them".

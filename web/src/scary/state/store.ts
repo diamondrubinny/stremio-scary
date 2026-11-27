@@ -5,6 +5,8 @@
 // (localStorage, "scary.state"); nothing is sent anywhere. What is read back is checked like any outside input, since
 // a backup file or another script on the device can have written it.
 
+import { PROVIDER_IDS, cleanKey, cleanModel, customBaseOf, isProviderId } from '../ai/providers';
+import type { ProviderId } from '../ai/providers';
 import { NO_LOCKOUT } from '../domain/lock';
 import { keyKind } from '../tmdb/client';
 import type { Lockout } from '../domain/lock';
@@ -40,6 +42,19 @@ type ScaryState = {
      * this browser and sent only to api.themoviedb.org. Never written to a backup file.
      */
     tmdbKey: string | null,
+    /**
+     * "Ask SCARY" (docs/AI_PLAN.md): the AI service chosen, the viewer's own key and model for each service, the
+     * address of a service of their own, the service they agreed to send requests to (asked again for another), and
+     * whether their taste may be sent along. Keys stay in this browser and are never written to a backup file.
+     */
+    ai: {
+        provider: ProviderId,
+        keys: Partial<Record<ProviderId, string>>,
+        models: Partial<Record<ProviderId, string>>,
+        customUrl: string | null,
+        agreed: string | null,
+        taste: boolean,
+    },
 };
 
 /** The version of the privacy text the consent was given to. A new version asks again. */
@@ -57,6 +72,7 @@ const DEFAULT_STATE: ScaryState = {
     effects: { atmosphere: true, shiver: true, sound: false, screensaver: true, seasonal: true, trailers: true },
     consent: { media: null, voice: false, at: null, version: CONSENT_VERSION },
     tmdbKey: null,
+    ai: { provider: 'pollinations', keys: {}, models: {}, customUrl: null, agreed: null, taste: false },
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -66,6 +82,19 @@ const ids = (value: unknown, max: number = MAX_LIST): string[] =>
 const whole = (value: unknown, min: number, max: number, fallback: number): number =>
     typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max ? value : fallback;
 
+const AGREED_HOST = /^[A-Za-z0-9.:-]{1,120}$/;
+
+/** A value for each known AI service, keeping only those that pass `clean`. */
+const perProvider = (value: unknown, clean: (item: unknown) => string | null): Partial<Record<ProviderId, string>> => {
+    const kept: Partial<Record<ProviderId, string>> = {};
+    if (!isRecord(value)) return kept;
+    for (const id of PROVIDER_IDS) {
+        const item = clean(value[id]);
+        if (item !== null) kept[id] = item;
+    }
+    return kept;
+};
+
 /** A state from anything: every part that is not what it should be falls back to its default. */
 const sanitize = (value: unknown): ScaryState => {
     const raw = isRecord(value) ? value : {};
@@ -73,6 +102,7 @@ const sanitize = (value: unknown): ScaryState => {
     const lockout = isRecord(raw.lockout) ? raw.lockout : {};
     const effects = isRecord(raw.effects) ? raw.effects : {};
     const consent = isRecord(raw.consent) ? raw.consent : {};
+    const ai = isRecord(raw.ai) ? raw.ai : {};
     // An answer given to an older privacy text does not count for this one.
     const answered = typeof consent.media === 'boolean' && consent.version === CONSENT_VERSION;
     const pin = typeof lock.pin === 'string' && PIN_HASH.test(lock.pin) ? lock.pin : null;
@@ -103,6 +133,14 @@ const sanitize = (value: unknown): ScaryState => {
             version: CONSENT_VERSION,
         },
         tmdbKey: keyKind(raw.tmdbKey) !== null ? raw.tmdbKey as string : null,
+        ai: {
+            provider: isProviderId(ai.provider) ? ai.provider : DEFAULT_STATE.ai.provider,
+            keys: perProvider(ai.keys, cleanKey),
+            models: perProvider(ai.models, cleanModel),
+            customUrl: customBaseOf(ai.customUrl),
+            agreed: typeof ai.agreed === 'string' && AGREED_HOST.test(ai.agreed) ? ai.agreed : null,
+            taste: ai.taste === true,
+        },
     };
 };
 
