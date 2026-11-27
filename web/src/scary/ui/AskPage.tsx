@@ -89,7 +89,8 @@ const AskPage = () => {
                 <textarea
                     id={'scary-ask'}
                     className={styles['ask-input']}
-                    dir={'auto'}
+                    // What is typed reads in its own direction; while the box is empty, the hint reads as the screen does.
+                    dir={text.length > 0 ? 'auto' : undefined}
                     rows={3}
                     maxLength={300}
                     value={text}
