@@ -188,7 +188,7 @@ describe('the AI settings in this browser', () => {
     test('a backup file carries no key and no agreement, and restoring changes neither', () => {
         const memory = (start: Record<string, string>) => {
             const map = new Map(Object.entries(start));
-            return { map, getItem: (key: string) => map.get(key) ?? null, setItem: (key: string, value: string) => void map.set(key, value), key: (index: number) => [...map.keys()][index] ?? null, get length() { return map.size; } };
+            return { map, getItem: (key: string) => map.get(key) ?? null, setItem: (key: string, value: string) => void map.set(key, value), removeItem: (key: string) => void map.delete(key), key: (index: number) => [...map.keys()][index] ?? null, get length() { return map.size; } };
         };
         const storage = memory({ [STORAGE_KEY]: JSON.stringify({ ai: { provider: 'openai', keys: { openai: 'sk-secret-12345678' }, models: { openai: 'gpt-x' }, agreed: 'api.openai.com', taste: true } }) });
         const backup = createBackup(storage, new Date(0));
