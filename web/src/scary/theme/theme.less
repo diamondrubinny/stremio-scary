@@ -103,3 +103,15 @@ html:root {
 html[dir='rtl'] svg[data-scary-directional] {
     transform: scaleX(-1);
 }
+
+// Words that come from outside in another language (a film's English synopsis on a Hebrew screen) are read in their
+// own direction (dir="auto"), and stay on the side the screen itself reads from.
+html[dir='rtl'] [data-scary-outside] {
+    /*rtl:ignore*/
+    text-align: right;
+}
+
+html[dir='ltr'] [data-scary-outside] {
+    /*rtl:ignore*/
+    text-align: left;
+}

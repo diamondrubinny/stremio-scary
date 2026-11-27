@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './Table.less';
 import Cell from './Cell/Cell';
 
-const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+import { leadingDays, weekDaysFrom, weekStartOf } from 'stremio/scary/domain/week';
 
 type Props = {
     items: CalendarItem[],
@@ -15,11 +15,14 @@ type Props = {
 };
 
 const Table = ({ items, selected, monthInfo, onChange }: Props) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    // SCARY: the week starts on the day it starts on in the interface language (Sunday in Hebrew).
+    const weekStart = weekStartOf(i18n.language);
+    const WEEK_DAYS = useMemo(() => weekDaysFrom(weekStart), [weekStart]);
 
     const cellsOffset = useMemo(() => {
-        return Array.from(Array(monthInfo.firstWeekday).keys());
-    }, [monthInfo]);
+        return Array.from(Array(leadingDays(monthInfo.firstWeekday, weekStart)).keys());
+    }, [monthInfo, weekStart]);
 
     return (
         <div className={styles['table']}>

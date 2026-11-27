@@ -121,7 +121,7 @@ const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seas
                 }
             </div>
             <div className={styles['info']}>
-                <div className={styles['title']}>
+                <div className={styles['title']} dir={'auto'} data-scary-outside={''}>
                     {typeof episode === 'number' ? `${episode}. ` : null}
                     {title.length > 0 ? title : id}
                 </div>

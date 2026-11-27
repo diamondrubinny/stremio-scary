@@ -157,6 +157,19 @@ const he: Record<string, string> = {
     TBA: 'טרם נקבע',
     UPDATER_INSTALL_BUTTON: 'התקנה עכשיו',
     UPDATER_TITLE: 'יש גרסה חדשה של SCARY',
+    // Counts: Hebrew has its own words for one and for two.
+    SETTINGS_SEARCH_RESULTS_one: 'הגדרה אחת עבור "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_two: 'שתי הגדרות עבור "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_many: '{{count}} הגדרות עבור "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_other: '{{count}} הגדרות עבור "{{query}}"',
+    SETTINGS_SPOTLIGHT_CATALOGS_one: 'קטלוג אחד',
+    SETTINGS_SPOTLIGHT_CATALOGS_two: 'שני קטלוגים',
+    SETTINGS_SPOTLIGHT_CATALOGS_many: '{{count}} קטלוגים',
+    SETTINGS_SPOTLIGHT_CATALOGS_other: '{{count}} קטלוגים',
+    SETTINGS_SPOTLIGHT_TITLES_one: 'כותר אחד',
+    SETTINGS_SPOTLIGHT_TITLES_two: 'שני כותרים',
+    SETTINGS_SPOTLIGHT_TITLES_many: '{{count}} כותרים',
+    SETTINGS_SPOTLIGHT_TITLES_other: '{{count}} כותרים',
 };
 
 /** The most visible of the same words, for the other languages SCARY speaks. */
@@ -199,6 +212,24 @@ const ar: Record<string, string> = {
     SETTINGS_SOURCE_CODE: 'الشيفرة المصدرية',
     UPDATER_INSTALL_BUTTON: 'التثبيت الآن',
     UPDATER_TITLE: 'يتوفر إصدار جديد من SCARY',
+    SETTINGS_SEARCH_RESULTS_zero: 'لا إعدادات لـ "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_one: 'إعداد واحد لـ "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_two: 'إعدادان لـ "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_few: '{{count}} إعدادات لـ "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_many: '{{count}} إعدادًا لـ "{{query}}"',
+    SETTINGS_SEARCH_RESULTS_other: '{{count}} إعداد لـ "{{query}}"',
+    SETTINGS_SPOTLIGHT_CATALOGS_zero: 'لا كتالوجات',
+    SETTINGS_SPOTLIGHT_CATALOGS_one: 'كتالوج واحد',
+    SETTINGS_SPOTLIGHT_CATALOGS_two: 'كتالوجان',
+    SETTINGS_SPOTLIGHT_CATALOGS_few: '{{count}} كتالوجات',
+    SETTINGS_SPOTLIGHT_CATALOGS_many: '{{count}} كتالوجًا',
+    SETTINGS_SPOTLIGHT_CATALOGS_other: '{{count}} كتالوج',
+    SETTINGS_SPOTLIGHT_TITLES_zero: 'لا عناوين',
+    SETTINGS_SPOTLIGHT_TITLES_one: 'عنوان واحد',
+    SETTINGS_SPOTLIGHT_TITLES_two: 'عنوانان',
+    SETTINGS_SPOTLIGHT_TITLES_few: '{{count}} عناوين',
+    SETTINGS_SPOTLIGHT_TITLES_many: '{{count}} عنوانًا',
+    SETTINGS_SPOTLIGHT_TITLES_other: '{{count}} عنوان',
 };
 
 const ru: Record<string, string> = {
@@ -240,8 +271,29 @@ const ru: Record<string, string> = {
     SETTINGS_SOURCE_CODE: 'Исходный код',
     UPDATER_INSTALL_BUTTON: 'Установить сейчас',
     UPDATER_TITLE: 'Доступна новая версия SCARY',
+    SETTINGS_SEARCH_RESULTS_one: '{{count}} настройка по запросу «{{query}}»',
+    SETTINGS_SEARCH_RESULTS_few: '{{count}} настройки по запросу «{{query}}»',
+    SETTINGS_SEARCH_RESULTS_many: '{{count}} настроек по запросу «{{query}}»',
+    SETTINGS_SEARCH_RESULTS_other: '{{count}} настройки по запросу «{{query}}»',
+    SETTINGS_SPOTLIGHT_CATALOGS_one: '{{count}} каталог',
+    SETTINGS_SPOTLIGHT_CATALOGS_few: '{{count}} каталога',
+    SETTINGS_SPOTLIGHT_CATALOGS_many: '{{count}} каталогов',
+    SETTINGS_SPOTLIGHT_CATALOGS_other: '{{count}} каталога',
+    SETTINGS_SPOTLIGHT_TITLES_one: '{{count}} название',
+    SETTINGS_SPOTLIGHT_TITLES_few: '{{count}} названия',
+    SETTINGS_SPOTLIGHT_TITLES_many: '{{count}} названий',
+    SETTINGS_SPOTLIGHT_TITLES_other: '{{count}} названия',
 };
 
-const GAP_STRINGS: Record<FeedLanguage, Record<string, string>> = { en: {}, he, ar, pt: {}, ru };
+const pt: Record<string, string> = {
+    SETTINGS_SEARCH_RESULTS_one: '{{count}} configuração para “{{query}}”',
+    SETTINGS_SEARCH_RESULTS_other: '{{count}} configurações para “{{query}}”',
+    SETTINGS_SPOTLIGHT_CATALOGS_one: '{{count}} catálogo',
+    SETTINGS_SPOTLIGHT_CATALOGS_other: '{{count}} catálogos',
+    SETTINGS_SPOTLIGHT_TITLES_one: '{{count}} título',
+    SETTINGS_SPOTLIGHT_TITLES_other: '{{count}} títulos',
+};
+
+const GAP_STRINGS: Record<FeedLanguage, Record<string, string>> = { en: {}, he, ar, pt, ru };
 
 export { GAP_STRINGS };

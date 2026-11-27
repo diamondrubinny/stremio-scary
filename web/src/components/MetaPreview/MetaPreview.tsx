@@ -98,7 +98,7 @@ const MetaPreview = ({
                 {metadata}
                 {
                     typeof description === 'string' && description.length > 0 ?
-                        <p className={styles['description']}>{description}</p>
+                        <p className={styles['description']} dir={'auto'} data-scary-outside={''}>{description}</p>
                         :
                         null
                 }

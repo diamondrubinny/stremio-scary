@@ -27,8 +27,13 @@ describe('SCARY words', () => {
         const wrong: string[] = [];
         for (const language of languages) {
             for (const [key, text] of Object.entries(GAP_STRINGS[language])) {
-                if (typeof english[key] !== 'string') wrong.push(`${language}.${key}: not a word of Stremio Web`);
-                else if (placeholders(text).join() !== placeholders(english[key]).join()) wrong.push(`${language}.${key}: blanks differ`);
+                // A count has more forms in some languages than in English ("two", "few", "many"), and a form that
+                // names the number in a word ("one catalog") needs no blank for it.
+                const counted = /_(zero|one|two|few|many|other)$/.test(key);
+                const source = english[key] ?? (counted ? english[key.replace(/_[a-z]+$/, '_other')] : undefined);
+                const blanks = placeholders(text);
+                if (typeof source !== 'string') wrong.push(`${language}.${key}: not a word of Stremio Web`);
+                else if (counted ? !blanks.every((blank) => placeholders(source).includes(blank)) || (key.endsWith('_other') && !blanks.includes('{{count}}')) : blanks.join() !== placeholders(source).join()) wrong.push(`${language}.${key}: blanks differ`);
                 else if (/stremio/i.test(text)) wrong.push(`${language}.${key}: names Stremio`);
             }
         }
